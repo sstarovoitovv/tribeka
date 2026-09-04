@@ -1,0 +1,65 @@
+name: Deploy production to REG.RU
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reg-ru-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEPLOY_HOST: 37.140.192.207
+      DEPLOY_USER: u3633961
+      DEPLOY_PATH: /var/www/u3633961/data/www/xn--80abmkm6an.xn--p1ai
+      BACKUP_ROOT: /var/www/u3633961/data/backups
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check code
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.REG_RU_SSH_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' '37.140.192.207 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSPBaPHv9z7U4pE2aIwKFawMMTCEUWJee23Jiry4h7h' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Back up current production
+        run: |
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          BACKUP_PATH="${BACKUP_ROOT}/tribeka-before-${SHORT_SHA}-${GITHUB_RUN_ID}"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${BACKUP_PATH}' && cp -a '${DEPLOY_PATH}/.' '${BACKUP_PATH}/'"
+
+      - name: Upload production build
+        run: rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+
+      - name: Verify production
+        run: curl --fail --silent --show-error --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/ > /dev/null

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { siteConfig } from '../siteConfig.js'
 
 const MAX_FILES = 5
-const MAX_TOTAL_SIZE = 100 * 1024 * 1024
+const MAX_TOTAL_SIZE = 15 * 1024 * 1024
 const acceptedFiles = '.pdf,.dwg,.dxf,.step,.stp,.iges,.igs,.zip,.rar,.7z,.jpg,.jpeg,.png,.webp'
 
 function formatSize(bytes) {
@@ -79,7 +79,7 @@ export default function RequestForm() {
     }
 
     if (totalSize > MAX_TOTAL_SIZE) {
-      setStatusMessage('Общий размер файлов не должен превышать 100 МБ.')
+      setStatusMessage('Общий размер файлов не должен превышать 15 МБ.')
       setStatus('error')
       return
     }
@@ -154,6 +154,10 @@ export default function RequestForm() {
 
   return (
     <form onSubmit={submit} encType="multipart/form-data" className="bg-white p-7 sm:p-9">
+      <label className="absolute -left-[10000px]" aria-hidden="true">
+        Не заполняйте это поле
+        <input name="website" tabIndex="-1" autoComplete="off" />
+      </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-1 text-[10px] font-bold uppercase tracking-widest text-ink/45">
           Ваше имя
@@ -202,7 +206,7 @@ export default function RequestForm() {
             <label htmlFor="request-files" className="shape-button inline-flex cursor-pointer items-center gap-2 border border-ink/10 bg-[#e3e7ed] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">
               <FiPaperclip size={15} /> Прикрепить файлы
             </label>
-            <span className="text-[10px] leading-4 text-ink/40">До 5 файлов, общий размер до 100 МБ</span>
+            <span className="text-[10px] leading-4 text-ink/40">До 5 файлов, общий размер до 15 МБ</span>
           </div>
           {files.length > 0 && (
             <div className="mt-3 text-left">
