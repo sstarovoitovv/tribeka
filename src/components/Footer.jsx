@@ -23,7 +23,8 @@ export default function Footer() {
               <Link to="/about" className="hover:text-white">О компании</Link>
               <Link to="/services" className="hover:text-white">Услуги</Link>
               <Link to="/contacts" className="hover:text-white">Контакты</Link>
-              <Link to="/privacy" className="hover:text-white">Конфиденциальность</Link>
+              <Link to="/privacy" className="hover:text-white">Обработка данных</Link>
+              <Link to="/consent" className="hover:text-white">Согласие</Link>
             </div>
           </div>
           <div className="flex flex-col items-center text-center">

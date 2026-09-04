@@ -9,6 +9,11 @@ export const siteConfig = {
   telegramUrl: 'https://t.me/+79062603060?text=Здравствуйте%21%20Хочу%20обсудить%20заказ%20на%20металлообработку.&profile',
   maxUrl: 'https://max.ru/u/f9LHodD0cOJtECLCLcosW-YWZLd_mKhIqn1nk8PQPAiWzjdeCTDls_dV50E',
   formEndpoint: import.meta.env.VITE_FORM_ENDPOINT || 'https://xn--80abmkm6an.xn--p1ai/api/request.php',
+  personalData: {
+    policyVersion: '2026-09-04',
+    consentVersion: '2026-09-04',
+    leadRetentionDays: 365,
+  },
   address: 'Санкт-Петербург, ул. Возрождения, 24, корп. 2Е',
   ogrn: '1127847218817',
   inn: '7805585933',

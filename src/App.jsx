@@ -8,6 +8,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 import ServicesPage from './pages/ServicesPage.jsx'
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx'
 import PrivacyPage from './pages/PrivacyPage.jsx'
+import ConsentPage from './pages/ConsentPage.jsx'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/consent" element={<ConsentPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

@@ -22,6 +22,7 @@ jobs:
       DEPLOY_USER: u3633961
       DEPLOY_PATH: /var/www/u3633961/data/www/xn--80abmkm6an.xn--p1ai
       BACKUP_ROOT: /var/www/u3633961/data/backups
+      APP_PATH: /var/www/u3633961/data/tribeka-app
 
     steps:
       - name: Checkout
@@ -38,6 +39,12 @@ jobs:
 
       - name: Check code
         run: npm run lint
+
+      - name: Check PHP syntax
+        run: |
+          php -l public/api/request.php
+          php -l server/config.example.php
+          php -l server/purge-expired-leads.php
 
       - name: Build
         run: npm run build
@@ -58,8 +65,19 @@ jobs:
           BACKUP_PATH="${BACKUP_ROOT}/tribeka-before-${SHORT_SHA}-${GITHUB_RUN_ID}"
           ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${BACKUP_PATH}' && cp -a '${DEPLOY_PATH}/.' '${BACKUP_PATH}/'"
 
+      - name: Upload private maintenance scripts
+        run: |
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${APP_PATH}'"
+          rsync -az --delete server/ "${DEPLOY_USER}@${DEPLOY_HOST}:${APP_PATH}/"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/config.example.php'"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/purge-expired-leads.php'"
+
       - name: Upload production build
-        run: rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+        run: |
+          rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${DEPLOY_PATH}/api/request.php'"
 
       - name: Verify production
-        run: curl --fail --silent --show-error --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/ > /dev/null
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/ > /dev/null
+          curl --fail --silent --show-error --request OPTIONS --header 'Origin: https://xn--80abmkm6an.xn--p1ai' https://xn--80abmkm6an.xn--p1ai/api/request.php > /dev/null

@@ -123,6 +123,9 @@ export default function RequestForm() {
       const formData = new FormData(form)
       formData.delete('attachments')
       files.forEach((file) => formData.append('attachments', file, file.name))
+      formData.set('source_url', window.location.href)
+      formData.set('consent_version', siteConfig.personalData.consentVersion)
+      formData.set('policy_version', siteConfig.personalData.policyVersion)
 
       const response = await fetch(siteConfig.formEndpoint, {
         method: 'POST',
@@ -235,8 +238,11 @@ export default function RequestForm() {
       </div>
       <label className="mt-6 flex max-w-lg items-start gap-3 text-[10px] leading-4 text-ink/50">
         <input required aria-required="true" type="checkbox" name="privacy" className="mt-0.5 size-4 shrink-0 accent-signal" />
-        <span>Я согласен на обработку персональных данных и принимаю <Link to="/privacy" className="text-signal underline underline-offset-2">политику конфиденциальности</Link></span>
+        <span>Я даю {siteConfig.legalName} <Link to="/consent" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
       </label>
+      <p className="mt-3 max-w-lg text-[9px] leading-4 text-ink/40">
+        Порядок обработки, хранения и удаления данных описан в <Link to="/privacy" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
+      </p>
       {statusMessage && <p className={`mt-4 text-xs leading-5 ${status === 'error' ? 'text-red-700' : 'text-ink/55'}`} role="alert" aria-live="polite">{statusMessage}</p>}
       <div className="mt-7 flex justify-end">
         <button type="submit" disabled={status === 'submitting'} className="shape-button flex items-center justify-center bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
