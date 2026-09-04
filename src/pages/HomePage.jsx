@@ -9,7 +9,6 @@ export default function HomePage() {
         <img src="/hero-cnc.jpg" alt="Обработка металлической детали на станке ЧПУ" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" />
         <div className="absolute inset-0 bg-ink/55" />
         <div className="absolute inset-y-0 left-0 w-[58%] bg-[#04101f]/75" />
-        <div className="absolute inset-y-0 left-[36%] hidden w-px bg-white/10 lg:block" />
         <div className="container-page relative flex min-h-[720px] items-center py-20 lg:min-h-[calc(100vh-72px)]">
           <div className="max-w-[790px]">
             <p className="eyebrow">Комплексная металлообработка с 2012 года</p>
