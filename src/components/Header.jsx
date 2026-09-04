@@ -80,9 +80,9 @@ export default function Header() {
       </div>
       <div className={`fixed inset-x-0 bottom-0 top-[72px] z-40 min-[1000px]:hidden ${open ? 'visible delay-0' : 'invisible delay-500'} transition-[visibility] duration-0`} aria-hidden={!open}>
         <button type="button" onClick={() => setOpen(false)} className={`absolute inset-0 bg-ink/25 transition-opacity duration-500 ease-in-out ${open ? 'opacity-100' : 'opacity-0'}`} aria-label="Закрыть меню" tabIndex={open ? 0 : -1} />
-        <nav id="mobile-navigation" className={`relative max-h-full overflow-y-auto bg-[#f7f8fa] px-5 pb-6 pt-2 shadow-[0_18px_40px_rgba(7,24,46,0.16)] transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`} aria-label="Мобильная навигация">
+        <nav id="mobile-navigation" className={`relative flex max-h-full flex-col items-start overflow-y-auto bg-[#f7f8fa] px-5 pb-6 pt-2 shadow-[0_18px_40px_rgba(7,24,46,0.16)] transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`} aria-label="Мобильная навигация">
           {links.map(([label, to]) => (
-            <NavLink key={to} to={to} tabIndex={open ? 0 : -1} onClick={() => setOpen(false)} className={({ isActive }) => `block py-3.5 text-xs font-black uppercase tracking-wider transition-[color,transform] duration-500 ease-in-out ${isActive ? 'translate-x-1 text-signal' : 'text-ink hover:translate-x-1 hover:text-signal'}`}>
+            <NavLink key={to} to={to} tabIndex={open ? 0 : -1} onClick={() => setOpen(false)} className={({ isActive }) => `shape-button -ml-3 inline-flex min-h-11 items-center px-3 py-2.5 text-xs font-black uppercase tracking-wider transition-[color,transform,background-color,border-radius] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isActive ? 'translate-x-1 bg-[#e3e7ed] text-signal' : 'text-ink hover:translate-x-1 hover:bg-[#e3e7ed] hover:text-signal'}`}>
               {label}
             </NavLink>
           ))}

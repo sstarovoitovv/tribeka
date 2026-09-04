@@ -29,7 +29,7 @@ const contacts = [
 ]
 
 export default function ContactLinks({ dark = false, header = false, labeled = false, className = '' }) {
-  const dimensions = header ? 'size-12' : labeled ? 'h-[72px] w-full' : 'size-12'
+  const dimensions = header ? 'size-12' : labeled ? 'h-[56px] w-[52px]' : 'size-12'
   const surface = labeled
     ? ''
     : dark
@@ -38,7 +38,7 @@ export default function ContactLinks({ dark = false, header = false, labeled = f
   const shape = labeled
     ? ''
     : 'rounded-[5px] transition-[border-radius,background-color,border-color] duration-500 ease-in-out hover:rounded-[50%]'
-  const baseClass = `group flex shrink-0 flex-col items-center justify-center gap-1.5 ${dimensions} ${surface} ${shape}`
+  const baseClass = `group flex shrink-0 flex-col items-center justify-center justify-self-center gap-1 ${dimensions} ${surface} ${shape}`
 
   return (
     <div className={`${labeled ? 'grid w-full grid-cols-4 gap-2' : 'flex items-center justify-center gap-2'} ${className}`} aria-label="Каналы связи">

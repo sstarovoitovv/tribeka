@@ -7,7 +7,7 @@ export default function Layout() {
   const { pathname } = useLocation()
 
   return (
-    <div className="min-h-screen bg-mist pb-[calc(68px+env(safe-area-inset-bottom))] text-ink min-[1000px]:pb-0">
+    <div className="min-h-screen bg-mist pb-[calc(62px+env(safe-area-inset-bottom))] text-ink min-[1000px]:pb-0">
       <Header />
       <main key={pathname} className="page-enter"><Outlet /></main>
       <Footer />
