@@ -88,10 +88,11 @@ jobs:
 
       - name: Verify production
         run: |
-          HOME_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/)"
+          HOME_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 --dump-header /tmp/tribeka-home-headers https://xn--80abmkm6an.xn--p1ai/)"
           PRIVACY_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/privacy/)"
           CONSENT_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/consent/)"
           SITEMAP="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/sitemap.xml)"
+          grep --ignore-case --extended-regexp --quiet '^cache-control:.*no-cache' /tmp/tribeka-home-headers
           grep --fixed-strings --quiet '<title>ТРИБЕКА — комплексная металлообработка в Санкт-Петербурге</title>' <<< "$HOME_HTML"
           grep --fixed-strings --quiet '<title>Политика обработки персональных данных — ТРИБЕКА</title>' <<< "$PRIVACY_HTML"
           grep --fixed-strings --quiet '<title>Согласие на обработку персональных данных — ТРИБЕКА</title>' <<< "$CONSENT_HTML"
