@@ -238,10 +238,10 @@ export default function RequestForm() {
       </div>
       <label className="mt-6 flex max-w-lg items-start gap-3 text-[10px] leading-4 text-ink/50">
         <input required aria-required="true" type="checkbox" name="privacy" className="mt-0.5 size-4 shrink-0 accent-signal" />
-        <span>Я даю {siteConfig.legalName} <Link to="/consent" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
+        <span>Я даю {siteConfig.legalName} <Link to="/consent/" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
       </label>
       <p className="mt-3 max-w-lg text-[9px] leading-4 text-ink/40">
-        Порядок обработки, хранения и удаления данных описан в <Link to="/privacy" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
+        Порядок обработки, хранения и удаления данных описан в <Link to="/privacy/" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
       </p>
       {statusMessage && <p className={`mt-4 text-xs leading-5 ${status === 'error' ? 'text-red-700' : 'text-ink/55'}`} role="alert" aria-live="polite">{statusMessage}</p>}
       <div className="mt-7 flex justify-end">

@@ -1,0 +1,53 @@
+name: Quality
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Automated quality checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint JavaScript and JSX
+        run: npm run lint
+
+      - name: Run automated tests
+        run: npm test
+
+      - name: Check PHP syntax
+        run: |
+          php -l public/api/request.php
+          php -l server/config.example.php
+          php -l server/prune-backups.php
+          php -l server/purge-expired-leads.php
+
+      - name: Build production files and SEO pages
+        run: npm run build

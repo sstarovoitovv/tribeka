@@ -23,7 +23,7 @@ export default function ServicesPage() {
           <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
             {serviceGroups.map(({ id, number, title, short, details }) => (
               <Link
-                to={`/services/${id}`}
+                to={`/services/${id}/`}
                 id={id}
                 key={number}
                 className="group scroll-mt-28 overflow-hidden border border-ink/10 bg-mist transition-[border-color,transform] duration-500 ease-out hover:-translate-y-1 hover:border-signal/45"

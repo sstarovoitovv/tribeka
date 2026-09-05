@@ -7,9 +7,9 @@ import { siteConfig } from '../siteConfig.js'
 
 const links = [
   ['Главная', '/'],
-  ['Услуги', '/services'],
-  ['О компании', '/about'],
-  ['Контакты', '/contacts'],
+  ['Услуги', '/services/'],
+  ['О компании', '/about/'],
+  ['Контакты', '/contacts/'],
 ]
 
 function NavItem({ label, to, onClick }) {

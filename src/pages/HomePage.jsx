@@ -19,10 +19,10 @@ export default function HomePage() {
               Работаем по принципу «одного окна»: берём на себя весь цикл, контролируем качество на каждом этапе и выдаём готовое изделие под ключ
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link to="/contacts#request" className="shape-button flex items-center justify-center bg-signal px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:bg-[#28548f]">
+              <Link to="/contacts/#request" className="shape-button flex items-center justify-center bg-signal px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:bg-[#28548f]">
                 Рассчитать стоимость
               </Link>
-              <Link to="/services" className="shape-button flex items-center justify-center gap-4 border border-white/25 px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:border-white hover:bg-white/5">
+              <Link to="/services/" className="shape-button flex items-center justify-center gap-4 border border-white/25 px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:border-white hover:bg-white/5">
                 Наши возможности
               </Link>
             </div>
@@ -39,13 +39,13 @@ export default function HomePage() {
             </div>
             <div className="max-w-md">
               <p className="text-sm leading-6 text-ink/55">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
-              <Link to="/services" className="mt-5 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-signal">Все услуги <span aria-hidden="true">→</span></Link>
+              <Link to="/services/" className="mt-5 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-signal">Все услуги <span aria-hidden="true">→</span></Link>
             </div>
           </div>
 
           <div className="mt-12 grid border-l border-t border-ink/15 md:grid-cols-2 xl:grid-cols-4">
             {serviceGroups.slice(0, 4).map(({ id, number, title, short }) => (
-              <Link to={`/services/${id}`} key={number} className="group relative overflow-hidden border-b border-r border-ink/15 bg-mist p-7 transition duration-500 hover:bg-graphite hover:text-white sm:p-8">
+              <Link to={`/services/${id}/`} key={number} className="group relative overflow-hidden border-b border-r border-ink/15 bg-mist p-7 transition duration-500 hover:bg-graphite hover:text-white sm:p-8">
                 <div className="flex items-start justify-between">
                   <span className="text-[10px] font-bold tracking-[0.2em] text-ink/35 group-hover:text-white/35">/{number}</span>
                   <span className="text-4xl font-black text-signal/25">{number}</span>
@@ -74,7 +74,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Link to="/about" className="shape-button mt-8 inline-flex items-center gap-4 border border-white/25 px-6 py-4 text-[10px] font-bold uppercase tracking-widest hover:border-white hover:bg-white/5">Подробнее о компании <span aria-hidden="true">→</span></Link>
+            <Link to="/about/" className="shape-button mt-8 inline-flex items-center gap-4 border border-white/25 px-6 py-4 text-[10px] font-bold uppercase tracking-widest hover:border-white hover:bg-white/5">Подробнее о компании <span aria-hidden="true">→</span></Link>
           </div>
           <div className="relative">
             <div className="relative aspect-[4/3] overflow-hidden border border-white/10 bg-white">

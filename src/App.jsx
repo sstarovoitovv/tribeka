@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
+import SeoMetadata from './components/SeoMetadata.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactsPage from './pages/ContactsPage.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <SeoMetadata />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />

@@ -5,18 +5,6 @@ export default function ScrollToTop() {
   const { pathname, hash } = useLocation()
 
   useEffect(() => {
-    const titles = {
-      '/': 'ТРИБЕКА — комплексная металлообработка',
-      '/about': 'О компании — ТРИБЕКА',
-      '/services': 'Услуги металлообработки — ТРИБЕКА',
-      '/contacts': 'Контакты — ТРИБЕКА',
-      '/privacy': 'Политика обработки персональных данных — ТРИБЕКА',
-      '/consent': 'Согласие на обработку персональных данных — ТРИБЕКА',
-    }
-    document.title = pathname.startsWith('/services/')
-      ? 'Примеры работ по услуге — ТРИБЕКА'
-      : titles[pathname] || 'Страница не найдена — ТРИБЕКА'
-
     if (hash) {
       window.setTimeout(() => document.querySelector(hash)?.scrollIntoView(), 0)
       return

@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom'
 
 const dashboardItems = [
   { label: 'Главная', to: '/', icon: FiHome },
-  { label: 'Услуги', to: '/services', icon: FiGrid },
-  { label: 'О компании', to: '/about', icon: FiInfo },
-  { label: 'Контакты', to: '/contacts', icon: FiMapPin },
+  { label: 'Услуги', to: '/services/', icon: FiGrid },
+  { label: 'О компании', to: '/about/', icon: FiInfo },
+  { label: 'Контакты', to: '/contacts/', icon: FiMapPin },
 ]
 
 export default function MobileDashboard() {

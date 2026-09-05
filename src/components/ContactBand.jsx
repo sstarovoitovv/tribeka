@@ -8,7 +8,7 @@ export default function ContactBand() {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">Есть чертёж или техническое задание?</p>
           <h2 className="mt-3 text-2xl font-black uppercase tracking-tight sm:text-4xl">Рассчитаем стоимость вашего проекта</h2>
         </div>
-        <Link to="/contacts#request" className="shape-button flex shrink-0 items-center justify-center bg-white px-7 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-signal hover:bg-ink hover:text-white">
+        <Link to="/contacts/#request" className="shape-button flex shrink-0 items-center justify-center bg-white px-7 py-5 text-[11px] font-bold uppercase tracking-[0.15em] text-signal hover:bg-ink hover:text-white">
           Отправить заявку
         </Link>
       </div>

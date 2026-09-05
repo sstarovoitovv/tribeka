@@ -24,7 +24,7 @@ export default function ServiceDetailPage() {
 
       <section className="bg-[#f7f7f5] py-16 sm:py-20">
         <div className="container-page">
-          <Link to="/services" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-signal transition-colors hover:text-ink">
+          <Link to="/services/" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-signal transition-colors hover:text-ink">
             <FiArrowLeft size={14} /> Все услуги
           </Link>
 

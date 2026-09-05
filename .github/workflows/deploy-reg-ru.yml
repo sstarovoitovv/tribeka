@@ -23,6 +23,7 @@ jobs:
       DEPLOY_PATH: /var/www/u3633961/data/www/xn--80abmkm6an.xn--p1ai
       BACKUP_ROOT: /var/www/u3633961/data/backups
       APP_PATH: /var/www/u3633961/data/tribeka-app
+      BACKUPS_TO_KEEP: 10
 
     steps:
       - name: Checkout
@@ -40,10 +41,14 @@ jobs:
       - name: Check code
         run: npm run lint
 
+      - name: Run automated tests
+        run: npm test
+
       - name: Check PHP syntax
         run: |
           php -l public/api/request.php
           php -l server/config.example.php
+          php -l server/prune-backups.php
           php -l server/purge-expired-leads.php
 
       - name: Build
@@ -59,18 +64,22 @@ jobs:
           printf '%s\n' '37.140.192.207 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSPBaPHv9z7U4pE2aIwKFawMMTCEUWJee23Jiry4h7h' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
+      - name: Upload private maintenance scripts
+        run: |
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${APP_PATH}'"
+          rsync -az --delete server/ "${DEPLOY_USER}@${DEPLOY_HOST}:${APP_PATH}/"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/config.example.php'"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/prune-backups.php'"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/purge-expired-leads.php'"
+
       - name: Back up current production
         run: |
           SHORT_SHA="${GITHUB_SHA:0:7}"
           BACKUP_PATH="${BACKUP_ROOT}/tribeka-before-${SHORT_SHA}-${GITHUB_RUN_ID}"
           ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${BACKUP_PATH}' && cp -a '${DEPLOY_PATH}/.' '${BACKUP_PATH}/'"
 
-      - name: Upload private maintenance scripts
-        run: |
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${APP_PATH}'"
-          rsync -az --delete server/ "${DEPLOY_USER}@${DEPLOY_HOST}:${APP_PATH}/"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/config.example.php'"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/purge-expired-leads.php'"
+      - name: Keep the latest production backups
+        run: ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php '${APP_PATH}/prune-backups.php' --keep='${BACKUPS_TO_KEEP}'"
 
       - name: Upload production build
         run: |
@@ -79,5 +88,12 @@ jobs:
 
       - name: Verify production
         run: |
-          curl --fail --silent --show-error --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/ > /dev/null
+          HOME_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/)"
+          PRIVACY_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/privacy/)"
+          CONSENT_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/consent/)"
+          SITEMAP="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/sitemap.xml)"
+          grep --fixed-strings --quiet '<title>ТРИБЕКА — комплексная металлообработка в Санкт-Петербурге</title>' <<< "$HOME_HTML"
+          grep --fixed-strings --quiet '<title>Политика обработки персональных данных — ТРИБЕКА</title>' <<< "$PRIVACY_HTML"
+          grep --fixed-strings --quiet '<title>Согласие на обработку персональных данных — ТРИБЕКА</title>' <<< "$CONSENT_HTML"
+          grep --fixed-strings --quiet '<loc>https://xn--80abmkm6an.xn--p1ai/about/</loc>' <<< "$SITEMAP"
           curl --fail --silent --show-error --request OPTIONS --header 'Origin: https://xn--80abmkm6an.xn--p1ai' https://xn--80abmkm6an.xn--p1ai/api/request.php > /dev/null

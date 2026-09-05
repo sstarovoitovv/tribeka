@@ -20,11 +20,11 @@ export default function Footer() {
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">Разделы</p>
             <div className="mt-4 grid gap-3 text-xs font-bold text-white/65">
-              <Link to="/about" className="hover:text-white">О компании</Link>
-              <Link to="/services" className="hover:text-white">Услуги</Link>
-              <Link to="/contacts" className="hover:text-white">Контакты</Link>
-              <Link to="/privacy" className="hover:text-white">Обработка данных</Link>
-              <Link to="/consent" className="hover:text-white">Согласие</Link>
+              <Link to="/about/" className="hover:text-white">О компании</Link>
+              <Link to="/services/" className="hover:text-white">Услуги</Link>
+              <Link to="/contacts/" className="hover:text-white">Контакты</Link>
+              <Link to="/privacy/" className="hover:text-white">Обработка данных</Link>
+              <Link to="/consent/" className="hover:text-white">Согласие</Link>
             </div>
           </div>
           <div className="flex flex-col items-center text-center">
