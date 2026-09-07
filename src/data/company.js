@@ -19,6 +19,11 @@ const serviceSlots = ['01', '02', '03', '04', '05', '06', '07', '08']
 // не меняя разметку карточек и страниц с примерами работ.
 export const serviceGroups = serviceSlots.map((number) => ({
   id: `service-${number}`,
+  // Keep temporary URLs until actual service names are approved. Then set a
+  // descriptive slug and retain previous slugs in aliases for permanent redirects.
+  slug: `service-${number}`,
+  aliases: [],
+  placeholder: true,
   number,
   title: `Название услуги ${number}`,
   short: 'Краткий комментарий об услуге и результате для заказчика.',

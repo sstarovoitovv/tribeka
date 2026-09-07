@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { FiFileText, FiPaperclip, FiX } from 'react-icons/fi'
 import { parsePhoneNumberWithError } from 'libphonenumber-js/max'
 import { Link } from 'react-router-dom'
+import { trackEvent } from '../analytics.js'
 import { siteConfig } from '../siteConfig.js'
 
 const MAX_FILES = 5
@@ -24,6 +25,7 @@ function resizeMessageField(event) {
 
 export default function RequestForm() {
   const fileInput = useRef(null)
+  const started = useRef(false)
   const [status, setStatus] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
   const [files, setFiles] = useState([])
@@ -122,8 +124,9 @@ export default function RequestForm() {
     try {
       const formData = new FormData(form)
       formData.delete('attachments')
-      files.forEach((file) => formData.append('attachments', file, file.name))
-      formData.set('source_url', window.location.href)
+      formData.delete('attachments[]')
+      files.forEach((file) => formData.append('attachments[]', file, file.name))
+      formData.set('source_url', window.location.origin + window.location.pathname)
       formData.set('consent_version', siteConfig.personalData.consentVersion)
       formData.set('policy_version', siteConfig.personalData.policyVersion)
 
@@ -133,14 +136,19 @@ export default function RequestForm() {
         headers: { Accept: 'application/json' },
       })
 
-      if (!response.ok) throw new Error('Request failed')
+      const result = await response.json().catch(() => null)
+      if (!response.ok || result?.ok !== true) {
+        const detail = result?.error
+        throw new Error(typeof detail === 'string' && detail.length <= 300 ? detail : 'Не удалось отправить заявку. Попробуйте ещё раз.')
+      }
+      trackEvent('form_submit')
 
       form.reset()
       setFiles([])
       setStatus('sent')
-    } catch {
+    } catch (error) {
       setStatus('error')
-      setStatusMessage(`Не удалось отправить заявку. Попробуйте ещё раз или напишите на ${siteConfig.email}.`)
+      setStatusMessage(error.message || `Не удалось отправить заявку. Напишите на ${siteConfig.email}.`)
     }
   }
 
@@ -156,17 +164,20 @@ export default function RequestForm() {
   }
 
   return (
-    <form onSubmit={submit} encType="multipart/form-data" className="bg-white p-7 sm:p-9">
+    <form method="post" action={siteConfig.formEndpoint} onFocus={() => { if (!started.current) { trackEvent('form_start'); started.current = true } }} onSubmit={submit} encType="multipart/form-data" className="bg-white p-7 sm:p-9">
+      <input type="hidden" name="consent_version" value={siteConfig.personalData.consentVersion} />
+      <input type="hidden" name="policy_version" value={siteConfig.personalData.policyVersion} />
+      <noscript><p className="mb-4 text-sm leading-6">Для отправки заявки с вложениями включите JavaScript или свяжитесь с нами по телефону.</p></noscript>
       <label className="absolute -left-[10000px]" aria-hidden="true">
         Не заполняйте это поле
         <input name="website" tabIndex="-1" autoComplete="off" />
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-widest text-ink/45">
+        <label className="grid gap-1 text-[11px] font-bold uppercase tracking-wider text-ink/70">
           Ваше имя
-          <input required name="name" placeholder="Александр" className="border-b border-ink/20 bg-transparent pb-1 pt-2 text-sm font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/25 focus:border-signal" />
+          <input required maxLength={120} autoComplete="name" name="name" placeholder="Александр" className="border-b border-ink/20 bg-transparent pb-1 pt-2 text-sm font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/25 focus:border-signal" />
         </label>
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-widest text-ink/45">
+        <label className="grid gap-1 text-[11px] font-bold uppercase tracking-wider text-ink/70">
           Телефон
           <input
             required
@@ -183,10 +194,11 @@ export default function RequestForm() {
           />
           {phoneError && <span id="request-phone-error" className="normal-case tracking-normal text-red-700" aria-live="polite">{phoneError}</span>}
         </label>
-        <label className="grid gap-1 text-[10px] font-bold uppercase tracking-widest text-ink/45 sm:col-span-2">
+        <label className="grid gap-1 text-[11px] font-bold uppercase tracking-wider text-ink/70 sm:col-span-2">
           Кратко о задаче
           <textarea
             name="message"
+            maxLength={5000}
             rows="1"
             placeholder="Что нужно изготовить, материал, объём партии"
             onInput={resizeMessageField}
@@ -194,11 +206,11 @@ export default function RequestForm() {
           />
         </label>
         <div className="sm:col-span-2">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ink/45">Чертежи и файлы</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-ink/70">Чертежи и файлы</p>
           <input
             ref={fileInput}
             id="request-files"
-            name="attachments"
+            name="attachments[]"
             type="file"
             multiple
             accept={acceptedFiles}
@@ -236,11 +248,11 @@ export default function RequestForm() {
           )}
         </div>
       </div>
-      <label className="mt-6 flex max-w-lg items-start gap-3 text-[10px] leading-4 text-ink/50">
+      <label className="mt-6 flex max-w-lg items-start gap-3 text-xs leading-5 text-ink/70">
         <input required aria-required="true" type="checkbox" name="privacy" className="mt-0.5 size-4 shrink-0 accent-signal" />
         <span>Я даю {siteConfig.legalName} <Link to="/consent/" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
       </label>
-      <p className="mt-3 max-w-lg text-[9px] leading-4 text-ink/40">
+      <p className="mt-3 max-w-lg text-[11px] leading-5 text-ink/65">
         Порядок обработки, хранения и удаления данных описан в <Link to="/privacy/" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
       </p>
       {statusMessage && <p className={`mt-4 text-xs leading-5 ${status === 'error' ? 'text-red-700' : 'text-ink/55'}`} role="alert" aria-live="polite">{statusMessage}</p>}

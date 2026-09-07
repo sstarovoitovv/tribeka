@@ -2,9 +2,13 @@ name: Deploy production to REG.RU
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      rollback_id:
+        description: 'Existing release id to restore (empty builds a new release)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -15,46 +19,43 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       DEPLOY_HOST: 37.140.192.207
       DEPLOY_USER: u3633961
       DEPLOY_PATH: /var/www/u3633961/data/www/xn--80abmkm6an.xn--p1ai
-      BACKUP_ROOT: /var/www/u3633961/data/backups
       APP_PATH: /var/www/u3633961/data/tribeka-app
-      BACKUPS_TO_KEEP: 10
+      PHP_BIN: /opt/php/8.3/bin/php
+      SITE_URL: https://xn--80abmkm6an.xn--p1ai
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check code
-        run: npm run lint
-
-      - name: Run automated tests
-        run: npm test
-
-      - name: Check PHP syntax
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, fileinfo, pdo_mysql, zip
+          coverage: none
+      - run: npm ci
+      - run: npm run lint && npm test && npm run test:php && npm run test:deploy
+      - name: Check every PHP file
+        run: rg --files public/api server tests/php -g '*.php' -0 | xargs -0 -n1 php -l
+      - run: npm run build
+      - run: npm run test:ssg
+      - name: Verify real Apache HTTP behavior
         run: |
-          php -l public/api/request.php
-          php -l server/config.example.php
-          php -l server/prune-backups.php
-          php -l server/purge-expired-leads.php
+          sudo apt-get update -qq
+          sudo apt-get install -y apache2
+          node scripts/test-apache.mjs
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
 
-      - name: Build
-        run: npm run build
-
-      - name: Configure SSH
+      - name: Configure pinned SSH connection
         env:
           SSH_PRIVATE_KEY: ${{ secrets.REG_RU_SSH_KEY }}
         run: |
@@ -64,37 +65,35 @@ jobs:
           printf '%s\n' '37.140.192.207 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSPBaPHv9z7U4pE2aIwKFawMMTCEUWJee23Jiry4h7h' > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Upload private maintenance scripts
+      - name: Verify one-time atomic layout before upload
         run: |
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${APP_PATH}'"
-          rsync -az --delete server/ "${DEPLOY_USER}@${DEPLOY_HOST}:${APP_PATH}/"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/config.example.php'"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/prune-backups.php'"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${APP_PATH}/purge-expired-leads.php'"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "test -L '${APP_PATH}/current' && test -L '${DEPLOY_PATH}'" || {
+            echo 'Initialize the atomic layout using docs/deployment.md. Live directories are never overwritten.' >&2
+            exit 1
+          }
 
-      - name: Back up current production
+      - name: Upload complete isolated release
+        if: inputs.rollback_id == ''
         run: |
-          SHORT_SHA="${GITHUB_SHA:0:7}"
-          BACKUP_PATH="${BACKUP_ROOT}/tribeka-before-${SHORT_SHA}-${GITHUB_RUN_ID}"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${BACKUP_PATH}' && cp -a '${DEPLOY_PATH}/.' '${BACKUP_PATH}/'"
+          RELEASE_ID="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          export RELEASE_ID
+          node -e 'require("fs").writeFileSync("dist/release.json", JSON.stringify({release:process.env.RELEASE_ID}) + "\n")'
+          STAGE_PATH="${APP_PATH}/releases/.incoming-${RELEASE_ID}"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "test ! -e '${STAGE_PATH}' && test ! -e '${APP_PATH}/releases/${RELEASE_ID}' && mkdir -p '${STAGE_PATH}/public' '${STAGE_PATH}/server'"
+          rsync -az --chmod=D755,F644 dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${STAGE_PATH}/public/"
+          rsync -az --chmod=D700,F600 server/ "${DEPLOY_USER}@${DEPLOY_HOST}:${STAGE_PATH}/server/"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mv '${STAGE_PATH}' '${APP_PATH}/releases/${RELEASE_ID}'"
+          printf 'RELEASE_ID=%s\n' "$RELEASE_ID" >> "$GITHUB_ENV"
 
-      - name: Keep the latest production backups
-        run: ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php '${APP_PATH}/prune-backups.php' --keep='${BACKUPS_TO_KEEP}'"
-
-      - name: Upload production build
+      - name: Consistent backup, atomic activation and automatic rollback on health failure
+        if: inputs.rollback_id == ''
         run: |
-          rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "/opt/php/8.3/bin/php -l '${DEPLOY_PATH}/api/request.php'"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "'${PHP_BIN}' '${APP_PATH}/releases/${RELEASE_ID}/server/deploy-release.php' --app-path='${APP_PATH}' --docroot='${DEPLOY_PATH}' --release-id='${RELEASE_ID}' --health-url='${SITE_URL}'"
 
-      - name: Verify production
+      - name: Restore a previous release with the same health checks
+        if: inputs.rollback_id != ''
+        env:
+          ROLLBACK_ID: ${{ inputs.rollback_id }}
         run: |
-          HOME_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 --dump-header /tmp/tribeka-home-headers https://xn--80abmkm6an.xn--p1ai/)"
-          PRIVACY_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/privacy/)"
-          CONSENT_HTML="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/consent/)"
-          SITEMAP="$(curl --fail --silent --show-error --location --retry 5 --retry-delay 3 https://xn--80abmkm6an.xn--p1ai/sitemap.xml)"
-          grep --ignore-case --extended-regexp --quiet '^cache-control:.*no-cache' /tmp/tribeka-home-headers
-          grep --fixed-strings --quiet '<title>ТРИБЕКА — комплексная металлообработка в Санкт-Петербурге</title>' <<< "$HOME_HTML"
-          grep --fixed-strings --quiet '<title>Политика обработки персональных данных — ТРИБЕКА</title>' <<< "$PRIVACY_HTML"
-          grep --fixed-strings --quiet '<title>Согласие на обработку персональных данных — ТРИБЕКА</title>' <<< "$CONSENT_HTML"
-          grep --fixed-strings --quiet '<loc>https://xn--80abmkm6an.xn--p1ai/about/</loc>' <<< "$SITEMAP"
-          curl --fail --silent --show-error --request OPTIONS --header 'Origin: https://xn--80abmkm6an.xn--p1ai' https://xn--80abmkm6an.xn--p1ai/api/request.php > /dev/null
+          [[ "$ROLLBACK_ID" =~ ^[a-zA-Z0-9][a-zA-Z0-9-]{2,79}$ ]] || exit 1
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "'${PHP_BIN}' '${APP_PATH}/current/server/deploy-release.php' --app-path='${APP_PATH}' --docroot='${DEPLOY_PATH}' --rollback-id='${ROLLBACK_ID}' --health-url='${SITE_URL}'"

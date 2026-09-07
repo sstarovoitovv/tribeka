@@ -10,9 +10,17 @@
     "preview": "vite preview",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:ssg": "node scripts/verify-prerender.mjs",
+    "test:php": "php tests/php/run.php && php tests/php/analytics.php",
+    "test:deploy": "php tests/php/deployment.php",
+    "preview:production": "node scripts/serve-preview.mjs",
+    "sitemap:submit": "node scripts/submit-sitemap.mjs",
+    "test:apache": "node scripts/test-apache.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "libphonenumber-js": "^1.13.12",
@@ -26,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.63.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",

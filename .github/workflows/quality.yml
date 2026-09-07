@@ -2,13 +2,9 @@ name: Quality
 
 on:
   push:
-    branches:
-      - develop
-      - main
+    branches: [develop, main]
   pull_request:
-    branches:
-      - develop
-      - main
+    branches: [develop, main]
 
 permissions:
   contents: read
@@ -21,33 +17,42 @@ jobs:
   quality:
     name: Automated quality checks
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 20
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint JavaScript and JSX
-        run: npm run lint
-
-      - name: Run automated tests
-        run: npm test
-
-      - name: Check PHP syntax
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, fileinfo, pdo_mysql, zip
+          coverage: none
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - name: Check every PHP file
+        run: rg --files public/api server tests/php -g '*.php' -0 | xargs -0 -n1 php -l
+      - run: npm run test:php
+      - run: npm run test:deploy
+      - run: npm run build
+      - run: npm run test:ssg
+      - name: Verify real Apache HTTP behavior
         run: |
-          php -l public/api/request.php
-          php -l server/config.example.php
-          php -l server/prune-backups.php
-          php -l server/purge-expired-leads.php
-
-      - name: Build production files and SEO pages
-        run: npm run build
+          sudo apt-get update -qq
+          sudo apt-get install -y apache2
+          node scripts/test-apache.mjs
+      - name: Verify Vercel routing artifact
+        run: node scripts/prepare-vercel.mjs
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: |
+            .work/test-results/
+            .work/playwright-report/
+          retention-days: 7
+          include-hidden-files: true

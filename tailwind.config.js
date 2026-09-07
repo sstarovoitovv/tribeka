@@ -11,7 +11,7 @@ export default {
         mist: '#f1f4f8',
       },
       fontFamily: {
-        sans: ['Arial', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Manrope Variable', 'Arial', 'sans-serif'],
       },
       boxShadow: {
         glow: '0 16px 60px rgba(53, 105, 173, 0.24)',
