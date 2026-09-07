@@ -32,7 +32,7 @@ HTTP-проверка читает новый `release.json`, содержимо
 
 ## Первый переход с физического каталога
 
-**До выполнения этого раздела новый workflow намеренно остановится.** Существующий physical docroot нельзя заменить символьной ссылкой стандартным атомарным `rename` без подготовки хостинга. В этом изменении миграция и публикация на реальном сервере не выполнялись.
+**На основном сервере этот переход выполнен 07.09.2026; повторять его не нужно.** Фактический релиз и проверки описаны в [production-status.md](production-status.md). Раздел ниже остаётся инструкцией для нового сервера: существующий physical docroot нельзя заменить символьной ссылкой стандартным атомарным `rename` без подготовки хостинга.
 
 1. В ISPmanager проверить, что Apache разрешает `FollowSymLinks`/`SymLinksIfOwnerMatch`, `.htaccess` (`FileInfo`, `Options`, `Indexes`, `AuthConfig`) и `mod_rewrite`/`mod_headers`. Каталоги-предки публичных файлов должны разрешать обход веб-серверу; закрытые `server/` и `tribeka-private/` — только владельцу. `www` должен иметь DNS-запись, привязку к этому же vhost и действующий TLS-сертификат: HTTPS-редирект происходит **после** TLS handshake.
 2. Проверить закрытый config по `server/config.example.php`. Путь по умолчанию `/var/www/u3633961/data/tribeka-private/config.php`; при другом расположении один и тот же `TRIBEKA_PRIVATE_CONFIG` требуется PHP-FPM и CLI. Вписать точные preview origins. Указать одинаковый `maintenance_lock` во всех процессах. Проверить `mysqldump`, `tar`, `curl`, место под БД + архивы + два релиза. PHP CLI: `/opt/php/8.3/bin/php`.
@@ -96,7 +96,7 @@ fi
 ```cron
 15 2 * * * /opt/php/8.3/bin/php /var/www/u3633961/data/tribeka-app/current/server/backup-data.php --prune-only
 30 2 * * * /opt/php/8.3/bin/php /var/www/u3633961/data/tribeka-app/current/server/backup-data.php
-30 3 * * * /opt/php/8.3/bin/php /var/www/u3633961/data/tribeka-app/current/server/purge-expired-leads.php
+23 3 * * * /opt/php/8.3/bin/php /var/www/u3633961/data/tribeka-app/current/server/purge-expired-leads.php
 ```
 
 Старый `prune-backups.php` обслуживает только прежние копии **кода** `tribeka-before-*`; их нельзя считать резервными копиями лидов. Локальная копия на REG.RU защищает от неудачного релиза, но не от потери сервера. Внешний backup требует выбранного пользователем закрытого хранилища, шифрования, учётных данных и той же ротации; внешний перенос в этом изменении не настроен.
