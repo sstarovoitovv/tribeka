@@ -7,7 +7,9 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 
-$configPath = getenv('TRIBEKA_PRIVATE_CONFIG') ?: '/var/www/u3633961/data/tribeka-private/config.php';
+require_once dirname(__DIR__) . '/public/api/_lib/request-security.php';
+
+$configPath = \Tribeka\Security\privateConfigPath();
 if (!is_file($configPath)) {
     fwrite(STDERR, "Private configuration was not found.\n");
     exit(1);
@@ -17,6 +19,23 @@ $config = require $configPath;
 $uploadRoot = rtrim((string) ($config['upload_dir'] ?? ''), '/');
 if ($uploadRoot === '' || !is_dir($uploadRoot)) {
     fwrite(STDERR, "Upload directory is unavailable.\n");
+    exit(1);
+}
+
+// A backup takes LOCK_EX on the same stable file and snapshots the database
+// together with uploads. Never delete/replace this lock inode during deploys.
+try {
+    $uploadRoot = \Tribeka\Security\ensurePrivateDirectory($uploadRoot);
+    $maintenanceLock = \Tribeka\Security\acquireMaintenanceLock(
+        (string) ($config['maintenance_lock'] ?? dirname($configPath) . '/maintenance.lock'),
+        10.0
+    );
+    if ($maintenanceLock === false) {
+        fwrite(STDERR, "Backup is active; retention cleanup skipped.\n");
+        exit(1);
+    }
+} catch (Throwable $exception) {
+    fwrite(STDERR, "Unable to acquire maintenance lock: " . $exception->getMessage() . "\n");
     exit(1);
 }
 
@@ -62,3 +81,5 @@ foreach ($expiredLeads as $lead) {
 }
 
 fwrite(STDOUT, sprintf("%s deleted=%d\n", gmdate('c'), $deleted));
+flock($maintenanceLock, LOCK_UN);
+fclose($maintenanceLock);

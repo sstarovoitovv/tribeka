@@ -8,9 +8,9 @@ export const siteConfig = {
   whatsappUrl: 'https://wa.me/79062603060?text=Здравствуйте%21%20Хочу%20обсудить%20заказ%20на%20металлообработку.',
   telegramUrl: 'https://t.me/+79062603060?text=Здравствуйте%21%20Хочу%20обсудить%20заказ%20на%20металлообработку.&profile',
   maxUrl: 'https://max.ru/u/f9LHodD0cOJtECLCLcosW-YWZLd_mKhIqn1nk8PQPAiWzjdeCTDls_dV50E',
-  formEndpoint: import.meta.env.VITE_FORM_ENDPOINT || 'https://xn--80abmkm6an.xn--p1ai/api/request.php',
+  formEndpoint: import.meta.env?.VITE_FORM_ENDPOINT || 'https://xn--80abmkm6an.xn--p1ai/api/request.php',
   personalData: {
-    policyVersion: '2026-09-04',
+    policyVersion: '2026-09-07',
     consentVersion: '2026-09-04',
     leadRetentionDays: 365,
   },

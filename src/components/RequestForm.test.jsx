@@ -20,7 +20,7 @@ afterEach(() => {
 describe('RequestForm', () => {
   it('sends validated fields, document versions and an attachment', async () => {
     const user = userEvent.setup()
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true })
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) })
     vi.stubGlobal('fetch', fetchMock)
     renderForm()
 
@@ -42,12 +42,12 @@ describe('RequestForm', () => {
     expect(options.body.get('message')).toBe('Нужна партия деталей')
     expect(options.body.get('consent_version')).toBe(siteConfig.personalData.consentVersion)
     expect(options.body.get('policy_version')).toBe(siteConfig.personalData.policyVersion)
-    expect(options.body.get('attachments')).toBeInstanceOf(File)
+    expect(options.body.get('attachments[]')).toBeInstanceOf(File)
   })
 
   it('keeps the form visible and explains a server failure', async () => {
     const user = userEvent.setup()
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }))
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, json: async () => ({ error: "Не удалось отправить заявку" }) }))
     renderForm()
 
     await user.type(screen.getByLabelText(/ваше имя/i), 'Мария')

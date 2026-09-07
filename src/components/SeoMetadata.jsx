@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { getSeoMetadata } from '../seoConfig.js'
+import { getSeoMetadata, getStructuredData, serializeStructuredData } from '../seoConfig.js'
 
 function setMeta(attribute, key, content) {
   let element = document.head.querySelector(`meta[${attribute}="${key}"]`)
@@ -27,6 +27,15 @@ export default function SeoMetadata() {
 
   useEffect(() => {
     const metadata = getSeoMetadata(pathname)
+
+    let structuredData = document.head.querySelector('script[data-seo-jsonld]')
+    if (!structuredData) {
+      structuredData = document.createElement('script')
+      structuredData.type = 'application/ld+json'
+      structuredData.dataset.seoJsonld = ''
+      document.head.append(structuredData)
+    }
+    structuredData.textContent = serializeStructuredData(getStructuredData(pathname))
 
     document.title = metadata.title
     setCanonical(metadata.canonical)

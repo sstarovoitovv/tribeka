@@ -2,6 +2,7 @@ import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import ContactLinks from './ContactLinks.jsx'
+import Analytics from './Analytics.jsx'
 import { siteConfig } from '../siteConfig.js'
 
 export default function Footer() {
@@ -60,6 +61,7 @@ export default function Footer() {
           </div>
         </div>
 
+        <Analytics />
         <div className="flex flex-col gap-3 pt-6 text-[10px] uppercase tracking-widest text-white/25 sm:flex-row sm:justify-between">
           <p>© {new Date().getFullYear()} {siteConfig.legalName}. Все права защищены.</p>
           <p className="flex flex-wrap gap-x-5 gap-y-1"><span>ОГРН {siteConfig.ogrn}</span><span>ИНН {siteConfig.inn}</span></p>

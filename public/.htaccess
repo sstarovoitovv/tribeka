@@ -1,21 +1,38 @@
-# Force HTTPS without redirect loops behind the hosting reverse proxy.
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
 RewriteEngine On
 
-# Always revalidate HTML so a release cannot keep pointing at an outdated hashed bundle.
+# Canonical production host; never construct redirects from an untrusted Host.
+RewriteCond %{HTTP_HOST} ^www\.xn--80abmkm6an\.xn--p1ai(?::[0-9]+)?$ [NC]
+RewriteRule ^ https://xn--80abmkm6an.xn--p1ai%{REQUEST_URI} [R=301,L,NE]
+RewriteCond %{HTTP_HOST} ^xn--80abmkm6an\.xn--p1ai(?::[0-9]+)?$ [NC]
+RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://xn--80abmkm6an.xn--p1ai%{REQUEST_URI} [R=301,L,NE]
+
+# GENERATED_SERVICE_REDIRECTS
+
+# Internal libraries and dotfiles must never become public entry points.
+RewriteRule ^(?:api/_lib(?:/|$)|\.(?!well-known(?:/|$))) - [R=404,L]
+<FilesMatch "(?i)(?:\.(?:bak|sql|log|ini|env)|~)$">
+  Require all denied
+</FilesMatch>
+
 <IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://xn--80abmkm6an.xn--p1ai; frame-src https://yandex.ru https://yandex.com; form-action 'self' https://xn--80abmkm6an.xn--p1ai; upgrade-insecure-requests"
   <FilesMatch "\.html$">
     Header always set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
 
-RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
-RewriteCond %{HTTPS} !=on
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
-# Serve existing files and directories as usual.
+# Real generated files/directories are served normally. No SPA success fallback.
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Let React Router handle client-side routes.
-RewriteRule ^ index.html [L]
+RewriteRule ^ - [END]
+RewriteRule ^ - [R=404,L]

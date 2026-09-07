@@ -17,7 +17,7 @@ export default function MobileDashboard() {
             key={to}
             to={to}
             end={to === '/'}
-            className={({ isActive }) => `group relative flex min-w-0 flex-col items-center justify-center gap-0.5 text-[8px] font-black uppercase tracking-[0.08em] transition-colors duration-500 ease-in-out ${isActive ? 'text-signal' : 'text-ink/50 hover:text-signal'}`}
+            className={({ isActive }) => `group relative flex min-w-0 flex-col items-center justify-center gap-0.5 text-[9px] font-extrabold uppercase tracking-[0.025em] transition-colors duration-500 ease-in-out ${isActive ? 'text-signal' : 'text-ink/50 hover:text-signal'}`}
           >
             {({ isActive }) => (
               <>
