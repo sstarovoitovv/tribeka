@@ -1,18 +1,20 @@
 import { FiArrowLeft } from 'react-icons/fi'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import ContactBand from '../components/ContactBand.jsx'
 import MediaPlaceholder from '../components/MediaPlaceholder.jsx'
 import PageHero from '../components/PageHero.jsx'
-import { serviceGroups } from '../data/company.js'
+import { findService, getServicePath } from '../serviceRoutes.js'
 import NotFoundPage from './NotFoundPage.jsx'
 
 const workExamples = ['01', '02', '03']
 
 export default function ServiceDetailPage() {
-  const { serviceId } = useParams()
-  const service = serviceGroups.find(({ id }) => id === serviceId)
+  const { serviceSlug } = useParams()
+  const { search, hash } = useLocation()
+  const service = findService(serviceSlug)
 
   if (!service) return <NotFoundPage />
+  if (serviceSlug !== service.slug) return <Navigate to={`${getServicePath(service)}${search}${hash}`} replace />
 
   return (
     <>

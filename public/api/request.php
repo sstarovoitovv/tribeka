@@ -2,38 +2,36 @@
 
 declare(strict_types=1);
 
-const MAX_FILES = 5;
-const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
-const CONSENT_VERSION = '2026-09-04';
-const POLICY_VERSION = '2026-09-04';
+require_once __DIR__ . '/_lib/request-security.php';
+$releaseMarker = __DIR__ . '/../release.json';
+if (is_file($releaseMarker)) {
+    $release = json_decode((string) file_get_contents($releaseMarker), true);
+    if (is_string($release['release'] ?? null) && preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{2,79}$/D', $release['release'])) {
+        header('X-Tribeka-Release: ' . $release['release']);
+    }
+}
+
+use Tribeka\Security\ValidationException;
+use function Tribeka\Security\acquireMaintenanceLock;
+use function Tribeka\Security\ensurePrivateDirectory;
+use function Tribeka\Security\privateConfigPath;
+use function Tribeka\Security\scalarField;
+use function Tribeka\Security\takeRateLimit;
+use function Tribeka\Security\trustedOrigin;
+use function Tribeka\Security\validateAttachments;
+use function Tribeka\Security\validateFields;
+use const Tribeka\Security\MAX_TOTAL_SIZE;
 
 function respond(int $status, array $payload): never
 {
     http_response_code($status);
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    header('Cache-Control: no-store');
+    header('X-Content-Type-Options: nosniff');
+    if ($status !== 204) {
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
     exit;
-}
-
-function allowedOrigin(?string $origin): ?string
-{
-    if (!$origin) {
-        return null;
-    }
-
-    $patterns = [
-        '~^https://(?:www\.)?xn--80abmkm6an\.xn--p1ai$~i',
-        '~^https://[a-z0-9-]+\.vercel\.app$~i',
-        '~^http://(?:localhost|127\.0\.0\.1)(?::\d+)?$~i',
-    ];
-
-    foreach ($patterns as $pattern) {
-        if (preg_match($pattern, $origin) === 1) {
-            return $origin;
-        }
-    }
-
-    return null;
 }
 
 function removeLeadDirectory(?string $directory): void
@@ -41,9 +39,7 @@ function removeLeadDirectory(?string $directory): void
     if (!$directory || !is_dir($directory)) {
         return;
     }
-
-    $files = new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS);
-    foreach ($files as $file) {
+    foreach (new FilesystemIterator($directory, FilesystemIterator::SKIP_DOTS) as $file) {
         if ($file->isFile() || $file->isLink()) {
             unlink($file->getPathname());
         }
@@ -51,141 +47,110 @@ function removeLeadDirectory(?string $directory): void
     rmdir($directory);
 }
 
-$origin = allowedOrigin($_SERVER['HTTP_ORIGIN'] ?? null);
-if ($origin !== null) {
-    header("Access-Control-Allow-Origin: {$origin}");
-    header('Vary: Origin');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Accept, Content-Type');
-}
-
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
-    respond($origin === null ? 403 : 204, []);
-}
-
-if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+$method = $_SERVER['REQUEST_METHOD'] ?? '';
+if (!in_array($method, ['POST', 'OPTIONS'], true)) {
     header('Allow: POST, OPTIONS');
     respond(405, ['error' => 'Метод не поддерживается.']);
 }
 
-if (isset($_SERVER['HTTP_ORIGIN']) && $origin === null) {
-    respond(403, ['error' => 'Источник запроса не разрешён.']);
+$configPath = privateConfigPath();
+try {
+    if (!is_file($configPath)) {
+        throw new RuntimeException('Private configuration is missing');
+    }
+    $config = require $configPath;
+    if (!is_array($config) || !is_array($config['trusted_origins'] ?? [])) {
+        throw new RuntimeException('Private configuration is invalid');
+    }
+} catch (Throwable $exception) {
+    error_log('Tribeka request form configuration error: ' . $exception->getMessage());
+    respond(503, ['error' => 'Сервис временно недоступен.']);
 }
 
-if (!empty($_POST['website'])) {
-    respond(200, ['ok' => true]);
+$origin = trustedOrigin($_SERVER['HTTP_ORIGIN'] ?? null, $config);
+header('Vary: Origin');
+if ($origin !== null) {
+    header("Access-Control-Allow-Origin: {$origin}");
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Accept, Content-Type');
+}
+if ($method === 'OPTIONS') {
+    respond($origin === null ? 403 : 204, []);
+}
+if (isset($_SERVER['HTTP_ORIGIN']) && $origin === null) {
+    respond(403, ['error' => 'Источник запроса не разрешён.']);
 }
 
 $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
 if ($contentLength > MAX_TOTAL_SIZE + 1024 * 1024) {
     respond(413, ['error' => 'Слишком большой размер запроса.']);
 }
-
-$remoteAddress = substr((string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown'), 0, 45);
-$rateFile = sys_get_temp_dir() . '/tribeka-form-' . hash('sha256', $remoteAddress);
-$lastRequest = is_file($rateFile) ? (int) file_get_contents($rateFile) : 0;
-if ($lastRequest > time() - 30) {
-    respond(429, ['error' => 'Повторите отправку через несколько секунд.']);
+$contentType = strtolower(trim(explode(';', (string) ($_SERVER['CONTENT_TYPE'] ?? ''))[0]));
+if (!in_array($contentType, ['multipart/form-data', 'application/x-www-form-urlencoded'], true)) {
+    respond(415, ['error' => 'Некорректный формат запроса.']);
+}
+if ($contentLength > 0 && $_POST === [] && $_FILES === []) {
+    respond(413, ['error' => 'Запрос пуст или превышает ограничение сервера.']);
 }
 
-$name = trim((string) ($_POST['name'] ?? ''));
-$phone = trim((string) ($_POST['phone'] ?? ''));
-$message = trim((string) ($_POST['message'] ?? ''));
-$privacyAccepted = isset($_POST['privacy']);
-$consentVersion = trim((string) ($_POST['consent_version'] ?? ''));
-$policyVersion = trim((string) ($_POST['policy_version'] ?? ''));
-$sourceUrl = trim((string) ($_POST['source_url'] ?? ''));
-
-if ($name === '' || $phone === '' || !$privacyAccepted) {
-    respond(422, ['error' => 'Заполните обязательные поля.']);
-}
-
-if ($consentVersion !== CONSENT_VERSION || $policyVersion !== POLICY_VERSION) {
-    respond(409, ['error' => 'Документы были обновлены. Обновите страницу и повторите отправку.']);
-}
-
-if (mb_strlen($name) > 120 || mb_strlen($phone) > 80 || mb_strlen($message) > 5000) {
-    respond(422, ['error' => 'Одно из полей слишком длинное.']);
-}
-
-if ($sourceUrl !== '' && (mb_strlen($sourceUrl) > 2048 || filter_var($sourceUrl, FILTER_VALIDATE_URL) === false)) {
-    $sourceUrl = '';
-}
-
-$uploadedFiles = $_FILES['attachments'] ?? null;
-$pendingAttachments = [];
-$totalSize = 0;
-$allowedExtensions = ['pdf', 'dwg', 'dxf', 'step', 'stp', 'iges', 'igs', 'zip', 'rar', '7z', 'jpg', 'jpeg', 'png', 'webp'];
-$fileInfo = new finfo(FILEINFO_MIME_TYPE);
-
-if (is_array($uploadedFiles) && isset($uploadedFiles['name'])) {
-    $names = is_array($uploadedFiles['name']) ? $uploadedFiles['name'] : [$uploadedFiles['name']];
-    $temporaryNames = is_array($uploadedFiles['tmp_name']) ? $uploadedFiles['tmp_name'] : [$uploadedFiles['tmp_name']];
-    $sizes = is_array($uploadedFiles['size']) ? $uploadedFiles['size'] : [$uploadedFiles['size']];
-    $errors = is_array($uploadedFiles['error']) ? $uploadedFiles['error'] : [$uploadedFiles['error']];
-
-    if (count($names) > MAX_FILES) {
-        respond(422, ['error' => 'Можно прикрепить не более пяти файлов.']);
+// Use the socket peer, never untrusted X-Forwarded-For. Proxy deployments must
+// configure the web server's trusted real-IP module before changing this value.
+$remoteAddress = filter_var($_SERVER['REMOTE_ADDR'] ?? '', FILTER_VALIDATE_IP) ?: 'unknown';
+try {
+    $retryAfter = takeRateLimit(
+        (string) ($config['rate_limit_dir'] ?? dirname($configPath) . '/rate-limits'),
+        $remoteAddress
+    );
+    if ($retryAfter > 0) {
+        header('Retry-After: ' . $retryAfter);
+        respond(429, ['error' => 'Повторите отправку через несколько секунд.']);
     }
-
-    foreach ($names as $index => $originalName) {
-        $error = (int) ($errors[$index] ?? UPLOAD_ERR_NO_FILE);
-        if ($error === UPLOAD_ERR_NO_FILE) {
-            continue;
-        }
-        if ($error !== UPLOAD_ERR_OK) {
-            respond(422, ['error' => 'Не удалось загрузить один из файлов.']);
-        }
-
-        $extension = strtolower(pathinfo((string) $originalName, PATHINFO_EXTENSION));
-        if (!in_array($extension, $allowedExtensions, true)) {
-            respond(422, ['error' => 'Формат одного из файлов не поддерживается.']);
-        }
-
-        $size = (int) ($sizes[$index] ?? 0);
-        $totalSize += $size;
-        if ($size <= 0 || $totalSize > MAX_TOTAL_SIZE) {
-            respond(413, ['error' => 'Общий размер файлов превышает 15 МБ.']);
-        }
-
-        $temporaryName = (string) ($temporaryNames[$index] ?? '');
-        if (!is_uploaded_file($temporaryName)) {
-            respond(422, ['error' => 'Не удалось проверить загруженный файл.']);
-        }
-
-        $safeName = preg_replace('/[^\pL\pN._ -]+/u', '_', basename((string) $originalName));
-        $safeName = mb_strcut($safeName ?: 'attachment.' . $extension, 0, 255, 'UTF-8');
-        $pendingAttachments[] = [
-            'original_name' => $safeName,
-            'temporary_path' => $temporaryName,
-            'extension' => $extension,
-            'mime_type' => substr($fileInfo->file($temporaryName) ?: 'application/octet-stream', 0, 127),
-            'size_bytes' => $size,
-        ];
+    if (scalarField($_POST, 'website', 2048) !== '') {
+        respond(200, ['ok' => true]);
     }
+    $fields = validateFields($_POST, $config);
+    $name = $fields['name'];
+    $phone = $fields['phone'];
+    $message = $fields['message'];
+    $consentVersion = $fields['consentVersion'];
+    $policyVersion = $fields['policyVersion'];
+    $sourceUrl = $fields['sourceUrl'];
+    $pendingAttachments = validateAttachments($_FILES);
+} catch (ValidationException $exception) {
+    respond($exception->status, ['error' => $exception->getMessage()]);
+} catch (Throwable $exception) {
+    error_log('Tribeka request form validation service error: ' . $exception->getMessage());
+    respond(503, ['error' => 'Сервис временно недоступен.']);
 }
 
-$configPath = getenv('TRIBEKA_PRIVATE_CONFIG') ?: dirname(__DIR__, 3) . '/tribeka-private/config.php';
-if (!is_file($configPath)) {
-    error_log('Tribeka request form: private configuration is missing');
-    respond(500, ['error' => 'Сервис временно недоступен.']);
-}
-
-$config = require $configPath;
 $uploadRoot = rtrim((string) ($config['upload_dir'] ?? ''), '/');
 $recipient = (string) ($config['recipient'] ?? '');
 $sender = (string) ($config['sender'] ?? '');
 $retentionDays = (int) ($config['retention_days'] ?? 365);
-
 if (
     $uploadRoot === ''
     || filter_var($recipient, FILTER_VALIDATE_EMAIL) === false
     || filter_var($sender, FILTER_VALIDATE_EMAIL) === false
+    || preg_match('/[\r\n\x00]/', $recipient . $sender)
     || $retentionDays < 1
     || $retentionDays > 3650
 ) {
     error_log('Tribeka request form: private configuration is invalid');
-    respond(500, ['error' => 'Сервис временно недоступен.']);
+    respond(503, ['error' => 'Сервис временно недоступен.']);
+}
+
+try {
+    $uploadRoot = ensurePrivateDirectory($uploadRoot);
+    $maintenanceLock = acquireMaintenanceLock(
+        (string) ($config['maintenance_lock'] ?? dirname($configPath) . '/maintenance.lock')
+    );
+    if ($maintenanceLock === false) {
+        header('Retry-After: 30');
+        respond(503, ['error' => 'Выполняется резервное копирование. Повторите отправку чуть позже.']);
+    }
+} catch (Throwable $exception) {
+    error_log('Tribeka request form maintenance lock error: ' . $exception->getMessage());
+    respond(503, ['error' => 'Сервис временно недоступен.']);
 }
 
 $publicId = bin2hex(random_bytes(16));
@@ -207,7 +172,9 @@ try {
         if (!move_uploaded_file($attachment['temporary_path'], $storedPath)) {
             throw new RuntimeException('Unable to move uploaded file');
         }
-        chmod($storedPath, 0600);
+        if (!chmod($storedPath, 0600)) {
+            throw new RuntimeException('Unable to protect uploaded file');
+        }
 
         $storedAttachments[] = [
             ...$attachment,
@@ -279,11 +246,17 @@ try {
     }
 
     $pdo->commit();
+    flock($maintenanceLock, LOCK_UN);
+    fclose($maintenanceLock);
 } catch (Throwable $exception) {
     if ($pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
     removeLeadDirectory($leadDirectory);
+    if (is_resource($maintenanceLock)) {
+        flock($maintenanceLock, LOCK_UN);
+        fclose($maintenanceLock);
+    }
     error_log('Tribeka request form storage error: ' . $exception->getMessage());
     respond(500, ['error' => 'Не удалось сохранить заявку.']);
 }
@@ -320,7 +293,7 @@ $sent = mail(
     '=?UTF-8?B?' . base64_encode($subject) . '?=',
     $body,
     implode("\r\n", $headers),
-    '-f' . $sender
+    '-f' . escapeshellarg($sender)
 );
 
 try {
@@ -345,5 +318,4 @@ if (!$sent) {
     error_log('Tribeka request form: notification failed for lead ' . $publicId);
 }
 
-file_put_contents($rateFile, (string) time(), LOCK_EX);
 respond(200, ['ok' => true, 'request_id' => $publicId]);

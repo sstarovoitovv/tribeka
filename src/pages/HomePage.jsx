@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { getServicePath } from '../serviceRoutes.js'
 import ContactBand from '../components/ContactBand.jsx'
 import { advantages, serviceGroups } from '../data/company.js'
 
@@ -12,7 +13,7 @@ export default function HomePage() {
         <div className="container-page relative flex min-h-[720px] items-center py-20 lg:min-h-[calc(100vh-72px)]">
           <div className="max-w-[790px]">
             <p className="eyebrow">Комплексная металлообработка с 2012 года</p>
-            <h1 className="mt-7 text-[clamp(2.8rem,7vw,6.6rem)] font-black uppercase leading-[0.88] tracking-[-0.055em]">
+            <h1 className="mt-7 text-[clamp(2.8rem,7vw,6.6rem)] font-black uppercase leading-[0.98] tracking-[-0.035em]">
               От идеи<br />до готового <span className="text-signal">изделия</span>
             </h1>
             <p className="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
@@ -44,8 +45,8 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 grid border-l border-t border-ink/15 md:grid-cols-2 xl:grid-cols-4">
-            {serviceGroups.slice(0, 4).map(({ id, number, title, short }) => (
-              <Link to={`/services/${id}/`} key={number} className="group relative overflow-hidden border-b border-r border-ink/15 bg-mist p-7 transition duration-500 hover:bg-graphite hover:text-white sm:p-8">
+            {serviceGroups.slice(0, 4).map(({ slug, number, title, short }) => (
+              <Link to={getServicePath({ slug })} key={number} className="group relative overflow-hidden border-b border-r border-ink/15 bg-mist p-7 transition duration-500 hover:bg-graphite hover:text-white sm:p-8">
                 <div className="flex items-start justify-between">
                   <span className="text-[10px] font-bold tracking-[0.2em] text-ink/35 group-hover:text-white/35">/{number}</span>
                   <span className="text-4xl font-black text-signal/25">{number}</span>
