@@ -10,6 +10,7 @@ export default {
         signal: '#3569ad',
         mist: '#f1f4f8',
       },
+      fontWeight: { black: '800' },
       fontFamily: {
         sans: ['Manrope Variable', 'Arial', 'sans-serif'],
       },
