@@ -30,6 +30,7 @@ export default function RequestForm() {
   const [statusMessage, setStatusMessage] = useState('')
   const [files, setFiles] = useState([])
   const [phoneError, setPhoneError] = useState('')
+  const [consentError, setConsentError] = useState(false)
 
   function validatePhoneField(field, formatNumber = false) {
     const value = field.value.trim()
@@ -249,9 +250,17 @@ export default function RequestForm() {
         </div>
       </div>
       <label className="mt-6 flex max-w-lg items-start gap-3 text-xs leading-5 text-ink/70">
-        <input required aria-required="true" type="checkbox" name="privacy" className="mt-0.5 size-4 shrink-0 accent-signal" />
+        <input
+          required aria-required="true" type="checkbox" name="privacy"
+          aria-invalid={consentError}
+          aria-describedby={consentError ? 'request-consent-error' : undefined}
+          onInvalid={(event) => { event.preventDefault(); setConsentError(true); event.currentTarget.focus() }}
+          onChange={(event) => { if (event.currentTarget.checked) setConsentError(false) }}
+          className={`mt-0.5 size-4 shrink-0 accent-signal ${consentError ? 'outline outline-1 outline-offset-2 outline-red-700' : ''}`}
+        />
         <span>Я даю {siteConfig.legalName} <Link to="/consent/" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
       </label>
+      {consentError && <p id="request-consent-error" role="alert" className="mt-3 border-l-2 border-red-700 bg-red-50 px-3 py-2 text-sm leading-5 text-red-700">Чтобы отправить заявку, согласитесь на обработку персональных данных.</p>}
       <p className="mt-3 max-w-lg text-[11px] leading-5 text-ink/65">
         Порядок обработки, хранения и удаления данных описан в <Link to="/privacy/" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
       </p>

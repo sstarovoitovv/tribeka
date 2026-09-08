@@ -13,9 +13,13 @@ RewriteRule ^ https://xn--80abmkm6an.xn--p1ai%{REQUEST_URI} [R=301,L,NE]
 
 # GENERATED_SERVICE_REDIRECTS
 
-# Internal libraries and dotfiles must never become public entry points.
-RewriteRule ^(?:api/_lib(?:/|$)|\.(?!well-known(?:/|$))) - [R=404,L]
-<FilesMatch "(?i)(?:\.(?:bak|sql|log|ini|env)|~)$">
+# Only the two intended PHP endpoints are public. Block private/source paths even
+# if a future release accidentally contains a file in one of these directories.
+RewriteRule ^(?:api/_lib|server|database|backups?|uploads?|tribeka-private|src|tests|scripts|docs|node_modules)(?:/|$) - [R=404,L,NC]
+RewriteRule (?:^|/)\.(?!well-known(?:/|$)) - [R=404,L]
+RewriteCond %{REQUEST_URI} !^/api/(?:request|analytics)\.php$
+RewriteRule \.(?:php[0-9]*|phtml|phar)(?:/|$) - [R=404,L,NC]
+<FilesMatch "(?i)(?:\.(?:bak|backup|old|orig|save|swp|sql|sqlite3?|db|log|ini|env|map)(?:\.(?:gz|zip|bz2|xz))?|~)$">
   Require all denied
 </FilesMatch>
 

@@ -104,24 +104,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .footer-label { @apply text-xs font-semibold uppercase tracking-[0.1em] text-white/75; }
 }
 
-/* Only the join is softened; the machining detail stays sharp. */
+/* A broad eased fade joins the photo to the exact hero background color. */
+.hero-photo::before,
 .hero-photo::after {
   content: '';
   position: absolute;
   inset: 0 0 auto;
-  height: 48px;
+  height: min(180px, 85%);
   pointer-events: none;
-  background: linear-gradient(to bottom, #07182e, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+}
+.hero-photo::before {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   mask-image: linear-gradient(to bottom, #000, transparent);
 }
+.hero-photo::after {
+  background: linear-gradient(to bottom, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
+}
 @media (min-width: 1024px) {
-  .hero-photo::after {
+  .hero-photo::before, .hero-photo::after {
     inset: 0 auto 0 0;
     height: auto;
-    width: 64px;
-    background: linear-gradient(to right, #07182e, transparent);
-    mask-image: linear-gradient(to right, #000, transparent);
+    width: clamp(240px, 26vw, 420px);
+  }
+  .hero-photo::before { mask-image: linear-gradient(to right, #000, transparent); }
+  .hero-photo::after {
+    background: linear-gradient(to right, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
   }
 }

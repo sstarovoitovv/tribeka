@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="flex flex-col gap-8 border-b border-white/20 pb-9 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
             <span className="w-fit shrink-0 bg-white px-3 py-2"><Logo compact /></span>
-            <p className="max-w-sm text-sm leading-6 text-white/80">Комплексная металлообработка.<br />От чертежа до готового изделия.</p>
+            <p className="max-w-sm text-sm leading-6 text-white/80">Комплексная металлообработка под ключ: от идеи и чертежа до готового изделия</p>
           </div>
           <a href={`tel:${siteConfig.phoneHref}`} className="w-fit text-xl font-bold tracking-tight transition-colors hover:text-white/80 sm:text-2xl">{siteConfig.phone}</a>
         </div>
@@ -28,12 +28,12 @@ export default function Footer() {
             </div>
           </nav>
           <div>
-            <p className="footer-label">Почта и мессенджеры</p>
+            <p className="footer-label">Связаться</p>
             <a href={`mailto:${siteConfig.email}`} className="mt-3 inline-flex min-h-11 items-center text-base font-semibold underline-offset-4 hover:underline">{siteConfig.email}</a>
-            <ContactLinks dark labeled includeEmail={false} className="mt-4" />
+            <ContactLinks dark includeEmail={false} className="mt-4" />
           </div>
           <div>
-            <p className="footer-label">Производство</p>
+            <p className="footer-label">Адрес</p>
             <address className="mt-5 max-w-xs text-sm not-italic leading-7 text-white/85">{siteConfig.address}</address>
             <a href={mapLink} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-11 items-center text-sm font-semibold underline underline-offset-4 hover:text-white/80">Открыть карту</a>
           </div>

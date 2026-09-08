@@ -31,14 +31,15 @@ export default function ContactsPage() {
             </div>
             <div className="mt-7 flex flex-col items-center text-center">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ink/70">Написать удобным способом</p>
-              <ContactLinks labeled className="mt-4 max-w-sm" />
+              <ContactLinks className="mt-4" />
             </div>
           </div>
 
           <div id="request" className="order-first min-w-0 scroll-mt-24 lg:order-none">
             <div className="border-t-4 border-signal bg-white p-6 pb-0 sm:p-9 sm:pb-0">
-              <h2 className="text-2xl font-black tracking-tight">Заявка на расчёт</h2>
-              <p className="mt-3 text-sm leading-6 text-ink/70">Укажите материал, количество и основные размеры. Чертежи можно приложить сразу.</p>
+              <p className="eyebrow">Заявка на расчёт</p>
+              <h2 className="mt-3 text-2xl font-black tracking-tight">Расскажите о задаче</h2>
+              <p className="mt-3 text-sm leading-6 text-ink/70">Укажите материал, количество и основные размеры. При необходимости сразу приложите чертёж или фотографии</p>
             </div>
             <RequestForm />
           </div>
@@ -47,6 +48,7 @@ export default function ContactsPage() {
 
       <section className="border-t border-ink/15 bg-mist py-8">
         <div className="container-page flex flex-wrap items-center gap-x-10 gap-y-4 text-sm leading-6 text-ink/70">
+          <p className="w-full text-xs font-semibold uppercase tracking-wider">Юридическая информация</p>
           <p className="flex items-center gap-3 font-bold text-ink"><FiBriefcase className="text-signal" aria-hidden="true" /> {siteConfig.legalName}</p>
           <p>ОГРН {siteConfig.ogrn}</p><p>ИНН {siteConfig.inn}</p>
         </div>

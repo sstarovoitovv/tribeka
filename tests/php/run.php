@@ -10,6 +10,7 @@ use function Tribeka\Security\ensurePrivateDirectory;
 use function Tribeka\Security\inspectAttachment;
 use function Tribeka\Security\normalizedUploads;
 use function Tribeka\Security\takeRateLimit;
+use function Tribeka\Security\storeLead;
 use function Tribeka\Security\trustedOrigin;
 use function Tribeka\Security\validateAttachments;
 use function Tribeka\Security\validateFields;
@@ -140,6 +141,37 @@ try {
     check(trustedOrigin('http://localhost:5173') === null, 'localhost is not trusted by production defaults');
     check(trustedOrigin('https://review.vercel.app', ['trusted_origins' => ['https://review.vercel.app']]) !== null, 'explicit preview origin can be allowed');
     check(trustedOrigin('https://xn--80abmkm6an.xn--p1ai.attacker.com') === null, 'origin suffix spoof is rejected');
+
+    // Exercise the production persistence function using an isolated PDO database.
+    // SQLite covers parameter binding and rollback; this is not a MySQL integration test.
+    $database = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $database->exec('CREATE TABLE leads (id INTEGER PRIMARY KEY, public_id TEXT, name TEXT, phone TEXT, message TEXT, source_origin TEXT, source_url TEXT, ip_address TEXT, user_agent TEXT, consent_version TEXT, policy_version TEXT, consent_accepted_at TEXT, expires_at TEXT)');
+    $database->exec('CREATE TABLE lead_attachments (lead_id INTEGER, original_name TEXT, stored_name TEXT, storage_path TEXT, mime_type TEXT, size_bytes INTEGER CHECK(size_bytes > 0), sha256 TEXT)');
+    $payload = "Robert'); DROP TABLE leads; -- <script>alert(1)</script>";
+    $injection = validateFields([...$valid, 'name' => $payload, 'message' => $payload]);
+    $lead = [
+        'public_id' => 'fixture', 'name' => $injection['name'], 'phone' => $injection['phone'],
+        'message' => $injection['message'], 'source_origin' => null, 'source_url' => null,
+        'ip_address' => null, 'user_agent' => $payload, 'consent_version' => CONSENT_VERSION,
+        'policy_version' => POLICY_VERSION, 'consent_accepted_at' => '2026-09-08 12:00:00', 'expires_at' => '2027-09-08 12:00:00',
+    ];
+    $attachment = ['original_name' => "drawing'); DROP TABLE lead_attachments; --.pdf", 'stored_name' => 'random.pdf', 'storage_path' => 'fixture/random.pdf', 'mime_type' => 'application/pdf', 'size_bytes' => 128, 'sha256' => str_repeat('a', 64)];
+    $database->beginTransaction();
+    $leadId = storeLead($database, $lead, [$attachment]);
+    $database->commit();
+    $stored = $database->query('SELECT * FROM leads')->fetch(PDO::FETCH_ASSOC);
+    check($leadId === 1 && $stored['name'] === $payload && $stored['message'] === $payload && $stored['user_agent'] === $payload, 'production SQL binds injection strings as literal values');
+    check($database->query('SELECT original_name FROM lead_attachments')->fetchColumn() === $attachment['original_name'], 'attachment SQL also binds hostile filenames as data');
+    storeLead($database, [...$lead, 'name' => "О’Коннор"], []);
+    check((int) $database->query('SELECT COUNT(*) FROM leads')->fetchColumn() === 2, 'tables survive injection and ordinary apostrophes remain valid');
+    $database->beginTransaction();
+    try {
+        storeLead($database, $lead, [[...$attachment, 'size_bytes' => -1]]);
+        throw new RuntimeException('Attachment constraint unexpectedly succeeded');
+    } catch (PDOException) {
+        $database->rollBack();
+    }
+    check((int) $database->query('SELECT COUNT(*) FROM leads')->fetchColumn() === 2, 'failed attachment transaction leaves no orphan lead');
 
     $pdf = fixture('drawing.pdf', "%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<<>>\n%%EOF\n");
     $png = fixture('drawing.png', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aMkkAAAAASUVORK5CYII='));

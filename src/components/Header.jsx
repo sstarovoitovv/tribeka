@@ -90,7 +90,7 @@ export default function Header() {
             <span className="grid size-12 shrink-0 place-items-center rounded-[5px] border border-ink/10 bg-[#e3e7ed] text-signal transition-[border-radius,background-color,border-color,color] duration-150 ease-in-out group-hover:rounded-[50%] group-hover:border-signal group-hover:bg-signal group-hover:text-white"><FiPhone size={21} /></span>
             {siteConfig.phone}
           </a>
-          <ContactLinks labeled className="mt-5" />
+          <ContactLinks className="mt-5" />
         </nav>
       </div>
     </header>

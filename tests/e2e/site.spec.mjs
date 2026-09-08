@@ -168,3 +168,80 @@ test('header and footer keep navigation and contact channels at intermediate wid
     }
   }
 })
+
+test('missing consent shows inline warning without losing input or sending a request', async ({ page }) => {
+  const requests = []
+  await page.route('**/api/request.php', async route => {
+    requests.push(route.request().postDataBuffer().toString())
+    await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' })
+  })
+  await page.setViewportSize({ width: 390, height: 900 })
+  await page.goto('/contacts/')
+  await page.getByLabel(/ваше имя/i).fill('Тестовый посетитель')
+  await page.getByLabel(/^телефон/i).fill('+79062603060')
+  await page.getByLabel(/кратко о задаче/i).fill('Нужна партия деталей')
+  await page.locator('input[type=file]').setInputFiles({ name: 'drawing.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\ntest') })
+  // Enter and clicking the submit button both use native form constraint validation.
+  await page.getByLabel(/ваше имя/i).press('Enter')
+  const warning = page.getByRole('alert')
+  await expect(warning).toHaveText('Чтобы отправить заявку, согласитесь на обработку персональных данных.')
+  await expect(warning).toHaveCSS('color', 'rgb(185, 28, 28)')
+  await expect(page.getByRole('checkbox')).toBeFocused()
+  await expect(page.getByRole('checkbox')).toHaveAttribute('aria-invalid', 'true')
+  await page.getByRole('button', { name: 'Обсудить проект' }).click()
+  expect(requests).toHaveLength(0)
+  await expect(page.getByLabel(/ваше имя/i)).toHaveValue('Тестовый посетитель')
+  await expect(page.getByLabel(/кратко о задаче/i)).toHaveValue('Нужна партия деталей')
+  await expect(page.getByRole('button', { name: 'Удалить файл drawing.pdf' })).toBeVisible()
+  await page.locator('#request').screenshot({ path: '.work/evidence/form-consent-warning.png', animations: 'disabled', style: 'header, body > #root > div > nav { visibility: hidden !important; }' })
+  await page.getByRole('checkbox').check()
+  await expect(warning).toHaveCount(0)
+  expect(requests).toHaveLength(0)
+  await page.getByRole('button', { name: 'Обсудить проект' }).click()
+  await expect(page.getByRole('heading', { name: 'Заявка принята' })).toBeVisible()
+  expect(requests).toHaveLength(1)
+  expect(requests[0]).toContain('drawing.pdf')
+})
+
+test('brand icons match across surfaces, contacts stay in one row and production wording is restored', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/')
+  await expect(page.locator('h1')).toHaveText('От идеидо готового изделия')
+  await expect(page.getByText('Комплексная металлообработка с 2012 года', { exact: true })).toBeVisible()
+  await expect(page.getByText('Как начинается заказ', { exact: true })).toHaveCount(0)
+  await expect(page.locator('main section').first()).not.toContainText('Собственное оборудование')
+  await expect(page.locator('main section').first().locator('figcaption')).toHaveCount(0)
+  for (const [label, color] of [['Почта', 'rgb(57, 118, 196)'], ['WhatsApp', 'rgb(37, 211, 102)'], ['Telegram', 'rgb(38, 165, 228)']]) {
+    const top = page.getByRole('banner').getByRole('link', { name: `Написать: ${label}` }).locator('svg')
+    await expect(top).toHaveCSS('color', color)
+    if (label === 'Почта') continue
+    const bottom = page.getByRole('contentinfo').getByRole('link', { name: `Написать: ${label}` }).locator('svg')
+    await expect(bottom).toHaveCSS('color', color)
+    expect(await bottom.innerHTML()).toBe(await top.innerHTML())
+  }
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/contacts/')
+    const icons = page.locator('main [aria-label="Каналы связи"] a')
+    await expect(icons).toHaveCount(4)
+    expect(await icons.allTextContents()).toEqual(['', '', '', ''])
+    const positions = await icons.evaluateAll(links => links.map(link => Math.round(link.getBoundingClientRect().top)))
+    expect(new Set(positions).size).toBe(1)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  }
+})
+
+test('form renders server error text without interpreting HTML', async ({ page }) => {
+  let scriptRan = false
+  page.on('dialog', async dialog => { scriptRan = true; await dialog.dismiss() })
+  const payload = '<img src=x onerror=alert(1)><script>alert(1)</script>'
+  await page.route('**/api/request.php', route => route.fulfill({ status: 422, contentType: 'application/json', body: JSON.stringify({ error: payload }) }))
+  await page.goto('/contacts/')
+  await page.getByLabel(/ваше имя/i).fill("Robert'); DROP TABLE leads; --")
+  await page.getByLabel(/^телефон/i).fill('+79062603060')
+  await page.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Обсудить проект' }).click()
+  await expect(page.getByRole('alert')).toHaveText(payload)
+  await expect(page.getByRole('alert').locator('img, script')).toHaveCount(0)
+  expect(scriptRan).toBe(false)
+})
