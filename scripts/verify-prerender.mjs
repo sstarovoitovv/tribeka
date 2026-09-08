@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { readFile } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { JSDOM } from 'jsdom'
 
@@ -31,6 +31,11 @@ for (const route of routes) {
 const sitemap = await readFile(new URL('sitemap.xml', dist), 'utf8')
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gu)].map((match) => match[1])
 assert.deepEqual(sitemapUrls.sort(), indexableUrls.sort(), 'Sitemap contains exactly the indexable canonical pages')
-const analyticsPaths = JSON.parse(await readFile(new URL('api/_lib/analytics-routes.json', dist), 'utf8'))
-assert.deepEqual(analyticsPaths, routes.map(({ path }) => path), 'Analytics allowlist matches the rendered routes')
-process.stdout.write(`Verified ${routes.length} full static pages, navigation, JSON-LD, forms, sitemap and analytics paths in ${fileURLToPath(dist)}\n`)
+await assert.rejects(readFile(new URL('api/analytics.php', dist)), { code: 'ENOENT' }, 'Collector is excluded from the release')
+await assert.rejects(readFile(new URL('api/_lib/analytics-routes.json', dist)), { code: 'ENOENT' }, 'Analytics route manifest is removed')
+for (const name of await readdir(new URL('assets/', dist))) {
+  if (!name.endsWith('.js')) continue
+  const script = await readFile(new URL(`assets/${name}`, dist), 'utf8')
+  assert.doesNotMatch(script, /api\/analytics\.php|tribeka:analytics|utm_source|utm_campaign/, 'No statistics collector, preference or attribution in the browser bundle')
+}
+process.stdout.write(`Verified ${routes.length} full static pages, navigation, JSON-LD, forms, sitemap and absence of analytics in ${fileURLToPath(dist)}\n`)

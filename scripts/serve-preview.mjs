@@ -8,7 +8,7 @@ const { redirects } = JSON.parse(await readFile(resolve(root, 'redirects.json'),
 createServer(async (request, response) => {
   let path
   try { path = decodeURIComponent(new URL(request.url, 'http://localhost').pathname) } catch { response.writeHead(400).end(); return }
-  if (path.startsWith('/api/') || path.split('/').some(part => part.startsWith('.'))) { response.writeHead(404).end(); return }
+  if (/^\/(?:api|server|database|backups?|uploads?|tribeka-private|src|tests|scripts|docs|node_modules)(?:\/|$)/i.test(path) || path.split('/').some(part => part.startsWith('.')) || /\.(?:bak|backup|old|orig|save|swp|sql|sqlite3?|db|log|ini|env|map)(?:\.(?:gz|zip|bz2|xz))?$/i.test(path)) { response.writeHead(404).end(); return }
   const redirect = redirects.find(({ from }) => from.replace(/\/$/, '') === path.replace(/\/$/, ''))
   if (redirect) { response.writeHead(301, { Location: redirect.to }).end(); return }
   let file = resolve(root, '.' + path)
@@ -24,4 +24,4 @@ createServer(async (request, response) => {
   } catch {
     response.writeHead(404, { 'Content-Type': types['.html'], 'X-Robots-Tag': 'noindex' }).end(await readFile(resolve(root, '404.html')))
   }
-}).listen(4173, '127.0.0.1', () => process.stdout.write('Tribeka preview: http://127.0.0.1:4173\n'))
+}).listen(Number(process.env.PORT || 4173), '127.0.0.1', () => process.stdout.write(`Tribeka preview: http://127.0.0.1:${process.env.PORT || 4173}\n`))

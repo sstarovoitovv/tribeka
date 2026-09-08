@@ -101,7 +101,7 @@ function createDataBackup(string $configPath): string
     $published = $root . '/' . $id;
     mkdir($pending, 0700);
     try {
-        // All writers (requests, purge, analytics) hold LOCK_SH on this same file.
+        // All writers (requests, purge) hold LOCK_SH on this same file.
         $credentials = $pending . '/.mysql.cnf';
         file_put_contents($credentials, backupDatabaseOptions($config));
         chmod($credentials, 0600);
@@ -111,8 +111,6 @@ function createDataBackup(string $configPath): string
         if (filesize($pending . '/database.sql') === 0) throw new RuntimeException('Database dump is empty.');
         backupArchive($uploads, $pending . '/uploads.tar.gz');
         backupRun(['tar', '-czf', $pending . '/config.tar.gz', '-C', dirname($configPath), basename($configPath)]);
-        $analytics = (string) ($config['analytics_dir'] ?? dirname($configPath) . '/analytics');
-        if (is_dir($analytics)) backupArchive($analytics, $pending . '/analytics.tar.gz');
         $files = [];
         foreach (new DirectoryIterator($pending) as $file) {
             if (!$file->isFile()) continue;

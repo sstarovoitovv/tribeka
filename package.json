@@ -13,7 +13,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:ssg": "node scripts/verify-prerender.mjs",
-    "test:php": "php tests/php/run.php && php tests/php/analytics.php",
+    "test:php": "php tests/php/run.php",
     "test:deploy": "php tests/php/deployment.php",
     "preview:production": "node scripts/serve-preview.mjs",
     "sitemap:submit": "node scripts/submit-sitemap.mjs",

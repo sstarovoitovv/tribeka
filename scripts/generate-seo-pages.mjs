@@ -103,7 +103,6 @@ try {
   await writeFile(join(distDirectory, 'sitemap.xml'), sitemap, 'utf8')
   await writeFile(join(distDirectory, 'robots.txt'), robots, 'utf8')
   await mkdir(join(distDirectory, 'api/_lib'), { recursive: true })
-  await writeFile(join(distDirectory, 'api/_lib/analytics-routes.json'), `${JSON.stringify([...entries.map(({ path }) => path), '/404/'], null, 2)}\n`, 'utf8')
   await writeFile(join(distDirectory, 'redirects.json'), `${JSON.stringify({ version: 1, redirects }, null, 2)}\n`, 'utf8')
   await writeFile(join(distDirectory, 'prerender-manifest.json'), `${JSON.stringify({ version: 1, routes }, null, 2)}\n`, 'utf8')
 

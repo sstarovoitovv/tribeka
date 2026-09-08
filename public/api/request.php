@@ -16,6 +16,7 @@ use function Tribeka\Security\acquireMaintenanceLock;
 use function Tribeka\Security\ensurePrivateDirectory;
 use function Tribeka\Security\privateConfigPath;
 use function Tribeka\Security\scalarField;
+use function Tribeka\Security\storeLead;
 use function Tribeka\Security\takeRateLimit;
 use function Tribeka\Security\trustedOrigin;
 use function Tribeka\Security\validateAttachments;
@@ -200,16 +201,7 @@ try {
 
     $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
     $expiresAt = $now->modify(sprintf('+%d days', $retentionDays));
-    $insertLead = $pdo->prepare(
-        'INSERT INTO leads (
-            public_id, name, phone, message, source_origin, source_url, ip_address,
-            user_agent, consent_version, policy_version, consent_accepted_at, expires_at
-        ) VALUES (
-            :public_id, :name, :phone, :message, :source_origin, :source_url, :ip_address,
-            :user_agent, :consent_version, :policy_version, :consent_accepted_at, :expires_at
-        )'
-    );
-    $insertLead->execute([
+    $leadId = storeLead($pdo, [
         'public_id' => $publicId,
         'name' => $name,
         'phone' => $phone,
@@ -222,28 +214,7 @@ try {
         'policy_version' => $policyVersion,
         'consent_accepted_at' => $now->format('Y-m-d H:i:s'),
         'expires_at' => $expiresAt->format('Y-m-d H:i:s'),
-    ]);
-    $leadId = (int) $pdo->lastInsertId();
-
-    $insertAttachment = $pdo->prepare(
-        'INSERT INTO lead_attachments (
-            lead_id, original_name, stored_name, storage_path, mime_type, size_bytes, sha256
-        ) VALUES (
-            :lead_id, :original_name, :stored_name, :storage_path, :mime_type, :size_bytes, :sha256
-        )'
-    );
-
-    foreach ($storedAttachments as $attachment) {
-        $insertAttachment->execute([
-            'lead_id' => $leadId,
-            'original_name' => $attachment['original_name'],
-            'stored_name' => $attachment['stored_name'],
-            'storage_path' => $attachment['storage_path'],
-            'mime_type' => $attachment['mime_type'],
-            'size_bytes' => $attachment['size_bytes'],
-            'sha256' => $attachment['sha256'],
-        ]);
-    }
+    ], $storedAttachments);
 
     $pdo->commit();
     flock($maintenanceLock, LOCK_UN);

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
-import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir, userInfo } from 'node:os'
 import path from 'node:path'
 import { createServer } from 'node:net'
@@ -19,6 +19,17 @@ await new Promise((resolve) => socket.close(resolve))
 // macOS privacy restrictions prevent the system daemon reading Desktop directly.
 const root = path.join(directory, 'public')
 await cp(path.resolve('dist'), root, { recursive: true })
+// Deliberately misplaced fixtures prove denied URLs cannot expose real files.
+const privatePaths = ['/api/analytics.php','/server/config.php', '/database/leads.sql', '/backups/leads.sql.gz', '/uploads/drawing.pdf', '/tribeka-private/config.php', '/src/App.jsx', '/tests/fixture.txt', '/docs/internal.html', '/node_modules/package/index.js', '/assets/.env', '/assets/bundle.js.map', '/config.php', '/api/request.php/extra', '/dump.sqlite', '/config.php.old', '/backup.sql.zip', '/.git/config']
+for (const route of privatePaths) {
+  const file = path.join(root, route)
+  // PATH_INFO is checked against the real endpoint file.
+  if (route === '/api/request.php/extra') continue
+  await mkdir(path.dirname(file), { recursive: true })
+  await writeFile(file, 'PRIVATE_FIXTURE_MUST_NOT_LEAK')
+}
+await mkdir(path.join(root, '.well-known/acme-challenge'), { recursive: true })
+await writeFile(path.join(root, '.well-known/acme-challenge/fixture'), 'public-certificate-challenge')
 const moduleNames = ['mpm_prefork', 'unixd', 'authz_core', 'authz_host', 'dir', 'mime', 'rewrite', 'headers']
 const loads = moduleNames.filter((name) => existsSync(`${modules}/mod_${name}.so`)).map((name) => `LoadModule ${name}_module "${modules}/mod_${name}.so"`)
 const mime = ['/etc/mime.types', '/etc/apache2/mime.types'].find(existsSync)
@@ -69,6 +80,12 @@ try {
   assert.equal((await request('/assets/missing.js')).status, 404)
   assert.equal((await request('/api/_lib/request-security.php')).status, 404)
   assert.equal((await request('/.user.ini')).status, 403)
+  for (const route of privatePaths) {
+    const response = await request(route)
+    assert.ok([403, 404].includes(response.status), `${route}: ${response.status}`)
+    assert.ok(!(await response.text()).includes('PRIVATE_FIXTURE_MUST_NOT_LEAK'), route)
+  }
+  assert.equal((await request('/.well-known/acme-challenge/fixture')).status, 200)
   const www = await request('/about/?utm_source=fixture', { Host: 'www.xn--80abmkm6an.xn--p1ai' })
   assert.equal(www.status, 301)
   assert.equal(www.headers.get('location'), 'https://xn--80abmkm6an.xn--p1ai/about/?utm_source=fixture')

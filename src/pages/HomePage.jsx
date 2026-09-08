@@ -6,104 +6,97 @@ import { advantages, serviceGroups } from '../data/company.js'
 export default function HomePage() {
   return (
     <>
-      <section className="relative min-h-[720px] overflow-hidden bg-ink text-white lg:min-h-[calc(100vh-72px)]">
-        <img src="/hero-cnc.jpg" alt="Обработка металлической детали на станке ЧПУ" className="absolute inset-0 h-full w-full object-cover object-[62%_center]" />
-        <div className="absolute inset-0 bg-ink/55" />
-        <div className="absolute inset-y-0 left-0 w-[58%] bg-[#04101f]/75" />
-        <div className="container-page relative flex min-h-[720px] items-center py-20 lg:min-h-[calc(100vh-72px)]">
-          <div className="max-w-[790px]">
-            <p className="eyebrow">Комплексная металлообработка с 2012 года</p>
-            <h1 className="mt-7 text-[clamp(2.8rem,7vw,6.6rem)] font-black uppercase leading-[0.98] tracking-[-0.035em]">
-              От идеи<br />до готового <span className="text-signal">изделия</span>
+      <section className="bg-ink text-white">
+        <div className="mx-auto grid max-w-[1600px] lg:min-h-[640px] lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="px-5 py-8 sm:px-8 sm:py-16 lg:flex lg:flex-col lg:justify-center lg:py-16 lg:pl-12 xl:pl-16">
+            <p className="eyebrow text-white/80">Комплексная металлообработка с 2012 года</p>
+            <h1 className="mt-5 max-w-[760px] text-[clamp(2.35rem,5.5vw,5.5rem)] font-black leading-[1.06] tracking-[-0.045em]">
+              От идеи<br />до готового изделия
             </h1>
-            <p className="mt-7 max-w-2xl text-base leading-7 text-white/75 sm:text-lg">
+            <p className="mt-5 max-w-xl text-base leading-7 text-white/80 sm:text-lg">
               Работаем по принципу «одного окна»: берём на себя весь цикл, контролируем качество на каждом этапе и выдаём готовое изделие под ключ
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link to="/contacts/#request" className="shape-button flex items-center justify-center bg-signal px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:bg-[#28548f]">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link to="/contacts/#request" className="shape-button flex min-h-12 items-center justify-center bg-signal px-6 py-3 text-sm font-bold text-white hover:bg-[#28548f]">
                 Рассчитать стоимость
               </Link>
-              <Link to="/services/" className="shape-button flex items-center justify-center gap-4 border border-white/25 px-7 py-5 text-xs font-bold uppercase tracking-[0.15em] hover:border-white hover:bg-white/5">
+              <Link to="/services/" className="shape-button flex min-h-12 items-center justify-center border border-white/30 px-6 py-3 text-sm font-bold hover:bg-white/10">
                 Наши возможности
               </Link>
             </div>
           </div>
+          <figure className="hero-photo relative min-h-[160px] overflow-hidden sm:min-h-[320px] lg:min-h-full">
+            <img src="/hero-cnc.jpg" alt="Обработка металлической детали на станке ЧПУ" className="absolute inset-0 h-full w-full object-cover object-[68%_center]" />
+
+          </figure>
         </div>
       </section>
 
-      <section className="py-20 sm:py-28">
+      <section className="py-14 sm:py-20">
         <div className="container-page">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
               <p className="eyebrow">Основные направления</p>
-              <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-[0.95] tracking-[-0.04em] sm:text-6xl">Производство<br />полного цикла</h2>
+              <h2 className="mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-[-0.035em] sm:text-5xl">Производство<br />полного цикла</h2>
             </div>
             <div className="max-w-md">
-              <p className="text-sm leading-6 text-ink/55">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
+              <p className="text-sm leading-6 text-ink/70">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
               <Link to="/services/" className="mt-5 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-signal">Все услуги <span aria-hidden="true">→</span></Link>
             </div>
           </div>
 
-          <div className="mt-12 grid border-l border-t border-ink/15 md:grid-cols-2 xl:grid-cols-4">
+          <ol className="mt-10 grid border-t border-ink/20 md:grid-cols-2 md:gap-x-12">
             {serviceGroups.slice(0, 4).map(({ slug, number, title, short }) => (
-              <Link to={getServicePath({ slug })} key={number} className="group relative overflow-hidden border-b border-r border-ink/15 bg-mist p-7 transition duration-500 hover:bg-graphite hover:text-white sm:p-8">
-                <div className="flex items-start justify-between">
-                  <span className="text-[10px] font-bold tracking-[0.2em] text-ink/35 group-hover:text-white/35">/{number}</span>
-                  <span className="text-4xl font-black text-signal/25">{number}</span>
-                </div>
-                <div className="mt-14">
-                  <h3 className="text-xl font-black uppercase tracking-tight">{title}</h3>
-                  <p className="mt-4 text-sm leading-6 text-ink/55 group-hover:text-white/55">{short}</p>
-                  <div className="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-signal">Подробнее <span aria-hidden="true">→</span></div>
-                </div>
-              </Link>
+              <li key={number} className="border-b border-ink/20">
+                <Link to={getServicePath({ slug })} className="service-index group grid grid-cols-[2rem_1fr] gap-4 py-7">
+                  <span className="pt-1 text-sm font-semibold tabular-nums text-signal">{number}</span>
+                  <div>
+                    <h3 className="text-xl font-bold tracking-tight group-hover:text-signal">{title}</h3>
+                    <p className="mt-3 max-w-md text-sm leading-6 text-ink/75">{short}</p>
+                    <span className="mt-4 inline-block text-sm font-semibold text-signal underline underline-offset-4">Подробнее</span>
+                  </div>
+                </Link>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      <section className="overflow-hidden bg-graphite py-16 text-white sm:py-20">
-        <div className="container-page grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="bg-graphite py-14 text-white sm:py-20">
+        <div className="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
           <div>
-            <p className="eyebrow">О компании</p>
-            <h2 className="mt-5 text-4xl font-black uppercase leading-[0.95] tracking-[-0.04em] sm:text-6xl">Технологический<br />партнёр бизнеса</h2>
-            <p className="mt-7 max-w-lg text-sm leading-7 text-white/55">ТРИБЕКА берёт полную ответственность за производственный результат и работает с чертежами любой сложности, чтобы заказчику не приходилось контролировать разных исполнителей</p>
-            <div className="mt-8 grid gap-3">
-              {advantages.map(({ title }, index) => (
-                <div key={title} className="flex items-center gap-3 border border-white/10 p-4 text-xs font-bold uppercase tracking-wide">
-                  <span className="text-signal">0{index + 1}</span> {title}
-                </div>
-              ))}
-            </div>
-            <Link to="/about/" className="shape-button mt-8 inline-flex items-center gap-4 border border-white/25 px-6 py-4 text-[10px] font-bold uppercase tracking-widest hover:border-white hover:bg-white/5">Подробнее о компании <span aria-hidden="true">→</span></Link>
+            <p className="eyebrow text-white/80">О компании</p>
+            <h2 className="section-title mt-5">Технологический<br />партнёр бизнеса</h2>
+            <p className="mt-6 max-w-lg text-base leading-7 text-white/80">ТРИБЕКА берёт полную ответственность за производственный результат и работает с чертежами любой сложности, чтобы заказчику не приходилось контролировать разных исполнителей</p>
+            <figure className="mt-8 overflow-hidden bg-white">
+              <img src="/brand/equipment-turning.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="aspect-[4/3] w-full object-contain p-6" />
+            </figure>
+            <div className="mt-5 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></div><span className="text-sm text-white/75">ЧПУ</span></div>
           </div>
-          <div className="relative">
-            <div className="relative aspect-[4/3] overflow-hidden border border-white/10 bg-white">
-              <img src="/brand/equipment-turning.png" alt="Токарный станок производственной площадки ТРИБЕКА" className="h-full w-full object-contain p-4" />
-              <div className="absolute bottom-0 left-0 right-0 bg-ink/95 px-6 py-6">
-                <div className="flex items-end justify-between border-t border-white/20 pt-5">
-                  <div><p className="text-[10px] font-bold uppercase tracking-[0.2em] text-signal">Собственное оборудование</p><p className="mt-2 text-xl font-black uppercase">Без лишних посредников</p></div>
-                  <span className="hidden text-3xl font-black text-white/20 sm:block">ЧПУ</span>
-                </div>
-              </div>
-            </div>
+          <div className="lg:pt-10">
+            <ul className="divide-y divide-white/20 border-y border-white/20">
+              {advantages.map(({ title }) => (
+                <li key={title} className="py-7 sm:py-9 text-xl font-bold tracking-tight">{title}</li>
+              ))}
+            </ul>
+            <Link to="/about/" className="shape-button mt-7 inline-flex min-h-12 items-center border border-white/35 px-6 py-3 text-sm font-semibold hover:bg-white/10">Подробнее о компании</Link>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#f7f7f5] py-20 sm:py-28">
+      <section className="py-14 sm:py-20" aria-labelledby="advantages-title">
         <div className="container-page">
           <p className="eyebrow">Почему ТРИБЕКА</p>
-          <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-[0.95] tracking-[-0.04em] sm:text-6xl">Один партнёр<br />Весь результат</h2>
-          <div className="mt-12 grid gap-px bg-ink/10 lg:grid-cols-3">
+          <h2 id="advantages-title" className="section-title mt-5">Один партнёр<br />Весь результат</h2>
+          <ol className="mt-10 grid gap-8 md:grid-cols-3">
             {advantages.map(({ title, text }, index) => (
-              <article key={title} className="bg-[#f7f7f5] p-7 sm:p-9">
-                <span className="text-5xl font-black text-ink/[0.07]">0{index + 1}</span>
-                <h3 className="mt-12 text-lg font-black uppercase">{title}</h3>
-                <p className="mt-4 text-sm leading-7 text-ink/50">{text}</p>
-              </article>
+              <li key={title} className="border-t-2 border-signal pt-5">
+                <span className="text-sm font-semibold tabular-nums text-signal">0{index + 1}</span>
+                <h3 className="mt-5 text-2xl font-bold tracking-tight">{title}</h3>
+                <p className="mt-3 max-w-sm text-sm leading-7 text-ink/75">{text}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 

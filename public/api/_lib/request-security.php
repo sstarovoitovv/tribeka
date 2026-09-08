@@ -13,7 +13,7 @@ if (PHP_SAPI !== 'cli' && realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? ''))
 const MAX_FILES = 5;
 const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
 const CONSENT_VERSION = '2026-09-04';
-const POLICY_VERSION = '2026-09-07';
+const POLICY_VERSION = '2026-09-08';
 
 final class ValidationException extends \RuntimeException
 {
@@ -95,7 +95,7 @@ function validateFields(array $fields, array $config = []): array
     $phone = normalizePhone($phone);
 
     // Persist only a trusted source page. Query strings/fragments can contain
-    // personal information; campaign attribution belongs in aggregate analytics.
+    // personal information; campaign attribution is not collected.
     if ($sourceUrl !== '') {
         $parts = parse_url($sourceUrl);
         if ($parts === false || !isset($parts['scheme'], $parts['host']) || isset($parts['user'], $parts['pass'])) {
@@ -348,4 +348,43 @@ function validateAttachments(array $files): array
         $result[] = $attachment;
     }
     return $result;
+}
+
+/** Values are always bound parameters; callers own the surrounding transaction. */
+function storeLead(\PDO $pdo, array $lead, array $attachments): int
+{
+    $insertLead = $pdo->prepare(
+        'INSERT INTO leads (
+            public_id, name, phone, message, source_origin, source_url, ip_address,
+            user_agent, consent_version, policy_version, consent_accepted_at, expires_at
+        ) VALUES (
+            :public_id, :name, :phone, :message, :source_origin, :source_url, :ip_address,
+            :user_agent, :consent_version, :policy_version, :consent_accepted_at, :expires_at
+        )'
+    );
+    $insertLead->execute($lead);
+
+    $leadId = (int) $pdo->lastInsertId();
+
+    $insertAttachment = $pdo->prepare(
+        'INSERT INTO lead_attachments (
+            lead_id, original_name, stored_name, storage_path, mime_type, size_bytes, sha256
+        ) VALUES (
+            :lead_id, :original_name, :stored_name, :storage_path, :mime_type, :size_bytes, :sha256
+        )'
+    );
+
+    foreach ($attachments as $attachment) {
+        $insertAttachment->execute([
+            'lead_id' => $leadId,
+            'original_name' => $attachment['original_name'],
+            'stored_name' => $attachment['stored_name'],
+            'storage_path' => $attachment['storage_path'],
+            'mime_type' => $attachment['mime_type'],
+            'size_bytes' => $attachment['size_bytes'],
+            'sha256' => $attachment['sha256'],
+        ]);
+    }
+
+    return $leadId;
 }
