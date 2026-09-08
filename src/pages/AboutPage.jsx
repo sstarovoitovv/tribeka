@@ -16,7 +16,7 @@ export default function AboutPage() {
         <div className="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
             <p className="eyebrow">Технологический партнёр</p>
-            <h2 className="mt-5 text-4xl font-black uppercase leading-[0.95] tracking-[-0.04em] sm:text-5xl">Производство под ключ</h2>
+            <h2 className="mt-5 section-title">Производство под ключ</h2>
           </div>
           <div className="max-w-3xl">
             <p className="text-xl font-bold leading-8 text-ink sm:text-2xl">Вы получаете готовое изделие под ключ, а мы берём на себя контроль качества на каждом этапе</p>
@@ -28,16 +28,15 @@ export default function AboutPage() {
       <section className="py-14 sm:py-20">
         <div className="container-page">
           <p className="eyebrow">Наши преимущества</p>
-          <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-[0.95] tracking-[-0.04em] sm:text-6xl">Один подрядчик<br />на весь цикл</h2>
-          <div className="mt-12 grid gap-px bg-ink/10 lg:grid-cols-3">
-            {advantages.map(({ title, text }, index) => (
-                <article key={title} className="bg-white p-8 sm:p-10">
-                  <div className="flex items-start justify-between"><span className="text-[10px] font-black tracking-[0.2em] text-ink/25">/0{index + 1}</span><span className="text-4xl font-black text-signal/25">0{index + 1}</span></div>
-                  <h3 className="mt-10 text-xl font-black uppercase">{title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-ink/70">{text}</p>
-                </article>
+          <h2 className="mt-5 max-w-4xl section-title">Один подрядчик<br />на весь цикл</h2>
+          <dl className="mt-10 divide-y divide-ink/20 border-y border-ink/20">
+            {advantages.map(({ title, text }) => (
+              <div key={title} className="grid gap-4 py-7 md:grid-cols-[0.8fr_1.2fr]">
+                <dt className="text-xl font-bold">{title}</dt>
+                <dd className="max-w-2xl text-base leading-7 text-ink/75">{text}</dd>
+              </div>
             ))}
-          </div>
+          </dl>
         </div>
       </section>
 

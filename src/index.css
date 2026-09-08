@@ -98,3 +98,30 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   min-width: 0;
   width: 100%;
 }
+
+@layer components {
+  .section-title { @apply text-3xl font-bold leading-[1.12] tracking-tight sm:text-5xl; }
+  .footer-label { @apply text-xs font-semibold uppercase tracking-[0.1em] text-white/75; }
+}
+
+/* Only the join is softened; the machining detail stays sharp. */
+.hero-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 48px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, #07182e, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, #000, transparent);
+}
+@media (min-width: 1024px) {
+  .hero-photo::after {
+    inset: 0 auto 0 0;
+    height: auto;
+    width: 64px;
+    background: linear-gradient(to right, #07182e, transparent);
+    mask-image: linear-gradient(to right, #000, transparent);
+  }
+}

@@ -27,25 +27,25 @@ export default function ServicesPage() {
                 to={getServicePath({ slug })}
                 id={id}
                 key={number}
-                className="group scroll-mt-28 overflow-hidden border border-ink/10 bg-mist transition-[border-color,transform] duration-500 ease-out hover:-translate-y-1 hover:border-signal/45"
+                className="group scroll-mt-28 overflow-hidden border border-ink/10 bg-mist transition-colors duration-150 hover:border-signal"
                 aria-label={`${title}: открыть примеры работ`}
               >
                 <MediaPlaceholder label="Фото услуги" compact />
                 <article className="p-6">
                   <div className="flex items-center justify-between gap-5">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-ink/35">Услуга /{number}</span>
-                    <span className="text-2xl font-black text-signal/25">{number}</span>
+                    <span className="text-xs font-black uppercase tracking-[0.2em] text-ink/70">Услуга /{number}</span>
+                    <span className="hidden">{number}</span>
                   </div>
-                  <h3 className="mt-5 text-xl font-black uppercase leading-tight tracking-tight">{title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-ink/55">{short}</p>
+                  <h3 className="mt-5 text-xl font-bold leading-tight tracking-tight">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-ink/75">{short}</p>
                   <div className="mt-5 flex flex-wrap gap-2 border-t border-ink/10 pt-5">
                     {details.map((detail) => (
-                      <span key={detail} className="w-fit max-w-full bg-[#e3e8ef] px-3 py-2 text-[9px] font-bold uppercase leading-4 tracking-wide text-ink/60">
+                      <span key={detail} className="w-fit max-w-full bg-[#e3e8ef] px-3 py-2 text-xs font-bold uppercase leading-4 tracking-wide text-ink/60">
                         {detail}
                       </span>
                     ))}
                   </div>
-                  <span className="mt-6 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-signal">
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-signal">
                     Смотреть примеры <FiArrowUpRight className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" size={14} />
                   </span>
                 </article>

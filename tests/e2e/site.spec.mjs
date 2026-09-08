@@ -142,3 +142,29 @@ test('request stays near the top and long attachments fit on mobile', async ({ p
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%' })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
+
+test('header and footer keep navigation and contact channels at intermediate widths', async ({ page }) => {
+  for (const width of [320, 1000, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    await page.evaluate(() => document.fonts.ready)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    const footer = page.getByRole('contentinfo')
+    await expect(footer.getByRole('link', { name: 'Услуги', exact: true })).toHaveAttribute('href', '/services/')
+    for (const label of ['WhatsApp', 'Telegram', 'MAX']) {
+      const link = footer.getByRole('link', { name: `Написать: ${label}` })
+      await expect(link).toBeVisible()
+      expect((await link.boundingBox()).height).toBeGreaterThanOrEqual(44)
+    }
+    if (width >= 1000) {
+      const header = page.getByRole('banner')
+      await expect(header.getByRole('navigation', { name: 'Основная навигация' })).toBeVisible()
+      for (const label of ['Почта', 'WhatsApp', 'Telegram', 'MAX']) await expect(header.getByRole('link', { name: `Написать: ${label}` })).toBeVisible()
+    } else {
+      await page.getByRole('button', { name: 'Открыть меню' }).click()
+      await expect(page.getByRole('navigation', { name: 'Мобильная навигация', exact: true })).toBeVisible()
+      await page.keyboard.press('Escape')
+      await expect(page.getByRole('button', { name: 'Открыть меню' })).toHaveAttribute('aria-expanded', 'false')
+    }
+  }
+})
