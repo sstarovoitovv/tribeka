@@ -72,11 +72,23 @@ textarea {
   }
 
   .shape-button {
-    @apply rounded-[5px] transition-[border-radius,background-color,border-color,color] duration-500 ease-in-out hover:rounded-[24px];
+    @apply rounded-[5px] transition-colors duration-200 ease-out;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .page-enter { animation: none; }
+}
+
+/* One focus treatment across existing controls, on both light and dark surfaces. */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
+.request-form input[type="file"]:focus-visible + div > label {
+  outline: 2px solid #3569ad;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
 }

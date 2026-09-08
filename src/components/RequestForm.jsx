@@ -164,7 +164,7 @@ export default function RequestForm() {
   }
 
   return (
-    <form method="post" action={siteConfig.formEndpoint} onFocus={() => { if (!started.current) { trackEvent('form_start'); started.current = true } }} onSubmit={submit} encType="multipart/form-data" className="bg-white p-7 sm:p-9">
+    <form method="post" action={siteConfig.formEndpoint} onFocus={() => { if (!started.current) { trackEvent('form_start'); started.current = true } }} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
       <input type="hidden" name="consent_version" value={siteConfig.personalData.consentVersion} />
       <input type="hidden" name="policy_version" value={siteConfig.personalData.policyVersion} />
       <noscript><p className="mb-4 text-sm leading-6">Для отправки заявки с вложениями включите JavaScript или свяжитесь с нами по телефону.</p></noscript>
@@ -172,10 +172,10 @@ export default function RequestForm() {
         Не заполняйте это поле
         <input name="website" tabIndex="-1" autoComplete="off" />
       </label>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="grid gap-1 text-[11px] font-bold uppercase tracking-wider text-ink/70">
           Ваше имя
-          <input required maxLength={120} autoComplete="name" name="name" placeholder="Александр" className="border-b border-ink/20 bg-transparent pb-1 pt-2 text-sm font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/25 focus:border-signal" />
+          <input required maxLength={120} autoComplete="name" name="name" placeholder="Александр" className="rounded border border-ink/30 bg-mist px-3 py-3 text-base font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/60 focus:border-signal" />
         </label>
         <label className="grid gap-1 text-[11px] font-bold uppercase tracking-wider text-ink/70">
           Телефон
@@ -190,7 +190,7 @@ export default function RequestForm() {
             aria-describedby={phoneError ? 'request-phone-error' : undefined}
             onInput={updatePhoneValidation}
             onBlur={(event) => validatePhoneField(event.currentTarget, true)}
-            className={`border-b bg-transparent pb-1 pt-2 text-sm font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/25 ${phoneError ? 'border-red-600' : 'border-ink/20 focus:border-signal'}`}
+            className={`rounded border bg-mist px-3 py-3 text-base font-medium normal-case tracking-normal text-ink outline-none transition-colors duration-500 ease-in-out placeholder:text-ink/60 ${phoneError ? 'border-red-600' : 'border-ink/30 focus:border-signal'}`}
           />
           {phoneError && <span id="request-phone-error" className="normal-case tracking-normal text-red-700" aria-live="polite">{phoneError}</span>}
         </label>
@@ -202,7 +202,7 @@ export default function RequestForm() {
             rows="1"
             placeholder="Что нужно изготовить, материал, объём партии"
             onInput={resizeMessageField}
-            className="min-h-[33px] max-h-[112px] resize-none overflow-y-hidden border-b border-ink/20 bg-transparent pb-1 pt-2 text-sm font-medium leading-5 normal-case tracking-normal text-ink outline-none transition-[border-color,height] duration-300 ease-out placeholder:text-ink/25 focus:border-signal"
+            className="min-h-[88px] max-h-[112px] resize-none overflow-y-hidden rounded border border-ink/30 bg-mist px-3 py-3 text-base font-medium leading-5 normal-case tracking-normal text-ink outline-none transition-[border-color,height] duration-300 ease-out placeholder:text-ink/60 focus:border-signal"
           />
         </label>
         <div className="sm:col-span-2">
@@ -221,7 +221,7 @@ export default function RequestForm() {
             <label htmlFor="request-files" className="shape-button inline-flex cursor-pointer items-center gap-2 border border-ink/10 bg-[#e3e7ed] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">
               <FiPaperclip size={15} /> Прикрепить файлы
             </label>
-            <span className="text-[10px] leading-4 text-ink/40">До 5 файлов, общий размер до 15 МБ</span>
+            <span className="text-xs leading-5 text-ink/70">До 5 файлов, общий размер до 15 МБ</span>
           </div>
           {files.length > 0 && (
             <div className="mt-3 text-left">
@@ -233,10 +233,10 @@ export default function RequestForm() {
                     <div key={`${file.name}-${file.size}-${file.lastModified}`} className="flex max-w-full items-center gap-3 rounded-[10px] border border-ink/10 bg-[#f1f4f8] px-3 py-2">
                       <span className="grid size-9 shrink-0 place-items-center rounded-[7px] bg-signal/10 text-signal"><FiFileText size={17} /></span>
                       <span className="min-w-0">
-                        <span className="block max-w-[220px] truncate text-[11px] font-bold normal-case tracking-normal text-ink" title={file.name}>{file.name}</span>
-                        <span className="mt-0.5 block text-[9px] font-medium normal-case tracking-normal text-ink/40">{extension} / {formatSize(file.size)}</span>
+                        <span className="block max-w-[180px] truncate text-[11px] font-bold normal-case tracking-normal text-ink" title={file.name}>{file.name}</span>
+                        <span className="mt-0.5 block text-[9px] font-medium normal-case tracking-normal text-ink/70">{extension} / {formatSize(file.size)}</span>
                       </span>
-                      <button type="button" onClick={() => removeFile(index)} className="grid size-7 shrink-0 place-items-center rounded-[5px] text-ink/35 transition-[border-radius,background-color,color] duration-500 ease-in-out hover:rounded-full hover:bg-ink/10 hover:text-ink" aria-label={`Удалить файл ${file.name}`} title="Удалить файл">
+                      <button type="button" onClick={() => removeFile(index)} className="grid size-11 shrink-0 place-items-center rounded-[5px] text-ink/35 transition-[border-radius,background-color,color] duration-500 ease-in-out hover:rounded-full hover:bg-ink/10 hover:text-ink" aria-label={`Удалить файл ${file.name}`} title="Удалить файл">
                         <FiX size={15} />
                       </button>
                     </div>
@@ -256,8 +256,8 @@ export default function RequestForm() {
         Порядок обработки, хранения и удаления данных описан в <Link to="/privacy/" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
       </p>
       {statusMessage && <p className={`mt-4 text-xs leading-5 ${status === 'error' ? 'text-red-700' : 'text-ink/55'}`} role="alert" aria-live="polite">{statusMessage}</p>}
-      <div className="mt-7 flex justify-end">
-        <button type="submit" disabled={status === 'submitting'} className="shape-button flex items-center justify-center bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
+      <div className="mt-7 flex">
+        <button type="submit" disabled={status === 'submitting'} className="shape-button flex w-full items-center justify-center bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
           {status === 'submitting' ? 'Отправляем…' : 'Обсудить проект'}
         </button>
       </div>
