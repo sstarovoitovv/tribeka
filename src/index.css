@@ -92,3 +92,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
 }
+
+.request-form input:not([type="checkbox"]):not([type="file"]):not([type="hidden"]),
+.request-form textarea {
+  min-width: 0;
+  width: 100%;
+}

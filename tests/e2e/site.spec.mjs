@@ -138,4 +138,7 @@ test('request stays near the top and long attachments fit on mobile', async ({ p
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: /^Удалить файл / }).click()
   await expect(page.getByRole('button', { name: /^Удалить файл / })).toHaveCount(0)
+  await page.setViewportSize({ width: 720, height: 900 })
+  await page.evaluate(() => { document.documentElement.style.fontSize = '200%' })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
