@@ -77,9 +77,7 @@ try {
     // Mirror the hosting path: /var/www is an account parent, not necessarily public.
     $private = $sandbox . '/var/www/u3633961/data/tribeka-private';
     mkdir($private . '/uploads', 0700, true);
-    mkdir($private . '/analytics', 0700);
     file_put_contents($private . '/uploads/drawing.pdf', '%PDF fixture');
-    file_put_contents($private . '/analytics/daily.json', '{"form_success":2}');
     $configPath = $private . '/config.php';
     $config = ['dsn' => 'mysql:host=localhost;dbname=tribeka_test;charset=utf8mb4', 'username' => 'fixture_user', 'password' => 'never-print-this-fixture', 'upload_dir' => $private . '/uploads', 'maintenance_lock' => $private . '/maintenance.lock'];
     file_put_contents($configPath, '<?php return ' . var_export($config, true) . ';');
@@ -91,7 +89,7 @@ try {
     putenv('TRIBEKA_TEST_LOCK=' . $private . '/maintenance.lock');
     $backup = createDataBackup($configPath);
     $manifest = json_decode((string) file_get_contents($backup . '/manifest.json'), true);
-    verify(count($manifest['files']) === 4, 'Snapshot includes SQL, uploads, private configuration and analytics under exclusive lock');
+    verify(count($manifest['files']) === 3, 'Snapshot includes SQL, uploads and private configuration under exclusive lock');
     foreach ($manifest['files'] as $file => $metadata) verify(hash_file('sha256', $backup . '/' . $file) === $metadata['sha256'], 'Manifest checksum verifies ' . $file);
     verify((fileperms($backup . '/database.sql') & 0777) === 0600, 'Sensitive backup files have 0600 permissions');
     verify(!file_exists($backup . '/.mysql.cnf'), 'Temporary database credentials removed');

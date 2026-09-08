@@ -17,8 +17,6 @@ return [
     'backup_dir' => '/absolute/path/outside/web/root/backups',
     'backup_keep' => 10,
     'backup_max_age_days' => 14,
-    'analytics_campaigns' => [], // Same approved campaign codes as VITE_ANALYTICS_CAMPAIGNS.
-    'analytics_dir' => '/absolute/path/outside/web/root/analytics',
     'recipient' => 'leads@example.com',
     'sender' => 'noreply@example.com',
     'retention_days' => 365,

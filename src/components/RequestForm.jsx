@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { FiFileText, FiPaperclip, FiX } from 'react-icons/fi'
 import { parsePhoneNumberWithError } from 'libphonenumber-js/max'
 import { Link } from 'react-router-dom'
-import { trackEvent } from '../analytics.js'
 import { siteConfig } from '../siteConfig.js'
 
 const MAX_FILES = 5
@@ -25,7 +24,6 @@ function resizeMessageField(event) {
 
 export default function RequestForm() {
   const fileInput = useRef(null)
-  const started = useRef(false)
   const [status, setStatus] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
   const [files, setFiles] = useState([])
@@ -142,7 +140,6 @@ export default function RequestForm() {
         const detail = result?.error
         throw new Error(typeof detail === 'string' && detail.length <= 300 ? detail : 'Не удалось отправить заявку. Попробуйте ещё раз.')
       }
-      trackEvent('form_submit')
 
       form.reset()
       setFiles([])
@@ -165,7 +162,7 @@ export default function RequestForm() {
   }
 
   return (
-    <form method="post" action={siteConfig.formEndpoint} onFocus={() => { if (!started.current) { trackEvent('form_start'); started.current = true } }} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
+    <form method="post" action={siteConfig.formEndpoint} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
       <input type="hidden" name="consent_version" value={siteConfig.personalData.consentVersion} />
       <input type="hidden" name="policy_version" value={siteConfig.personalData.policyVersion} />
       <noscript><p className="mb-4 text-sm leading-6">Для отправки заявки с вложениями включите JavaScript или свяжитесь с нами по телефону.</p></noscript>

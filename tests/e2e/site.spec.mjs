@@ -65,43 +65,28 @@ test('two attachments, server errors and successful form conversion', async ({ p
   expect(body.match(/name="attachments\[\]"/g)).toHaveLength(2)
 })
 
-test('analytics opt-in, redacted UTM, clicks and withdrawal', async ({ page }) => {
-  const events = []
-  await page.route('**/api/analytics.php', async route => {
-    events.push(route.request().postDataJSON())
-    await route.fulfill({ status: 204 })
-  })
-  await page.goto('/?utm_source=yandex&utm_medium=cpc&utm_campaign=private@example.com&phone=123')
+test('statistics remain absent even for a visitor with an old opt-in', async ({ page }) => {
+  const submissions = []
+  await page.addInitScript(() => localStorage.setItem('tribeka:analytics-consent:v1', 'yes'))
+  page.on('request', request => { if (request.method() === 'POST') submissions.push(new URL(request.url()).pathname) })
+  await page.route('**/api/request.php', route => route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }))
+  await page.goto('/?utm_source=yandex&utm_campaign=test')
+  await expect(page.getByText('Настройки статистики:', { exact: false })).toHaveCount(0)
+  for (const prefix of ['tel:', 'https://t.me/']) {
+    const link = page.locator(`a[href^="${prefix}"]`).first()
+    await link.evaluate(element => element.addEventListener('click', event => event.preventDefault()))
+    await link.click()
+  }
   await page.getByRole('link', { name: 'Услуги', exact: true }).first().click()
-  expect(events).toHaveLength(0)
-  await page.goto('/?utm_source=yandex&utm_medium=cpc&utm_campaign=private@example.com&phone=123')
-  await page.getByText('Настройки статистики:', { exact: false }).click()
-  await page.getByRole('button', { name: 'Разрешить статистику' }).click()
-  await expect.poll(() => events.length).toBe(1)
-  expect(events[0]).toMatchObject({ event: 'page_view', source: 'yandex', medium: 'cpc', campaign: 'other', path: '/' })
-  await page.locator('a[href^="tel:"]').first().evaluate(link => link.addEventListener('click', event => event.preventDefault()))
-  await page.locator('a[href^="tel:"]').first().click()
-  await expect.poll(() => events.some(event => event.event === 'phone_click')).toBe(true)
-  expect(JSON.stringify(events)).not.toContain('private@')
-  await page.getByRole('button', { name: 'Отключить статистику' }).click()
-  const count = events.length
-  await page.locator('a[href^="tel:"]').first().click()
-  expect(events).toHaveLength(count)
+  await page.goto('/contacts/')
+  await page.getByLabel(/ваше имя/i).fill('Тестовый посетитель')
+  await page.getByLabel(/^телефон/i).fill('+79062603060')
+  await page.getByRole('checkbox').check()
+  await page.getByRole('button', { name: 'Обсудить проект' }).click()
+  await expect(page.getByRole('heading', { name: 'Заявка принята' })).toBeVisible()
+  expect(submissions).toEqual(['/api/request.php'])
+  expect((await page.request.post('/api/analytics.php', { data: { event: 'page_view' } })).status()).toBe(404)
 })
-
-test('GPC overrides stored analytics permission', async ({ page }) => {
-  const events = []
-  await page.addInitScript(() => {
-    localStorage.setItem('tribeka:analytics-consent:v1', 'yes')
-    Object.defineProperty(navigator, 'globalPrivacyControl', { value: true })
-  })
-  await page.route('**/api/analytics.php', route => { events.push(1); return route.fulfill({ status: 204 }) })
-  await page.goto('/')
-  await page.getByText('Настройки статистики:', { exact: false }).click()
-  await expect(page.getByText('В браузере включён запрет отслеживания. Статистика отключена.')).toBeVisible()
-  expect(events).toHaveLength(0)
-})
-
 
 test('desktop typography and visible content', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 })

@@ -20,7 +20,7 @@ await new Promise((resolve) => socket.close(resolve))
 const root = path.join(directory, 'public')
 await cp(path.resolve('dist'), root, { recursive: true })
 // Deliberately misplaced fixtures prove denied URLs cannot expose real files.
-const privatePaths = ['/server/config.php', '/database/leads.sql', '/backups/leads.sql.gz', '/uploads/drawing.pdf', '/tribeka-private/config.php', '/src/App.jsx', '/tests/fixture.txt', '/docs/internal.html', '/node_modules/package/index.js', '/assets/.env', '/assets/bundle.js.map', '/config.php', '/api/request.php/extra', '/dump.sqlite', '/config.php.old', '/backup.sql.zip', '/.git/config']
+const privatePaths = ['/api/analytics.php','/server/config.php', '/database/leads.sql', '/backups/leads.sql.gz', '/uploads/drawing.pdf', '/tribeka-private/config.php', '/src/App.jsx', '/tests/fixture.txt', '/docs/internal.html', '/node_modules/package/index.js', '/assets/.env', '/assets/bundle.js.map', '/config.php', '/api/request.php/extra', '/dump.sqlite', '/config.php.old', '/backup.sql.zip', '/.git/config']
 for (const route of privatePaths) {
   const file = path.join(root, route)
   // PATH_INFO is checked against the real endpoint file.

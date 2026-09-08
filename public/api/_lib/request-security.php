@@ -13,7 +13,7 @@ if (PHP_SAPI !== 'cli' && realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? ''))
 const MAX_FILES = 5;
 const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
 const CONSENT_VERSION = '2026-09-04';
-const POLICY_VERSION = '2026-09-07';
+const POLICY_VERSION = '2026-09-08';
 
 final class ValidationException extends \RuntimeException
 {
@@ -95,7 +95,7 @@ function validateFields(array $fields, array $config = []): array
     $phone = normalizePhone($phone);
 
     // Persist only a trusted source page. Query strings/fragments can contain
-    // personal information; campaign attribution belongs in aggregate analytics.
+    // personal information; campaign attribution is not collected.
     if ($sourceUrl !== '') {
         $parts = parse_url($sourceUrl);
         if ($parts === false || !isset($parts['scheme'], $parts['host']) || isset($parts['user'], $parts['pass'])) {

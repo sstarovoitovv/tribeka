@@ -20,7 +20,6 @@ CI запускает lint, frontend, PHP, deployment/backup и Chromium e2e-т�
     ├── maintenance.lock
     ├── uploads/
     ├── rate-limits/
-    ├── analytics/
     └── backups/                    # 700, SQL/архивы 600
 ```
 
@@ -84,7 +83,6 @@ fi
 - `database.sql` — `mysqldump --single-transaction` всех таблиц базы;
 - `uploads.tar.gz` — закрытые вложения;
 - `config.tar.gz` — конфигурация, необходимая для восстановления;
-- `analytics.tar.gz` — анонимные агрегаты, если каталог существует;
 - `manifest.json` — время, срок хранения, размеры и SHA-256 каждого файла.
 
 Пароль MySQL передаётся через временный `.mysql.cnf` с правами `600`, не через аргументы процесса; файл удаляется до завершения. Незавершённые копии имеют `.pending-*` и удаляются при обработанной ошибке. После аварийного выключения/`SIGKILL` проверить и удалить оставшийся закрытый `.pending-*` вручную: он не считается готовым backup.
@@ -128,3 +126,5 @@ Apache отдаёт существующие SSG HTML, для неизвестн
 Vercel использует `scripts/prepare-vercel.mjs` и [Build Output API](https://vercel.com/docs/build-output-api/configuration): HTTP-коды, маршруты и redirects берутся из готовой сборки; PHP-файлы физически исключены. Preview нужно разрешать в закрытом CORS-конфиге точным origin. Локальный Vite служит разработке; HTTP-семантика production проверяется Apache/e2e, а не SPA fallback сервера разработки.
 
 Локальная проверка без сервера: `npm run test:deploy` покрывает успешную активацию, возврат после ошибки, явный rollback, непрерывное чтение во время смены ссылки, запрет physical docroot и обхода путей, блокировку backup, комплектность и SHA-256 архивов, права файлов, очистку неудачного dump и ротацию по возрасту. Это fixture-тесты; реальный MySQL restore и поведение REG.RU vhost подтверждаются только на сервере.
+
+В локальной ветке `design/ui-review` статистика удалена. При её будущей публикации убрать устаревший cron `server/purge-analytics.php`; см. [заметку об удалении](search-and-analytics.md#сбор-статистики-удалён). Эта правка сама по себе прод не обновляет.
