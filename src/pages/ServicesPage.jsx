@@ -22,7 +22,7 @@ export default function ServicesPage() {
             <h2 className="mt-4 text-3xl font-black uppercase leading-none tracking-tight sm:text-4xl">Основные виды работ</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {serviceGroups.map(({ id, slug, number, title, short, details }) => (
+            {serviceGroups.map(({ id, slug, number, title, short }) => (
               <Link
                 to={getServicePath({ slug })}
                 id={id}
@@ -38,11 +38,6 @@ export default function ServicesPage() {
                   </div>
                   <h3 className="mt-5 text-xl font-bold leading-tight tracking-tight">{title}</h3>
                   <p className="mt-3 text-sm leading-6 text-ink/75">{short}</p>
-                  {details.length > 0 && (
-                    <ul className="mt-5 space-y-2 border-t border-ink/10 pt-5 text-sm leading-6 text-ink/75">
-                      {details.map((detail) => <li key={detail} className="ml-4 list-disc marker:text-signal">{detail}</li>)}
-                    </ul>
-                  )}
                   <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-signal">
                     Подробнее об услуге <FiArrowUpRight className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" size={14} />
                   </span>
