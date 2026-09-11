@@ -25,8 +25,8 @@ describe('SEO configuration', () => {
   it('generates service-specific metadata and hides unfinished pages from indexing', () => {
     const metadata = getSeoMetadata('/services/service-01/')
 
-    expect(metadata.title).toContain('Название услуги 01')
-    expect(metadata.description).toContain('Название услуги 01')
+    expect(metadata.title).toContain('Токарная обработка с ЧПУ')
+    expect(metadata.description).toContain('Токарная обработка с ЧПУ')
     expect(metadata.robots).toBe('noindex,follow')
   })
 

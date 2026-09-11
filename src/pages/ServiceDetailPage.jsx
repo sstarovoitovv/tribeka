@@ -33,16 +33,14 @@ export default function ServiceDetailPage() {
           <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
             <MediaPlaceholder label="Основное фото услуги" />
             <div className="bg-graphite p-7 text-white sm:p-9">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-signal">Комментарий</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-signal">Возможности производства</p>
               <h2 className="mt-4 text-2xl font-black uppercase leading-tight tracking-tight">Описание услуги</h2>
-              <p className="mt-4 max-w-md text-sm leading-7 text-white/55">Здесь будет подробное описание услуги, производственного процесса и результата, который получает заказчик.</p>
-              <div className="mt-7 flex flex-wrap gap-2 border-t border-white/10 pt-6">
-                {service.details.map((detail) => (
-                  <span key={detail} className="w-fit max-w-full bg-white/10 px-3 py-2 text-[9px] font-bold uppercase leading-4 tracking-wide text-white/70">
-                    {detail}
-                  </span>
-                ))}
-              </div>
+              <p className="mt-4 max-w-md text-sm leading-7 text-white/80">{service.short}</p>
+              {service.details.length > 0 && (
+                <ul className="mt-7 space-y-3 border-t border-white/15 pt-6 text-sm leading-6 text-white/85">
+                  {service.details.map((detail) => <li key={detail} className="ml-4 list-disc">{detail}</li>)}
+                </ul>
+              )}
             </div>
           </div>
         </div>
