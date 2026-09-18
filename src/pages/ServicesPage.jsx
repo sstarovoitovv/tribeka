@@ -12,41 +12,34 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Услуги"
         title="Каталог услуг"
-        description="Шаблон раздела: добавьте фотографии, названия, комментарии и характеристики для каждого направления"
+        description="Основные виды производимых работ и возможности оборудования ТРИБЕКА"
       />
 
       <section className="bg-[#f7f7f5] py-16 sm:py-20">
         <div className="container-page">
           <div className="mb-9 max-w-2xl">
-            <p className="eyebrow">Шаблоны карточек</p>
-            <h2 className="mt-4 text-3xl font-black uppercase leading-none tracking-tight sm:text-4xl">Заполните своими материалами</h2>
+            <p className="eyebrow">Производственные возможности</p>
+            <h2 className="mt-4 text-3xl font-black uppercase leading-none tracking-tight sm:text-4xl">Основные виды работ</h2>
           </div>
-          <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {serviceGroups.map(({ id, slug, number, title, short, details }) => (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {serviceGroups.map(({ id, slug, number, title, short }) => (
               <Link
                 to={getServicePath({ slug })}
                 id={id}
                 key={number}
-                className="group scroll-mt-28 overflow-hidden border border-ink/10 bg-mist transition-colors duration-150 hover:border-signal"
-                aria-label={`${title}: открыть примеры работ`}
+                className="group flex scroll-mt-28 flex-col overflow-hidden border border-ink/10 bg-mist transition-colors duration-150 hover:border-signal [&>div]:shrink-0"
+                aria-label={`${title}: подробнее об услуге`}
               >
                 <MediaPlaceholder label="Фото услуги" compact />
-                <article className="p-6">
+                <article className="flex flex-1 flex-col p-6">
                   <div className="flex items-center justify-between gap-5">
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-ink/70">Услуга /{number}</span>
                     <span className="hidden">{number}</span>
                   </div>
                   <h3 className="mt-5 text-xl font-bold leading-tight tracking-tight">{title}</h3>
                   <p className="mt-3 text-sm leading-6 text-ink/75">{short}</p>
-                  <div className="mt-5 flex flex-wrap gap-2 border-t border-ink/10 pt-5">
-                    {details.map((detail) => (
-                      <span key={detail} className="w-fit max-w-full bg-[#e3e8ef] px-3 py-2 text-xs font-bold uppercase leading-4 tracking-wide text-ink/60">
-                        {detail}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-signal">
-                    Смотреть примеры <FiArrowUpRight className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" size={14} />
+                  <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-signal">
+                    Подробнее об услуге <FiArrowUpRight className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" size={14} />
                   </span>
                 </article>
               </Link>

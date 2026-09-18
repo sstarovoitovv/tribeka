@@ -127,4 +127,4 @@ Vercel использует `scripts/prepare-vercel.mjs` и [Build Output API](h
 
 Локальная проверка без сервера: `npm run test:deploy` покрывает успешную активацию, возврат после ошибки, явный rollback, непрерывное чтение во время смены ссылки, запрет physical docroot и обхода путей, блокировку backup, комплектность и SHA-256 архивов, права файлов, очистку неудачного dump и ротацию по возрасту. Это fixture-тесты; реальный MySQL restore и поведение REG.RU vhost подтверждаются только на сервере.
 
-В локальной ветке `design/ui-review` статистика удалена. При её будущей публикации убрать устаревший cron `server/purge-analytics.php`; см. [заметку об удалении](search-and-analytics.md#сбор-статистики-удалён). Эта правка сама по себе прод не обновляет.
+Релиз 09.09.2026 удалил статистику; устаревший cron `server/purge-analytics.php` уже убран на REG.RU. См. [заметку об удалении](search-and-analytics.md#сбор-статистики-удалён) и [состояние production](production-status.md).
