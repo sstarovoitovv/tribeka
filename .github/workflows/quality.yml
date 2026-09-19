@@ -43,8 +43,6 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y apache2
           node scripts/test-apache.mjs
-      - name: Verify Vercel routing artifact
-        run: node scripts/prepare-vercel.mjs
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4

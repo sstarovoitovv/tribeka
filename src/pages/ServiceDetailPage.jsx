@@ -16,6 +16,8 @@ export default function ServiceDetailPage() {
   if (!service) return <NotFoundPage />
   if (serviceSlug !== service.slug) return <Navigate to={`${getServicePath(service)}${search}${hash}`} replace />
 
+  const photo = service.image
+
   return (
     <>
       <PageHero
@@ -31,7 +33,26 @@ export default function ServiceDetailPage() {
           </Link>
 
           <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-            <MediaPlaceholder label="Основное фото услуги" />
+            <figure>
+              <img
+                src={photo.src}
+                srcSet={`${photo.small} 480w, ${photo.src} 960w`}
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                alt={photo.alt}
+                width="960"
+                height="600"
+                decoding="async"
+                className="aspect-[8/5] w-full object-cover"
+              />
+              {photo.license && (
+                <figcaption className="mt-3 text-xs leading-5 text-ink/65">
+                  <a href={photo.source} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.author}</a>
+                  {' — '}
+                  {photo.licenseUrl ? <a href={photo.licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.license}</a> : photo.license}
+                  {'. Изображение уменьшено, переведено в WebP и кадрируется при отображении.'}
+                </figcaption>
+              )}
+            </figure>
             <div className="bg-graphite p-7 text-white sm:p-9">
               <p className="text-[9px] font-black uppercase tracking-[0.2em] text-signal">Возможности производства</p>
               <h2 className="mt-4 text-2xl font-black uppercase leading-tight tracking-tight">Описание услуги</h2>
