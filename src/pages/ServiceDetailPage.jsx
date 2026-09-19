@@ -5,7 +5,6 @@ import MediaPlaceholder from '../components/MediaPlaceholder.jsx'
 import PageHero from '../components/PageHero.jsx'
 import { findService, getServicePath } from '../serviceRoutes.js'
 import NotFoundPage from './NotFoundPage.jsx'
-import { serviceImages } from '../data/serviceImages.js'
 
 const workExamples = ['01', '02', '03']
 
@@ -17,7 +16,7 @@ export default function ServiceDetailPage() {
   if (!service) return <NotFoundPage />
   if (serviceSlug !== service.slug) return <Navigate to={`${getServicePath(service)}${search}${hash}`} replace />
 
-  const photo = serviceImages[Number(service.number) - 1]
+  const photo = service.image
 
   return (
     <>

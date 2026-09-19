@@ -1,5 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
+import { existsSync } from 'node:fs'
+import { serviceGroups } from './data/company.js'
 import { getPrerenderSeoEntries, renderPage } from './entry-server.jsx'
 
 describe('complete static page rendering', () => {
@@ -13,6 +15,16 @@ describe('complete static page rendering', () => {
     expect(JSON.parse(structuredData)['@graph']).toEqual(expect.arrayContaining([
       expect.objectContaining({ '@type': 'Organization', legalName: 'ООО «ТРИБЕКА»' }),
     ]))
+  })
+
+  it('uses each service photo in both catalog and detail HTML', () => {
+    const catalog = renderPage('/services/').markup
+    for (const service of serviceGroups) {
+      expect(existsSync(`public${service.image.src}`)).toBe(true)
+      expect(existsSync(`public${service.image.small}`)).toBe(true)
+      expect(catalog).toContain(`src="${service.image.src}"`)
+      expect(renderPage(`/services/${service.slug}/`).markup).toContain(`src="${service.image.src}"`)
+    }
   })
 
   it('renders the actual content and functional link/form markup in the first HTML response', () => {

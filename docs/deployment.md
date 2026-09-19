@@ -1,6 +1,6 @@
 # Доставка, резервные копии и восстановление
 
-Основной сайт — `https://xn--80abmkm6an.xn--p1ai` (трибека.рф), REG.RU, Apache + PHP 8.3 + MySQL. Ветка `main` запускает production workflow. `develop` и feature-ветки используются для просмотра в Vercel. Vercel не исполняет PHP: сборщик исключает `api/` из его публичного артефакта, форма обращается к разрешённому origin на основном домене. Все страницы Vercel получают `X-Robots-Tag: noindex, nofollow`.
+Основной сайт — `https://xn--80abmkm6an.xn--p1ai` (трибека.рф), REG.RU, Apache + PHP 8.3 + MySQL. Ветка `main` запускает production workflow. Предпросмотр — локальная production-сборка (`npm run preview:production`); Vercel больше не используется.
 
 ## Что проверяется перед релизом
 
@@ -123,7 +123,7 @@ GitHub Actions → Deploy production to REG.RU → Run workflow → ветка `
 
 Apache отдаёт существующие SSG HTML, для неизвестного URL — `404.html` со статусом **404**, а не успешный SPA fallback. `.htaccess` фиксирует HTTPS и `www → apex`, запрещает листинг, dotfiles и внутренние PHP-библиотеки. CSP сохраняет карту Яндекса, inline CSS существующих фоновых изображений, JSON-LD и отправку формы с preview на apex. Выполняемые inline scripts запрещены. HSTS не включает `includeSubDomains`/preload, поскольку владение и TLS остальных поддоменов не проверялись.
 
-Vercel использует `scripts/prepare-vercel.mjs` и [Build Output API](https://vercel.com/docs/build-output-api/configuration): HTTP-коды, маршруты и redirects берутся из готовой сборки; PHP-файлы физически исключены. Preview нужно разрешать в закрытом CORS-конфиге точным origin. Локальный Vite служит разработке; HTTP-семантика production проверяется Apache/e2e, а не SPA fallback сервера разработки.
+Локальный Vite служит разработке. `npm run preview:production` отдаёт готовые HTML и настоящие 404 без исполнения PHP. HTTP-семантика production проверяется Apache/e2e. Для ручных проверок формы требуется отдельно настроенный PHP-сервер; разрешённые origins задаются точно в закрытом серверном config.
 
 Локальная проверка без сервера: `npm run test:deploy` покрывает успешную активацию, возврат после ошибки, явный rollback, непрерывное чтение во время смены ссылки, запрет physical docroot и обхода путей, блокировку backup, комплектность и SHA-256 архивов, права файлов, очистку неудачного dump и ротацию по возрасту. Это fixture-тесты; реальный MySQL restore и поведение REG.RU vhost подтверждаются только на сервере.
 
