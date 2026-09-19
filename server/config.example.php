@@ -12,7 +12,7 @@ return [
     'trusted_origins' => [
         'https://xn--80abmkm6an.xn--p1ai',
         'https://www.xn--80abmkm6an.xn--p1ai',
-        // Add the exact approved preview origin here; never *.vercel.app.
+        // Add the exact approved preview origin here; never wildcard origins.
     ],
     'backup_dir' => '/absolute/path/outside/web/root/backups',
     'backup_keep' => 10,

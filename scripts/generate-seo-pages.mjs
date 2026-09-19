@@ -109,10 +109,6 @@ try {
   await insertRedirects('.htaccess', '# GENERATED_SERVICE_REDIRECTS', redirects.map(({ from, to }) => (
     `RewriteRule ^${escapePattern(from.slice(1, -1))}/?$ ${to} [R=301,L,NE]`
   )), redirects)
-  await insertRedirects('_redirects', '# GENERATED_SERVICE_REDIRECTS', redirects.flatMap(({ from, to, status }) => [
-    `${from.slice(0, -1)} ${to} ${status}`,
-    `${from} ${to} ${status}`,
-  ]), redirects)
   process.stdout.write(`Prerendered ${entries.length} complete React pages and a static 404; ${redirects.length} legacy service redirects.\n`)
 } finally {
   await rm(serverDirectory, { recursive: true, force: true })
