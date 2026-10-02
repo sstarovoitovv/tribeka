@@ -132,3 +132,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     background: linear-gradient(to right, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
   }
 }
+
+/* A soft blue halo keeps the equipment cutout continuous with the section. */
+.partner-equipment {
+  position: relative;
+  isolation: isolate;
+  padding: 12px 16px;
+}
+.partner-equipment::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgb(53 105 173 / 60%) 0%, rgb(53 105 173 / 28%) 42%, rgb(16 39 68 / 0%) 70%);
+  pointer-events: none;
+}
