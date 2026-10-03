@@ -15,8 +15,8 @@ export default function ContactLinks({ dark = false, header = false, labeled = f
     <div className={`relative flex items-center gap-2 ${className}`} aria-label="Каналы связи">
       {includePhone && (
         <a href={`tel:${siteConfig.phoneHref}`} aria-label={`Позвонить: ${siteConfig.phone}`} className="group absolute right-[calc(100%+0.5rem)] top-1/2 z-10 inline-flex min-h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[5px] text-sm font-semibold text-signal transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-signal/10 focus-visible:bg-signal/10">
-          <FiPhone size={20} className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-2 group-focus-visible:-translate-x-2" aria-hidden="true" />
-          <span className="pointer-events-none absolute left-1/2 top-[calc(100%+0.35rem)] -translate-x-1/2 -translate-y-1 whitespace-nowrap rounded-[5px] bg-mist px-3 py-2 text-xs font-bold text-ink opacity-0 shadow-[0_10px_28px_rgba(7,24,46,0.14)] transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">{siteConfig.phone}</span>
+          <FiPhone size={20} className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-[126px] group-focus-visible:-translate-x-[126px]" aria-hidden="true" />
+          <span className="pointer-events-none absolute right-0 top-1/2 flex h-11 w-[138px] -translate-y-1/2 translate-x-2 items-center justify-end whitespace-nowrap text-[13px] font-bold text-ink opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">{siteConfig.phone}</span>
         </a>
       )}
       {contacts.filter(contact => includeEmail || contact.label !== 'Почта').map(({ label, href, icon: Icon, image, iconClass }) => {
