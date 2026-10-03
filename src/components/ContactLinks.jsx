@@ -14,9 +14,9 @@ export default function ContactLinks({ dark = false, header = false, labeled = f
   return (
     <div className={`relative flex items-center gap-2 ${className}`} aria-label="Каналы связи">
       {includePhone && (
-        <a href={`tel:${siteConfig.phoneHref}`} aria-label={`Позвонить: ${siteConfig.phone}`} className="group absolute right-[calc(100%+0.5rem)] top-1/2 z-10 inline-flex min-h-11 w-11 -translate-y-1/2 items-center justify-center rounded-[5px] text-sm font-semibold text-signal transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-signal/10 focus-visible:bg-signal/10">
-          <FiPhone size={20} className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-[126px] group-focus-visible:-translate-x-[126px]" aria-hidden="true" />
-          <span className="pointer-events-none absolute right-0 top-1/2 flex h-11 w-[138px] -translate-y-1/2 translate-x-2 items-center justify-end whitespace-nowrap text-[13px] font-bold text-ink opacity-0 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">{siteConfig.phone}</span>
+        <a href={`tel:${siteConfig.phoneHref}`} aria-label={`Позвонить: ${siteConfig.phone}`} className="group absolute right-[calc(100%+0.5rem)] top-1/2 z-10 inline-flex min-h-11 w-11 -translate-y-1/2 items-center justify-end gap-2 overflow-hidden rounded-[5px] text-sm font-semibold text-signal transition-[width,background-color] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:w-[184px] hover:bg-signal/10 focus-visible:w-[184px] focus-visible:bg-signal/10">
+          <FiPhone size={20} className="mr-3 shrink-0 transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)]" aria-hidden="true" />
+          <span className="max-w-0 shrink-0 overflow-hidden whitespace-nowrap text-[13px] font-bold text-ink/85 opacity-0 transition-[max-width,opacity,color] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:max-w-[138px] group-hover:opacity-100 group-focus-visible:max-w-[138px] group-focus-visible:opacity-100 hover:text-signal">{siteConfig.phone}</span>
         </a>
       )}
       {contacts.filter(contact => includeEmail || contact.label !== 'Почта').map(({ label, href, icon: Icon, image, iconClass }) => {
