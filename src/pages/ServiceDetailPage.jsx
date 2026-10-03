@@ -32,12 +32,12 @@ export default function ServiceDetailPage() {
             <FiArrowLeft size={14} /> Все услуги
           </Link>
 
-          <figure className="relative mt-8 overflow-hidden bg-ink">
-            <div className="relative grid w-full overflow-hidden lg:aspect-[8/5]">
+          <figure className="relative mx-auto mt-8 max-w-[960px] overflow-hidden bg-ink">
+            <div className="relative grid w-full overflow-hidden lg:aspect-video">
               <img
                 src={photo.src}
                 srcSet={`${photo.small} 480w, ${photo.src} 960w`}
-                sizes="(min-width: 1024px) 1280px, 100vw"
+                sizes="(min-width: 1024px) 960px, 100vw"
                 alt={photo.alt}
                 width="960"
                 height="600"
