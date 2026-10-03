@@ -65,9 +65,9 @@ export default function Header() {
           {links.map(([label, to]) => <NavItem key={to} label={label} to={to} />)}
         </nav>
         <div className="hidden h-full items-stretch min-[1000px]:contents">
-          <a href={`tel:${siteConfig.phoneHref}`} className="group flex h-full items-center justify-center gap-2.5 px-2 text-[13px] font-black leading-none text-ink transition-colors duration-150 ease-in-out hover:text-signal">
-            <FiPhone size={18} className="shrink-0 text-signal" aria-hidden="true" />
-            <span className="whitespace-nowrap">{siteConfig.phone}</span>
+          <a href={`tel:${siteConfig.phoneHref}`} aria-label={`Позвонить: ${siteConfig.phone}`} className="group flex h-full items-center justify-center overflow-hidden px-2 text-[13px] font-black leading-none text-ink transition-colors duration-200 ease-out hover:text-signal focus-visible:text-signal">
+            <FiPhone size={18} className="shrink-0 text-signal transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-2 group-focus-visible:-translate-x-2" aria-hidden="true" />
+            <span className="max-w-0 -translate-x-1 overflow-hidden whitespace-nowrap opacity-0 transition-[max-width,opacity,transform,margin] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:ml-0.5 group-hover:max-w-40 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:ml-0.5 group-focus-visible:max-w-40 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">{siteConfig.phone}</span>
           </a>
           <ContactLinks header className="h-full justify-end" />
         </div>

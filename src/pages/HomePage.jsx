@@ -72,11 +72,11 @@ export default function HomePage() {
             <p className="max-w-xl text-base leading-7 text-white/80">ТРИБЕКА берёт полную ответственность за производственный результат и работает с чертежами любой сложности, чтобы заказчику не приходилось контролировать разных исполнителей</p>
           </div>
           <div className="mt-7 grid gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
-            <figure>
+            <figure className="flex min-w-0 flex-col">
               <div className="partner-equipment">
-                <img src="/brand/equipment-turning-cutout.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative mx-auto h-auto max-h-[360px] w-full object-contain" />
+                <img src="/brand/equipment-turning-cutout.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain" />
               </div>
-              <figcaption className="mt-4 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></div><span className="text-sm text-white/75">ЧПУ</span></figcaption>
+              <figcaption className="mt-4"><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></figcaption>
             </figure>
             <div>
               <ul className="divide-y divide-white/20 border-y border-white/20">
