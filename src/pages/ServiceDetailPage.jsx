@@ -32,38 +32,42 @@ export default function ServiceDetailPage() {
             <FiArrowLeft size={14} /> Все услуги
           </Link>
 
-          <figure className="relative mx-auto mt-8 max-w-[960px] overflow-hidden bg-ink">
-            <div className="relative grid w-full overflow-hidden lg:aspect-video">
-              <img
-                src={photo.src}
-                srcSet={`${photo.small} 480w, ${photo.src} 960w`}
-                sizes="(min-width: 1024px) 960px, 100vw"
-                alt={photo.alt}
-                width="960"
-                height="600"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div className="relative z-10 mx-4 mb-4 mt-40 bg-graphite/95 p-6 text-white shadow-glow backdrop-blur-sm sm:mx-6 sm:mb-6 sm:mt-56 sm:p-8 lg:absolute lg:inset-y-8 lg:left-auto lg:right-8 lg:m-0 lg:flex lg:w-[calc(50%-3rem)] lg:flex-col lg:justify-center lg:p-9 xl:inset-y-10 xl:right-10 xl:w-[calc(50%-4rem)]">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-signal">Возможности производства</p>
-                <h2 className="mt-4 text-2xl font-black uppercase leading-tight tracking-tight">Описание услуги</h2>
-                <p className="mt-4 max-w-md text-sm leading-7 text-white/80">{service.short}</p>
-                {service.details.length > 0 && (
-                  <ul className="mt-6 space-y-3 border-t border-white/15 pt-5 text-sm leading-6 text-white/85">
-                    {service.details.map((detail) => <li key={detail} className="ml-4 list-disc">{detail}</li>)}
-                  </ul>
-                )}
+          <div className="mt-8 grid items-start gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+            <figure>
+              <div className="relative overflow-hidden">
+                <img
+                  src={photo.src}
+                  srcSet={`${photo.small} 480w, ${photo.src} 960w`}
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  alt={photo.alt}
+                  width="960"
+                  height="600"
+                  decoding="async"
+                  className="aspect-[8/5] w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-ink/15" aria-hidden="true" />
               </div>
+              {photo.license && (
+                <figcaption className="mt-3 text-xs leading-5 text-ink/65">
+                  <a href={photo.source} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.author}</a>
+                  {' — '}
+                  {photo.licenseUrl ? <a href={photo.licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.license}</a> : photo.license}
+                  {'. Изображение уменьшено, переведено в WebP и кадрируется при отображении.'}
+                </figcaption>
+              )}
+            </figure>
+            <div className="relative overflow-hidden bg-gradient-to-br from-graphite to-ink p-7 text-white sm:p-9 lg:border-l-2 lg:border-signal/70">
+              <div className="absolute -right-24 -top-24 size-64 rounded-full bg-signal/10 blur-3xl" aria-hidden="true" />
+              <p className="relative text-[10px] font-black uppercase tracking-[0.22em] text-[#77a7e6]">Возможности производства</p>
+              <h2 className="relative mt-4 text-2xl font-black leading-tight tracking-[-0.025em] sm:text-3xl">Описание услуги</h2>
+              <p className="relative mt-5 max-w-md text-base leading-7 text-white/80">{service.short}</p>
+              {service.details.length > 0 && (
+                <ul className="relative mt-8 space-y-3 border-t border-white/15 pt-7 text-sm leading-6 text-white/85">
+                  {service.details.map((detail) => <li key={detail} className="ml-4 list-disc marker:text-signal">{detail}</li>)}
+                </ul>
+              )}
             </div>
-            {photo.license && (
-              <figcaption className="bg-[#f7f7f5] pt-3 text-xs leading-5 text-ink/65">
-                <a href={photo.source} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.author}</a>
-                {' — '}
-                {photo.licenseUrl ? <a href={photo.licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">{photo.license}</a> : photo.license}
-                {'. Изображение уменьшено, переведено в WebP и кадрируется при отображении.'}
-              </figcaption>
-            )}
-          </figure>
+          </div>
         </div>
       </section>
 

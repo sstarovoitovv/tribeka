@@ -10,7 +10,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Услуги"
         title="Каталог услуг"
-        description="Основные виды производимых работ и возможности оборудования ТРИБЕКА"
+        description="Основные виды производственных работ и возможности оборудования"
       />
 
       <section className="bg-[#f7f7f5] py-16 sm:py-20">

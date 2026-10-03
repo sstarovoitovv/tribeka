@@ -57,15 +57,15 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-mist">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-stretch min-[1000px]:grid min-[1000px]:grid-cols-[180px_minmax(340px,1fr)_392px] min-[1000px]:pr-6 xl:grid-cols-[220px_minmax(360px,1fr)_392px] xl:pr-[42px]">
+      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-stretch min-[1000px]:grid min-[1000px]:grid-cols-[180px_minmax(340px,1fr)_200px] min-[1000px]:pr-6 xl:grid-cols-[220px_minmax(360px,1fr)_200px] xl:pr-[42px]">
         <div className="flex min-w-0 items-center px-5 sm:px-7 min-[1000px]:justify-center min-[1000px]:px-4 xl:px-8">
           <Logo compact />
         </div>
         <nav className="hidden h-full min-w-0 items-stretch justify-center min-[1000px]:flex min-[1000px]:gap-4 min-[1000px]:px-2 xl:gap-8 xl:px-6" aria-label="Основная навигация">
           {links.map(([label, to]) => <NavItem key={to} label={label} to={to} />)}
         </nav>
-        <div className="hidden h-full items-center min-[1000px]:flex">
-          <ContactLinks header includePhone className="justify-end" />
+        <div className="hidden h-full items-center justify-end min-[1000px]:flex">
+          <ContactLinks header includePhone />
         </div>
         <button onClick={() => setOpen((current) => !current)} className="ml-auto mr-4 grid size-11 place-items-center self-center rounded-[5px] bg-transparent text-ink transition-[border-radius,background-color] duration-150 ease-in-out hover:bg-signal/10 min-[1000px]:hidden" aria-label={open ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={open} aria-controls="mobile-navigation">
           <span className="relative size-6">

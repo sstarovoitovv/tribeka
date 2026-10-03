@@ -34,13 +34,13 @@ export default function HomePage() {
 
       <section className="py-14 sm:py-20">
         <div className="container-page">
-          <div className="grid gap-6 lg:grid-cols-2 lg:items-end lg:gap-x-12">
+          <div className="grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-x-12">
             <div>
               <p className="eyebrow">Основные направления</p>
               <h2 className="mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-[-0.035em] sm:text-5xl">Производство<br />полного цикла</h2>
             </div>
-            <div className="max-w-md lg:pl-12">
-              <p className="text-sm leading-6 text-ink/70">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
+            <div className="max-w-lg lg:mt-[37px] lg:pl-12">
+              <p className="text-base leading-7 text-ink/70 sm:text-lg sm:leading-8">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
               <Link to="/services/" className="mt-5 inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-signal">Все услуги <span aria-hidden="true">→</span></Link>
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function HomePage() {
           <div className="mt-7 grid gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
             <figure className="flex min-w-0 flex-col">
               <div className="partner-equipment">
-                <img src="/brand/equipment-turning-cutout.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[8.6%]" />
+                <img src="/brand/equipment-turning-cutout.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[16%]" />
               </div>
               <figcaption className="mt-4"><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></figcaption>
             </figure>
