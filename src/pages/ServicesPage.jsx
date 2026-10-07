@@ -10,7 +10,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Услуги"
         title="Каталог услуг"
-        description="Основные виды производимых работ и возможности оборудования ТРИБЕКА"
+        description="Основные виды производственных работ и возможности оборудования"
       />
 
       <section className="bg-[#f7f7f5] py-16 sm:py-20">
@@ -28,17 +28,19 @@ export default function ServicesPage() {
                 className="group flex scroll-mt-28 flex-col overflow-hidden border border-ink/10 bg-mist transition-colors duration-150 hover:border-signal [&>div]:shrink-0"
                 aria-label={`${title}: подробнее об услуге`}
               >
-                <img
-                  src={image.src}
-                  srcSet={`${image.small} 480w, ${image.src} 960w`}
-                  sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
-                  alt={image.alt}
-                  width="960"
-                  height="600"
-                  loading={index < 3 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className="aspect-[8/5] w-full shrink-0 object-cover"
-                />
+                <div className="aspect-[8/5] w-full shrink-0 overflow-hidden">
+                  <img
+                    src={image.src}
+                    srcSet={`${image.small} 480w, ${image.src} 960w`}
+                    sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
+                    alt={image.alt}
+                    width="960"
+                    height="600"
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] group-focus-visible:scale-[1.04]"
+                  />
+                </div>
                 <article className="flex flex-1 flex-col p-6">
                   <div className="flex items-center justify-between gap-5">
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-ink/70">Услуга /{number}</span>

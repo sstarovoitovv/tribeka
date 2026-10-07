@@ -89,6 +89,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   box-shadow: 0 0 0 4px #fff;
 }
 
+.request-form input:not([type="checkbox"]):focus-visible,
+.request-form textarea:focus-visible {
+  outline-width: 1px;
+  outline-offset: -1px;
+  box-shadow: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
 }
@@ -130,5 +137,29 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-photo::before { mask-image: linear-gradient(to right, #000, transparent); }
   .hero-photo::after {
     background: linear-gradient(to right, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
+  }
+}
+
+/* A soft blue halo keeps the equipment cutout continuous with the section. */
+.partner-equipment {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: clamp(260px, 28vw, 380px);
+  place-items: center;
+  padding: 12px 0;
+}
+.partner-equipment::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgb(53 105 173 / 60%) 0%, rgb(53 105 173 / 28%) 42%, rgb(16 39 68 / 0%) 70%);
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .partner-equipment img {
+    margin-inline: auto;
   }
 }

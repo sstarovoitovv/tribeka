@@ -137,9 +137,9 @@ try {
     rejects(fn () => validateFields([...$valid, 'message' => "bad\xFFvalue"]), 'invalid UTF-8 is rejected');
     rejects(fn () => validateFields([...$valid, 'policy_version' => 'old']), 'stale policy version returns conflict', 409);
     rejects(fn () => validateFields([...$valid, 'source_url' => 'https://attacker.example/page']), 'foreign source page is rejected');
-    check(trustedOrigin('https://attacker.vercel.app') === null, 'arbitrary Vercel projects are not trusted');
+    check(trustedOrigin('https://attacker.example.com') === null, 'arbitrary external sites are not trusted');
     check(trustedOrigin('http://localhost:5173') === null, 'localhost is not trusted by production defaults');
-    check(trustedOrigin('https://review.vercel.app', ['trusted_origins' => ['https://review.vercel.app']]) !== null, 'explicit preview origin can be allowed');
+    check(trustedOrigin('https://review.example.com', ['trusted_origins' => ['https://review.example.com']]) !== null, 'explicit preview origin can be allowed');
     check(trustedOrigin('https://xn--80abmkm6an.xn--p1ai.attacker.com') === null, 'origin suffix spoof is rejected');
 
     // Exercise the production persistence function using an isolated PDO database.
@@ -313,8 +313,8 @@ try {
     check(httpRequest($base, 'GET')['status'] === 405, 'HTTP endpoint returns 405 for GET');
     $preflight = httpRequest($base, 'OPTIONS', null, 'http://localhost:5173');
     check($preflight['status'] === 204 && $preflight['body'] === '', 'trusted preflight is an empty 204');
-    check(httpRequest($base, 'OPTIONS', null, 'https://attacker.vercel.app')['status'] === 403, 'untrusted preview preflight is forbidden');
-    check(httpRequest($base, 'POST', $valid, 'https://attacker.vercel.app')['status'] === 403, 'untrusted POST is forbidden');
+    check(httpRequest($base, 'OPTIONS', null, 'https://attacker.example.com')['status'] === 403, 'untrusted preview preflight is forbidden');
+    check(httpRequest($base, 'POST', $valid, 'https://attacker.example.com')['status'] === 403, 'untrusted POST is forbidden');
     check(httpRequest($base, 'POST', '{}', null, ['Content-Type: application/json'])['status'] === 415, 'unexpected JSON body is rejected');
     $badConsent = httpRequest($base, 'POST', [...$valid, 'privacy' => 'false']);
     check($badConsent['status'] === 422, 'real HTTP request cannot submit false consent');

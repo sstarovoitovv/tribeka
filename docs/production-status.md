@@ -34,10 +34,10 @@ PHP OPTIONS возвращает 204 и X-Tribeka-Release нового рели�
 
 ### Предыдущая публикация
 
-Основной сайт: https://xn--80abmkm6an.xn--p1ai (трибека.рф), REG.RU. Vercel служит для просмотра; разработка продолжается в develop. Релиз: `0554a9ac5e3c76bf467c3d5c54da60a0e27617a3-34139998685-1`.
+Основной сайт: https://xn--80abmkm6an.xn--p1ai (трибека.рф), REG.RU. Разработка продолжается в develop. Релиз: `0554a9ac5e3c76bf467c3d5c54da60a0e27617a3-34139998685-1`.
 
 - [Production deployment — success](https://github.com/sstarovoitovv/tribeka/actions/runs/34139998685).
-- [Quality — success](https://github.com/sstarovoitovv/tribeka/actions/runs/34139998646): lint, frontend, PHP, backup/deploy, SSG, Apache, Vercel routing и e2e.
+- [Quality — success](https://github.com/sstarovoitovv/tribeka/actions/runs/34139998646): lint, frontend, PHP, backup/deploy, SSG, Apache и e2e.
 - PR #1 объединён в develop; PR #2 — в main.
 
 ## Подтверждено на основном домене
