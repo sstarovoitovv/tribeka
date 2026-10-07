@@ -30,7 +30,8 @@ describe('complete static page rendering', () => {
   it('renders the actual content and functional link/form markup in the first HTML response', () => {
     expect(renderPage('/').markup).toContain('готового')
     expect(renderPage('/services/').markup).toContain('href="/services/service-08/"')
-    expect(renderPage('/services/service-01/').markup).toContain('Примеры работ')
+    expect(renderPage('/services/service-01/').markup).not.toContain('Примеры работ')
+    expect(renderPage('/services/service-01/').markup).not.toContain('Название работы')
     const { markup } = renderPage('/contacts/')
     expect(markup).toContain('<form')
     expect(markup).toContain('name="phone"')

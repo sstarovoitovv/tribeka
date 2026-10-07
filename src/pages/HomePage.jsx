@@ -74,7 +74,7 @@ export default function HomePage() {
           <div className="mt-7 grid gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
             <figure className="flex min-w-0 flex-col">
               <div className="partner-equipment">
-                <img src="/brand/equipment-turning-cutout.png" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[16%]" />
+                <img src="/brand/equipment-turning-cutout.webp" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[16%]" />
               </div>
               <figcaption className="mt-4"><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></figcaption>
             </figure>

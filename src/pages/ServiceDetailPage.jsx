@@ -1,12 +1,9 @@
 import { FiArrowLeft } from 'react-icons/fi'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import ContactBand from '../components/ContactBand.jsx'
-import MediaPlaceholder from '../components/MediaPlaceholder.jsx'
 import PageHero from '../components/PageHero.jsx'
 import { findService, getServicePath } from '../serviceRoutes.js'
 import NotFoundPage from './NotFoundPage.jsx'
-
-const workExamples = ['01', '02', '03']
 
 export default function ServiceDetailPage() {
   const { serviceSlug } = useParams()
@@ -67,30 +64,6 @@ export default function ServiceDetailPage() {
                 </ul>
               )}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 sm:py-20">
-        <div className="container-page">
-          <p className="eyebrow">Портфолио услуги</p>
-          <h2 className="mt-4 text-3xl font-black uppercase leading-none tracking-tight sm:text-5xl">Примеры работ</h2>
-          <div className="mt-9 grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {workExamples.map((number) => (
-              <article key={number} className="overflow-hidden border border-ink/10 bg-white">
-                <MediaPlaceholder label={`Фото примера ${number}`} compact />
-                <div className="p-6">
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-signal">Пример /{number}</p>
-                  <h3 className="mt-4 text-xl font-black uppercase tracking-tight">Название работы</h3>
-                  <p className="mt-3 text-sm leading-6 text-ink/50">Краткий комментарий о задаче, процессе изготовления и полученном результате.</p>
-                  <div className="mt-5 flex flex-wrap gap-2 border-t border-ink/10 pt-5">
-                    {['Материал', 'Размер', 'Срок'].map((item) => (
-                      <span key={item} className="w-fit bg-[#e3e8ef] px-3 py-2 text-[9px] font-bold uppercase tracking-wide text-ink/60">{item}</span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))}
           </div>
         </div>
       </section>
