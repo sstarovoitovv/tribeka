@@ -36,24 +36,8 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-          extensions: mbstring, fileinfo, pdo_mysql, pdo_sqlite, zip
-          coverage: none
       - run: npm ci
-      - run: npm run lint && npm test && npm run test:php && npm run test:deploy
-      - name: Check every PHP file
-        run: rg --files public/api server tests/php -g '*.php' -0 | xargs -0 -n1 php -l
       - run: npm run build
-      - run: npm run test:ssg
-      - name: Verify real Apache HTTP behavior
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y apache2
-          node scripts/test-apache.mjs
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
 
       - name: Configure pinned SSH connection
         env:

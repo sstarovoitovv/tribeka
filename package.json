@@ -17,7 +17,8 @@
     "test:deploy": "php tests/php/deployment.php",
     "preview:production": "node scripts/serve-preview.mjs",
     "sitemap:submit": "node scripts/submit-sitemap.mjs",
-    "test:apache": "node scripts/test-apache.mjs"
+    "test:apache": "node scripts/test-apache.mjs",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
