@@ -32,7 +32,7 @@ function currentRelease(string $appPath, string $docroot): string
 {
     $current = $appPath . '/current';
     if (!is_link($current) || !is_link($docroot) || readlink($docroot) !== $current . '/public') {
-        throw new RuntimeException('Atomic layout is not initialized. Physical production directories are never overwritten; follow docs/deployment.md bootstrap.');
+        throw new RuntimeException('Atomic layout is not initialized. Physical production directories are never overwritten; see docs/operations.md.');
     }
     $resolved = realpath($current);
     if ($resolved === false || dirname($resolved) !== realpath($appPath . '/releases')) {

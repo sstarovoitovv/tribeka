@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/_lib/request-security.php';
+require_once __DIR__ . '/_lib/attachment-scanner.php';
 $releaseMarker = __DIR__ . '/../release.json';
 if (is_file($releaseMarker)) {
     $release = json_decode((string) file_get_contents($releaseMarker), true);
@@ -16,6 +17,7 @@ use function Tribeka\Security\acquireMaintenanceLock;
 use function Tribeka\Security\ensurePrivateDirectory;
 use function Tribeka\Security\privateConfigPath;
 use function Tribeka\Security\scalarField;
+use function Tribeka\Security\scanAttachments;
 use function Tribeka\Security\storeLead;
 use function Tribeka\Security\takeRateLimit;
 use function Tribeka\Security\trustedOrigin;
@@ -117,6 +119,7 @@ try {
     $policyVersion = $fields['policyVersion'];
     $sourceUrl = $fields['sourceUrl'];
     $pendingAttachments = validateAttachments($_FILES);
+    scanAttachments($pendingAttachments, $config);
 } catch (ValidationException $exception) {
     respond($exception->status, ['error' => $exception->getMessage()]);
 } catch (Throwable $exception) {

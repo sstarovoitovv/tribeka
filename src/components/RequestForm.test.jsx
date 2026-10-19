@@ -58,4 +58,19 @@ describe('RequestForm', () => {
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Не удалось отправить заявку'))
     expect(screen.getByLabelText(/ваше имя/i)).toHaveValue('Мария')
   })
+
+  it('renders attachment names and server errors as text rather than HTML or CSS', async () => {
+    const user = userEvent.setup()
+    const payload = '<style>body{display:none}</style><img src=x onerror=alert(1)>'
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, json: async () => ({ error: payload }) }))
+    const { container } = renderForm()
+    await user.upload(screen.getByLabelText(/прикрепить файлы/i), new File(['drawing'], `${payload}.pdf`, { type: 'application/pdf' }))
+    expect(screen.getByText(`${payload}.pdf`)).toBeVisible()
+    await user.type(screen.getByLabelText(/ваше имя/i), 'Тест')
+    await user.type(screen.getByLabelText(/^телефон/i), '+79062603060')
+    await user.click(screen.getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: /обсудить проект/i }))
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(payload))
+    expect(container.querySelector('style, img[src="x"], [onerror]')).toBeNull()
+  })
 })

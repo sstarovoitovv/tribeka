@@ -10,8 +10,8 @@ export const siteConfig = {
   maxUrl: 'https://max.ru/u/f9LHodD0cOJtECLCLcosW-YWZLd_mKhIqn1nk8PQPAiWzjdeCTDls_dV50E',
   formEndpoint: import.meta.env?.VITE_FORM_ENDPOINT || 'https://xn--80abmkm6an.xn--p1ai/api/request.php',
   personalData: {
-    policyVersion: '2026-09-08',
-    consentVersion: '2026-09-04',
+    policyVersion: '2026-10-19',
+    consentVersion: '2026-10-19',
     leadRetentionDays: 365,
   },
   address: 'Санкт-Петербург, ул. Возрождения, 24, корп. 2Е',

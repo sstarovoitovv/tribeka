@@ -12,8 +12,8 @@ if (PHP_SAPI !== 'cli' && realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? ''))
 
 const MAX_FILES = 5;
 const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
-const CONSENT_VERSION = '2026-09-04';
-const POLICY_VERSION = '2026-09-08';
+const CONSENT_VERSION = '2026-10-19';
+const POLICY_VERSION = '2026-10-19';
 
 final class ValidationException extends \RuntimeException
 {
