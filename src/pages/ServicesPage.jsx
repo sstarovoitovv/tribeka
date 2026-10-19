@@ -54,19 +54,6 @@ export default function ServicesPage() {
               </Link>
             ))}
           </div>
-          <details className="mt-8 text-xs leading-6 text-ink/65">
-            <summary className="w-fit cursor-pointer underline underline-offset-4">Источники фотографий</summary>
-            <p className="mt-3">Фотографии иллюстрируют виды обработки. Изображения уменьшены и переведены в WebP; при отображении кадрируются.</p>
-            <ul className="mt-2 space-y-1">
-              {serviceGroups.map(({ image }) => image).filter(({ license }) => license).map(({ src, author, source, license, licenseUrl }) => (
-                <li key={src}>
-                  <a href={source} target="_blank" rel="noreferrer" className="underline underline-offset-4">{author}</a>
-                  {' — '}
-                  {licenseUrl ? <a href={licenseUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">{license}</a> : license}
-                </li>
-              ))}
-            </ul>
-          </details>
         </div>
       </section>
 

@@ -19,7 +19,7 @@
 ```text
 src/pages/            # Страницы
 src/components/       # Общие элементы и форма заявки
-src/data/company.js   # Услуги, параметры и фотографии
+src/data/company.js   # Услуги, параметры и изображения
 src/siteConfig.js     # Контакты и настройки сайта
 public/               # Изображения и PHP-обработчик формы
 server/               # Деплой, резервные копии и обслуживание
@@ -75,4 +75,4 @@ backup/deploy, сборку, SSG, Apache и браузерные e2e. При п�
 
 `develop` — разработка, `main` — основной сайт. После объединения pull request в `main` GitHub Actions собирает сайт, создаёт резервную копию и публикует релиз на REG.RU. При ошибке проверки сайта выполняется откат.
 
-Подробности: [деплой и backup](docs/deployment.md), [защита формы](docs/security.md), [SEO](docs/ssg-seo.md), [источники фотографий](docs/service-photo-sources.md).
+Подробности: [деплой и backup](docs/deployment.md), [защита формы](docs/security.md), [SEO](docs/ssg-seo.md), [изображения и описания услуг](docs/service-photo-sources.md).
