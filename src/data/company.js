@@ -18,6 +18,7 @@ export const advantages = [
 export const serviceGroups = [
   {
     "number": "01",
+    "description": ["Токарная обработка применяется для изготовления валов, втулок, осей и других деталей вращения. Заготовка вращается, а резец снимает материал, формируя наружные и внутренние поверхности, торцы, канавки и резьбу.","Программное управление задаёт последовательность операций и помогает повторять геометрию в партии. Размеры, материал и требования к поверхностям определяются чертежом детали."],
     "title": "Токарная обработка с ЧПУ",
     "short": "Изготовление деталей на токарных станках-автоматах с ЧПУ",
     "details": [
@@ -26,83 +27,66 @@ export const serviceGroups = [
       "Нарезка винтов с длиной резьбы ≈ 2000 мм"
     ],
     "image": {
-      "src": "/images/services/service-01-960.webp",
-      "small": "/images/services/service-01-480.webp",
-      "alt": "Токарная обработка металлической детали",
-      "source": "https://disk.yandex.ru/d/UbF3zXN5haTMEQ",
-      "original": "sven-daniel-DV_rG1mjDxs-unsplash.jpg",
-      "author": "Материалы заказчика",
-      "license": null
-    }
+      "src": "/images/services/generated/service-01-ai-960.webp",
+      "small": "/images/services/generated/service-01-ai-480.webp",
+      "alt": "Токарная обработка металлической детали"
+}
   },
   {
     "number": "02",
+    "description": ["Фрезерование позволяет получать плоскости, пазы, карманы и сложные контуры с помощью вращающегося режущего инструмента. Четвёртая ось даёт возможность поворачивать заготовку и обрабатывать её с разных сторон.","Этот способ подходит для деталей со сложной геометрией и несколькими рабочими поверхностями. Схему закрепления и последовательность обработки выбирают по чертежу и материалу заготовки."],
     "title": "Четырёхосевая фрезерная обработка с ЧПУ",
     "short": "Многоосевая обработка деталей на фрезерных станках с ЧПУ",
     "details": [
       "Габариты детали без перестановки — 800 × 500 мм"
     ],
     "image": {
-      "src": "/images/services/service-02-960.webp",
-      "small": "/images/services/service-02-480.webp",
-      "alt": "Фрезерование детали на станке с ЧПУ",
-      "source": "https://disk.yandex.ru/d/UbF3zXN5haTMEQ",
-      "original": "cnc-5770326.jpg",
-      "author": "Материалы заказчика",
-      "license": null
-    }
+      "src": "/images/services/generated/service-02-ai-960.webp",
+      "small": "/images/services/generated/service-02-ai-480.webp",
+      "alt": "Фрезерование металлической заготовки крупным планом"
+}
   },
   {
     "number": "03",
+    "description": ["Расточка — обработка уже имеющихся отверстий для получения нужного диаметра, формы и качества поверхности. Её применяют к корпусам, посадочным местам и другим деталям, в которых важно взаимное расположение отверстий.","Операция позволяет подготовить поверхности под сопряжение с валами, втулками и подшипниками. Требования к посадкам и соосности задаются конструкторской документацией."],
     "title": "Расточные работы",
     "short": "Расточная обработка корпусных деталей",
     "details": [
       "Масса детали — до 1000 кг"
     ],
     "image": {
-      "src": "/images/services/service-03-960.webp",
-      "small": "/images/services/service-03-480.webp",
-      "alt": "Обработка крупной цилиндрической заготовки",
-      "source": "https://disk.yandex.ru/d/UbF3zXN5haTMEQ",
-      "original": "rotate-1136053.jpg",
-      "author": "Материалы заказчика",
-      "license": null
-    }
+      "src": "/images/services/generated/service-03-ai-960.webp",
+      "small": "/images/services/generated/service-03-ai-480.webp",
+      "alt": "Обработка крупной цилиндрической заготовки"
+}
   },
   {
     "number": "04",
+    "description": ["При электроэрозионной обработке материал удаляется электрическими разрядами между электродом и токопроводящей заготовкой. Метод позволяет получать сложные контуры и полости, в том числе в твёрдых материалах, которые трудно обрабатывать обычным режущим инструментом.","Технологию используют при изготовлении точных деталей и технологической оснастки. Способ обработки подбирают по форме изделия, материалу и требованиям к поверхности."],
     "title": "Электроэрозионная обработка",
     "short": "Электроэрозионная обработка деталей",
     "details": [],
     "image": {
-      "src": "/images/services/service-04-960.webp",
-      "small": "/images/services/service-04-480.webp",
-      "alt": "Электроэрозионная обработка в рабочей ванне",
-      "source": "https://commons.wikimedia.org/wiki/File:Electroerosiofinal.JPG",
-      "original": "Electroerosiofinal.JPG",
-      "author": "Ricard1990",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
-    }
+      "src": "/images/services/generated/service-04-ai-960.webp",
+      "small": "/images/services/generated/service-04-ai-480.webp",
+      "alt": "Электроэрозионная обработка в рабочей ванне"
+}
   },
   {
     "number": "05",
+    "description": ["Шлифование — абразивная обработка, при которой вращающийся круг снимает тонкий слой материала. Плоское шлифование применяют для плоскостей, круглое — для цилиндрических поверхностей деталей.","Операция помогает довести размер и уменьшить шероховатость после предшествующей обработки. При выборе режима учитывают материал, состояние заготовки и требования к готовой поверхности."],
     "title": "Шлифовальные работы",
     "short": "Обработка на плоско- и круглошлифовальных станках",
     "details": [],
     "image": {
-      "src": "/images/services/service-05-960.webp",
-      "small": "/images/services/service-05-480.webp",
-      "alt": "Круглошлифовальный станок",
-      "source": "https://commons.wikimedia.org/wiki/File:Rundschleifmaschine.jpg",
-      "original": "Rundschleifmaschine.jpg",
-      "author": "DieAlraune (указан в Wikimedia Commons)",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
-    }
+      "src": "/images/services/generated/service-05-ai-960.webp",
+      "small": "/images/services/generated/service-05-ai-480.webp",
+      "alt": "Шлифовальный круг в процессе обработки металла"
+}
   },
   {
     "number": "06",
+    "description": ["Зубофрезерные и шлицефрезерные операции формируют профиль зубьев и шлицевых соединений. Такие элементы служат для передачи вращения и крутящего момента в механизмах и приводах.","Геометрию обработки определяют модуль, число зубьев, угол и другие параметры чертежа. Для изготовления важно согласовать материал, профиль и требования к последующим операциям."],
     "title": "Зубофрезерные и шлицефрезерные работы",
     "short": "Изготовление зубчатых колёс, звёздочек и вариаторных дисков",
     "details": [
@@ -112,49 +96,38 @@ export const serviceGroups = [
       "Модуль — до 16 мм"
     ],
     "image": {
-      "src": "/images/services/service-06-960.webp",
-      "small": "/images/services/service-06-480.webp",
-      "alt": "Нарезка зубьев зубчатого колеса",
-      "source": "https://commons.wikimedia.org/wiki/File:W%C3%A4lzfr%C3%A4sen.jpg",
-      "original": "Wälzfräsen.jpg",
-      "author": "User:Kolossos",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
-    }
+      "src": "/images/services/generated/service-06-ai-960.webp",
+      "small": "/images/services/generated/service-06-ai-480.webp",
+      "alt": "Нарезка зубьев зубчатого колеса"
+}
   },
   {
     "number": "07",
+    "description": ["Холодная листовая штамповка придаёт листовой заготовке форму под действием пресса и штампа, без предварительного нагрева для формования. В зависимости от оснастки выполняются разделение материала и изменение его формы.","Метод подходит для повторяющихся деталей: геометрию изделия задают рабочие поверхности штампа. Выбор материала, толщины листа и конструкции оснастки связан с формой детали и объёмом партии."],
     "title": "Холодная листовая штамповка",
     "short": "Холодная штамповка листового металла",
     "details": [],
     "image": {
-      "src": "/images/services/service-07-960.webp",
-      "small": "/images/services/service-07-480.webp",
-      "alt": "Штамп и полоса листового металла после штамповки",
-      "source": "https://commons.wikimedia.org/wiki/File:ProgressiveDieToyota-strip-scrap.jpg",
-      "original": "ProgressiveDieToyota-strip-scrap.jpg",
-      "author": "Glenn McKechnie",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
-    }
+      "src": "/images/services/generated/service-07-ai-960.webp",
+      "small": "/images/services/generated/service-07-ai-480.webp",
+      "alt": "Раскрытый штамп, металлическая лента и вырубленные детали"
+}
   },
   {
     "number": "08",
+    "description": ["Сварка создаёт неразъёмное соединение металлических деталей за счёт локального воздействия тепла, давления или их сочетания. Способ соединения выбирают с учётом металла, толщины, формы изделия и условий его работы.","Подготовка кромок и последовательность сварки влияют на качество соединения и деформации конструкции. Требования к швам и готовому изделию определяются чертежом или техническим заданием."],
     "title": "Сварочные работы",
     "short": "Сварка чёрных и цветных металлов",
     "details": [],
     "image": {
-      "src": "/images/services/service-08-960.webp",
-      "small": "/images/services/service-08-480.webp",
-      "alt": "Сварка металлических деталей",
-      "source": "https://disk.yandex.ru/d/UbF3zXN5haTMEQ",
-      "original": "metalworking-1405852.jpg",
-      "author": "Материалы заказчика",
-      "license": null
-    }
+      "src": "/images/services/generated/service-08-ai-960.webp",
+      "small": "/images/services/generated/service-08-ai-480.webp",
+      "alt": "Сварка металлических деталей"
+}
   },
   {
     "number": "09",
+    "description": ["Термообработка изменяет структуру и свойства металла за счёт заданных циклов нагрева, выдержки и охлаждения. Её применяют, когда детали нужны определённая твёрдость, износостойкость или стабильность размеров.","Режим зависит от марки материала и назначения изделия. Вид обработки, требуемые свойства и место этой операции в производственном процессе согласуют по технической документации."],
     "title": "Термообработка",
     "short": "Обработка на установках ТВЧ и другие виды термообработки",
     "details": [
@@ -162,33 +135,26 @@ export const serviceGroups = [
       "Объёмная закалка сталей, включая нержавеющие и инструментальные"
     ],
     "image": {
-      "src": "/images/services/service-09-960.webp",
-      "small": "/images/services/service-09-480.webp",
-      "alt": "Камера печи для термообработки",
-      "source": "https://commons.wikimedia.org/wiki/File:Heat-Treating-Furnace.jpg",
-      "original": "Heat-Treating-Furnace.jpg",
-      "author": "Ichudov",
-      "license": "CC BY-SA 3.0",
-      "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
-    }
+      "src": "/images/services/generated/service-09-ai-960.webp",
+      "small": "/images/services/generated/service-09-ai-480.webp",
+      "alt": "Раскалённые металлические детали после термообработки"
+}
   },
   {
     "number": "10",
+    "description": ["Штамп — технологическая оснастка, рабочие элементы которой задают форму детали при обработке листового металла на прессе. Его конструкция зависит от требуемых операций, геометрии изделия, материала и толщины листа.","При изготовлении оснастки важны согласованность рабочих поверхностей и соответствие используемому оборудованию. Исходными данными служат чертежи детали, требования к партии и параметры пресса."],
     "title": "Изготовление штампов",
     "short": "Штампы для холодной листовой штамповки",
     "details": [],
     "image": {
-      "src": "/images/services/service-10-960.webp",
-      "small": "/images/services/service-10-480.webp",
-      "alt": "Оснастка для изготовления деталей",
-      "source": "https://disk.yandex.ru/d/UbF3zXN5haTMEQ",
-      "original": "pressformy.jpg",
-      "author": "Материалы заказчика",
-      "license": null
-    }
+      "src": "/images/services/generated/service-10-ai-960.webp",
+      "small": "/images/services/generated/service-10-ai-480.webp",
+      "alt": "Оснастка для изготовления деталей"
+}
   },
   {
     "number": "11",
+    "description": ["Защитные и декоративные покрытия применяют для защиты металлической поверхности и получения нужного внешнего вида. Способ обработки выбирают по материалу детали, условиям эксплуатации и требованиям к готовому изделию.","Цинковые и гальванические покрытия формируют поверхностный металлический слой; окраска с полимеризацией создаёт защитную плёнку. При назначении покрытия учитывают посадки, резьбы и поверхности, на которых его нанесение ограничено."],
     "title": "Защитные и декоративные покрытия",
     "short": "Цинкование, гальванические покрытия и декоративная окраска деталей",
     "details": [
@@ -197,15 +163,10 @@ export const serviceGroups = [
       "Декоративная окраска с защитной полимеризацией"
     ],
     "image": {
-      "src": "/images/services/service-11-960.webp",
-      "small": "/images/services/service-11-480.webp",
-      "alt": "Нанесение порошкового покрытия",
-      "source": "https://commons.wikimedia.org/wiki/File:Powder_Coating_Spraying.JPG",
-      "original": "Powder Coating Spraying.JPG",
-      "author": "Hardcoreraveman",
-      "license": "Public domain",
-      "licenseUrl": null
-    }
+      "src": "/images/services/generated/service-11-ai-960.webp",
+      "small": "/images/services/generated/service-11-ai-480.webp",
+      "alt": "Распыление порошкового покрытия на металлическую поверхность"
+}
   }
 ].map(service => ({
   id: `service-${service.number}`,

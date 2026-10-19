@@ -1,15 +1,20 @@
-# Фотографии каталога
+# Изображения и описания услуг
 
-Иллюстрации видов обработки; не заявляются как фотографии производства ТРИБЕКА. Материалы заказчика взяты из предоставленной папки. Внешние фото — Wikimedia Commons; атрибуция доступна под каталогом. Конвертация в WebP, уменьшение размера, кадрирование при отображении. Для CC BY-SA производные изображения распространяются по той же лицензии.
+Все 11 изображений услуг созданы с нуля встроенным инструментом image_gen 18 октября 2026 года. Входные фотографии не использовались. Это иллюстрации процессов, а не фотографии оборудования или результатов работ ТРИБЕКИ. Изображения не содержат людей, надписей и заметных товарных знаков.
 
-- 01: sven-daniel-DV_rG1mjDxs-unsplash.jpg — Материалы заказчика; предоставлено заказчиком; https://disk.yandex.ru/d/UbF3zXN5haTMEQ
-- 02: cnc-5770326.jpg — Материалы заказчика; предоставлено заказчиком; https://disk.yandex.ru/d/UbF3zXN5haTMEQ
-- 03: rotate-1136053.jpg — Материалы заказчика; предоставлено заказчиком; https://disk.yandex.ru/d/UbF3zXN5haTMEQ
-- 04: Electroerosiofinal.JPG — Ricard1990; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:Electroerosiofinal.JPG
-- 05: Rundschleifmaschine.jpg — DieAlraune (указан в Wikimedia Commons); CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:Rundschleifmaschine.jpg
-- 06: Wälzfräsen.jpg — User:Kolossos; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:W%C3%A4lzfr%C3%A4sen.jpg
-- 07: ProgressiveDieToyota-strip-scrap.jpg — Glenn McKechnie; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:ProgressiveDieToyota-strip-scrap.jpg
-- 08: metalworking-1405852.jpg — Материалы заказчика; предоставлено заказчиком; https://disk.yandex.ru/d/UbF3zXN5haTMEQ
-- 09: Heat-Treating-Furnace.jpg — Ichudov; CC BY-SA 3.0; https://commons.wikimedia.org/wiki/File:Heat-Treating-Furnace.jpg
-- 10: pressformy.jpg — Материалы заказчика; предоставлено заказчиком; https://disk.yandex.ru/d/UbF3zXN5haTMEQ
-- 11: Powder Coating Spraying.JPG — Hardcoreraveman; Public domain; https://commons.wikimedia.org/wiki/File:Powder_Coating_Spraying.JPG
+Файлы в `public/images/services/generated/` оптимизированы в WebP в двух размерах: 480 и 960 пикселей. Полный набор промптов сохранён в [generated-service-prompts.json](generated-service-prompts.json). Условия CC/Pexels для ранее использовавшихся фотографий к новым иллюстрациям не относятся.
+
+## Источники общих описаний услуг
+
+Тексты написаны заново по техническим справочным материалам. Они объясняют процессы и не добавляют неподтверждённых характеристик оборудования ТРИБЕКА. Числовые параметры в `details` сохранены из данных заказчика.
+
+- Токарная обработка: [Sandvik Coromant — обработка резьбы](https://www.sandvik.coromant.com/en-us/knowledge/threading/thread-turning/thread-turning-application-tips).
+- Фрезерование: [Sandvik Coromant — Milling](https://www.sandvik.coromant.com/en-gb/milling-appl-guide).
+- Расточка: [Sandvik Coromant — Boring](https://www.sandvik.coromant.com/en-gb/tools/silent-tools/what-is-silent-tools/application-guide-silent-tools/boring-appl-guide).
+- Электроэрозия: [Makino — EDM](https://www.makino.com/en-us/machine-technology/machining-process/edm).
+- Шлифование: [Norton — Cylindrical Grinding](https://www.nortonabrasives.com/en-us/product/norton-32a-type-01-cylindrical-grinding-wheel).
+- Зубофрезерование: [Sandvik Coromant — Gear Manufacturing](https://cdn.sandvik.coromant.com/files/sitecollectiondocuments/downloads/global/brochures/en-gb/c-1140-547.pdf).
+- Штамповка и штампы: [Schuler — технологии обработки листа](https://www.schulergroup.com/technologien/index.html?sLang=en).
+- Сварка: [TWI — What is Welding?](https://www.twi-global.com/technical-knowledge/faqs/what-is-welding).
+- Термообработка: [Bodycote — Precision Heat Treatment](https://www.bodycote.com/what-we-do/precision-heat-treatment/).
+- Покрытия: [Powder Coating Institute — What is Powder Coating?](https://www.powdercoating.org/page/WhatIsPC).

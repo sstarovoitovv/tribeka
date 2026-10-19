@@ -1,0 +1,49 @@
+{
+  "style": "Use case: ads-marketing. Asset: one landscape service photograph for a Russian precision metalworking company website. Generate a new original photorealistic industrial photograph, 3:2 landscape. Premium understated real manufacturing photography, technically plausible machinery, clean but believable workshop, cool neutral steel and graphite tones, soft directional practical lighting, subtle natural texture, sharp focal subject and gently out-of-focus background. Compose the entire important subject in the centre 75% so landscape 16:10 crops work. No people, hands, body parts, logos, trademarks, labels, numbers, text, watermarks, borders, collages, diagrams, dramatic fog or exaggerated sparks. Do not imitate an existing photograph or a named artist. ",
+  "images": [
+    {
+      "id": "01",
+      "scene": "CNC turning: close-up of a cylindrical steel workpiece clamped in a three-jaw lathe chuck, a single carbide turning insert precisely shaving the external cylindrical surface, a few realistic curled metal chips."
+    },
+    {
+      "id": "02",
+      "scene": "Four-axis CNC milling: close-up of a steel part on a rotary fourth-axis fixture inside a machining centre, a short end mill cutting a clean pocket, visible coherent machine spindle and realistic metal chips."
+    },
+    {
+      "id": "03",
+      "scene": "Precision boring: close-up of a large rectangular steel housing with a circular bore, a horizontal boring bar entering the bore to finish its inner surface, rigid industrial machine tooling."
+    },
+    {
+      "id": "04",
+      "scene": "Wire electrical discharge machining: fine vertical brass EDM wire passing through a thick steel plate submerged in clear dielectric water, an intricate precisely cut contour, realistic wire guides."
+    },
+    {
+      "id": "05",
+      "scene": "Surface grinding: large abrasive grinding wheel tangentially finishing a rectangular steel block held on a magnetic chuck, small restrained trail of orange sparks at contact, accurate machine geometry."
+    },
+    {
+      "id": "06",
+      "scene": "Gear hobbing: close-up of a steel spur gear blank with partially cut teeth and a cylindrical helical hob meshing with it on a gear cutting machine, realistic precise tool engagement."
+    },
+    {
+      "id": "07",
+      "scene": "Cold sheet-metal stamping: close-up of an open stamping press die with a thin silver sheet-metal strip fed through it, repeating punched openings and small neatly formed metal brackets, coherent upper punch and lower die."
+    },
+    {
+      "id": "08",
+      "scene": "Welding: an automated TIG torch welding a clean joint between two steel components on a fixture, a small bright welding arc and subtle warm highlights, no welder or person."
+    },
+    {
+      "id": "09",
+      "scene": "Heat treatment: machined steel gears and cylindrical parts on a heat-resistant tray at the mouth of an industrial heat treatment furnace, restrained warm orange furnace glow against cool dark steel."
+    },
+    {
+      "id": "10",
+      "scene": "Tool and die manufacturing: precision ground steel punch-and-die tool assembly on a clean inspection bench, guide pillars, precision cavities, clearly visible machined cutting edges, contemporary toolmaking photograph."
+    },
+    {
+      "id": "11",
+      "scene": "Protective and decorative metal coatings: automatic powder-coating spray nozzle applying an even fine mist to small flat steel brackets hanging individually on a clean industrial rack, matte graphite finished brackets nearby, no operator, no ladder or household object."
+    }
+  ]
+}

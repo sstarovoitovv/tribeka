@@ -57,7 +57,9 @@ export default function ServiceDetailPage() {
               <div className="absolute -right-24 -top-24 size-64 rounded-full bg-signal/10 blur-3xl" aria-hidden="true" />
               <p className="relative text-[10px] font-black uppercase tracking-[0.22em] text-[#77a7e6]">Возможности производства</p>
               <h2 className="relative mt-4 text-2xl font-black leading-tight tracking-[-0.025em] sm:text-3xl">Описание услуги</h2>
-              <p className="relative mt-5 max-w-md text-base leading-7 text-white/80">{service.short}</p>
+              <div className="relative mt-5 max-w-md space-y-4 text-base leading-7 text-white/80">
+                {(service.description ?? [service.short]).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+              </div>
               {service.details.length > 0 && (
                 <ul className="relative mt-8 space-y-3 border-t border-white/15 pt-7 text-sm leading-6 text-white/85">
                   {service.details.map((detail) => <li key={detail} className="ml-4 list-disc marker:text-signal">{detail}</li>)}
