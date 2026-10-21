@@ -52,7 +52,7 @@ jobs:
       - name: Verify one-time atomic layout before upload
         run: |
           ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "test -L '${APP_PATH}/current' && test -L '${DEPLOY_PATH}'" || {
-            echo 'Initialize the atomic layout using docs/deployment.md. Live directories are never overwritten.' >&2
+            echo 'Configure the atomic layout described in docs/operations.md. Live directories are never overwritten.' >&2
             exit 1
           }
 

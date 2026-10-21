@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { FiMenu, FiPhone, FiX } from 'react-icons/fi'
+import { FiMenu, FiX } from 'react-icons/fi'
 import Logo from './Logo.jsx'
 import ContactLinks from './ContactLinks.jsx'
 import { siteConfig } from '../siteConfig.js'
@@ -57,9 +57,9 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-mist">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-stretch min-[1000px]:grid min-[1000px]:grid-cols-[180px_minmax(340px,1fr)_200px] min-[1000px]:pr-6 xl:grid-cols-[220px_minmax(360px,1fr)_200px] xl:pr-[42px]">
+      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-stretch min-[1000px]:grid min-[1000px]:grid-cols-[216px_minmax(340px,1fr)_200px] min-[1000px]:pr-6 xl:grid-cols-[248px_minmax(360px,1fr)_200px] xl:pr-[42px]">
         <div className="flex min-w-0 items-center px-5 sm:px-7 min-[1000px]:justify-center min-[1000px]:px-4 xl:px-8">
-          <Logo compact />
+          <Logo compact header />
         </div>
         <nav className="hidden h-full min-w-0 items-stretch justify-center min-[1000px]:flex min-[1000px]:gap-4 min-[1000px]:px-2 xl:gap-8 xl:px-6" aria-label="Основная навигация">
           {links.map(([label, to]) => <NavItem key={to} label={label} to={to} />)}
@@ -83,7 +83,7 @@ export default function Header() {
             </NavLink>
           ))}
           <a href={`tel:${siteConfig.phoneHref}`} tabIndex={open ? 0 : -1} className="group mt-5 flex items-center gap-2.5 text-sm font-black text-ink">
-            <span className="inline-flex min-h-11 w-11 shrink-0 items-center justify-center rounded-[5px] border border-ink/20 text-signal transition-colors duration-150 group-hover:bg-signal/10 group-focus-visible:bg-signal/10"><FiPhone size={20} aria-hidden="true" /></span>
+            <span className="inline-flex min-h-11 w-11 shrink-0 items-center justify-center rounded-[5px] border border-ink/20 text-signal transition-colors duration-150 group-hover:bg-signal/10 group-focus-visible:bg-signal/10"><img src="/brand/phone.svg" alt="" className="size-6" /></span>
             {siteConfig.phone}
           </a>
           <ContactLinks className="mt-5" />

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once dirname(__DIR__, 2) . '/public/api/_lib/request-security.php';
+require_once dirname(__DIR__, 2) . '/public/api/_lib/attachment-scanner.php';
 
 use Tribeka\Security\ValidationException;
 use function Tribeka\Security\acquireMaintenanceLock;
@@ -14,6 +15,7 @@ use function Tribeka\Security\storeLead;
 use function Tribeka\Security\trustedOrigin;
 use function Tribeka\Security\validateAttachments;
 use function Tribeka\Security\validateFields;
+use function Tribeka\Security\scanAttachments;
 use const Tribeka\Security\CONSENT_VERSION;
 use const Tribeka\Security\POLICY_VERSION;
 
@@ -207,6 +209,41 @@ try {
     rejects(fn () => normalizedUploads(['attachments' => [...$upload, 'name' => [['nested.pdf']]]]), 'nested multipart filename is rejected');
     rejects(fn () => normalizedUploads(['attachments' => array_map(fn ($items) => array_fill(0, 6, $items[0]), $upload)]), 'six uploads are rejected');
     rejects(fn () => validateAttachments(['attachments' => $single]), 'local filesystem paths cannot impersonate HTTP uploads');
+
+    // Test the scanner boundary, not ClamAV's signature engine, using a local executable.
+    $scannerPath = fixture('scanner', '#!' . PHP_BINARY . "\n<?php\n" . <<<'PHP'
+$mode = trim(file_get_contents(__DIR__ . '/scanner-mode'));
+if (in_array('--version', $argv, true)) {
+    echo 'ClamAV 1.4.6/1/' . ($mode === 'stale' ? 'Wed Jul 14 14:05:45 2021' : gmdate('D M d H:i:s Y'));
+    exit;
+}
+file_put_contents(__DIR__ . '/scanner-arguments', json_encode($argv));
+if ($mode === 'timeout') { sleep(3); }
+exit(match ($mode) { 'virus', 'encrypted', 'limit' => 1, 'error' => 2, default => 0 });
+PHP);
+    chmod($scannerPath, 0700);
+    $scanConfig = ['antivirus' => ['enabled' => true, 'binary' => $scannerPath, 'database_dir' => $temp, 'timeout_seconds' => 1]];
+    $scanFiles = [['temporary_path' => $pdf], ['temporary_path' => $step]];
+    fixture('scanner-mode', 'clean');
+    scanAttachments($scanFiles, $scanConfig);
+    $arguments = json_decode(file_get_contents($temp . '/scanner-arguments'), true);
+    check(array_slice($arguments, -2) === [$pdf, $step], 'scanner receives all attachments as separate arguments without a shell');
+    check(in_array('--alert-encrypted=yes', $arguments, true) && in_array('--alert-exceeds-max=yes', $arguments, true), 'encrypted files and incomplete scans are configured to fail closed');
+    foreach (['virus', 'encrypted', 'limit'] as $mode) {
+        fixture('scanner-mode', $mode);
+        rejects(fn () => scanAttachments($scanFiles, $scanConfig), 'scanner rejects ' . $mode . ' verdict');
+    }
+    foreach (['error', 'stale', 'timeout'] as $mode) {
+        fixture('scanner-mode', $mode);
+        try {
+            scanAttachments($scanFiles, $scanConfig);
+            throw new LogicException('Scanner failure accepted');
+        } catch (RuntimeException $exception) {
+            check(!$exception instanceof LogicException && !$exception instanceof ValidationException, 'scanner ' . $mode . ' is an availability error, never a clean verdict');
+        }
+    }
+    scanAttachments([], $scanConfig);
+    check(true, 'requests without attachments do not require antivirus availability');
 
     $rates = $temp . '/rates';
     check(takeRateLimit($rates, 'client', 1000) === 0, 'first rate reservation succeeds');

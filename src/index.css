@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Onest';
+  src: url('/fonts/onest/Onest-variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
   color: #07182e;
   background: #f1f4f8;
@@ -23,6 +31,7 @@ body {
 h1,
 h2,
 h3 {
+  font-family: 'Onest', Arial, sans-serif;
   overflow-wrap: normal;
   text-wrap: balance;
   word-break: normal;

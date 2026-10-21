@@ -20,4 +20,10 @@ return [
     'recipient' => 'leads@example.com',
     'sender' => 'noreply@example.com',
     'retention_days' => 365,
+    'antivirus' => [
+        'enabled' => false,
+        'binary' => '/usr/bin/clamscan',
+        'database_dir' => '/var/lib/clamav',
+        'timeout_seconds' => 15,
+    ],
 ];

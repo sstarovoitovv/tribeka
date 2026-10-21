@@ -13,6 +13,7 @@ export default {
       fontWeight: { black: '800' },
       fontFamily: {
         sans: ['Manrope Variable', 'Arial', 'sans-serif'],
+        display: ['Onest', 'Arial', 'sans-serif'],
       },
       boxShadow: {
         glow: '0 16px 60px rgba(53, 105, 173, 0.24)',
