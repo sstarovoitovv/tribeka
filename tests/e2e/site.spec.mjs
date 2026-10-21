@@ -102,7 +102,7 @@ test('desktop typography and visible content', async ({ page }) => {
   const { root } = await cdp.send('DOM.getDocument')
   const { nodeId } = await cdp.send('DOM.querySelector', { nodeId: root.nodeId, selector: 'h1' })
   const { fonts } = await cdp.send('CSS.getPlatformFontsForNode', { nodeId })
-  expect(fonts.some(font => font.isCustomFont && font.postScriptName.startsWith('Manrope'))).toBe(true)
+  expect(fonts.some(font => font.isCustomFont && font.postScriptName.startsWith('Onest'))).toBe(true)
   await page.screenshot({ path: '.work/evidence/home-desktop.png', animations: 'disabled' })
 })
 
@@ -196,10 +196,12 @@ test('brand icons match across surfaces, contacts stay in one row and production
   await expect(page.getByText('Как начинается заказ', { exact: true })).toHaveCount(0)
   await expect(page.locator('main section').first()).not.toContainText('Собственное оборудование')
   await expect(page.locator('main section').first().locator('figcaption')).toHaveCount(0)
-  for (const [label, color] of [['Почта', 'rgb(57, 118, 196)'], ['WhatsApp', 'rgb(37, 211, 102)'], ['Telegram', 'rgb(38, 165, 228)']]) {
+  const emailIcon = page.getByRole('banner').getByRole('link', { name: 'Написать: Почта' }).locator('img')
+  await expect(emailIcon).toHaveAttribute('src', '/brand/email.svg')
+  expect(await emailIcon.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true)
+  for (const [label, color] of [['WhatsApp', 'rgb(37, 211, 102)'], ['Telegram', 'rgb(38, 165, 228)']]) {
     const top = page.getByRole('banner').getByRole('link', { name: `Написать: ${label}` }).locator('svg')
     await expect(top).toHaveCSS('color', color)
-    if (label === 'Почта') continue
     const bottom = page.getByRole('contentinfo').getByRole('link', { name: `Написать: ${label}` }).locator('svg')
     await expect(bottom).toHaveCSS('color', color)
     expect(await bottom.innerHTML()).toBe(await top.innerHTML())

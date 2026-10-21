@@ -1,7 +1,7 @@
 export const siteConfig = {
   companyName: 'ТРИБЕКА',
   legalName: 'ООО «ТРИБЕКА»',
-  logoSrc: '/brand/logo-tribeka.png',
+  logoSrc: '/brand/logo-tribeka.svg',
   phone: '+7 (906) 260-30-60',
   phoneHref: '+79062603060',
   email: 'tribekaspb@bk.ru',

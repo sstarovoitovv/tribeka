@@ -13,12 +13,12 @@ export default function Footer() {
       <div className="container-page">
         <div className="flex flex-col gap-8 border-b border-white/20 pb-9 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
-            <span className="w-fit shrink-0 bg-white px-3 py-2"><Logo compact /></span>
-            <p className="max-w-sm text-sm leading-6 text-white/80">Комплексная металлообработка под ключ: от идеи и чертежа до готового изделия</p>
+            <span className="w-fit shrink-0 px-3 py-2 [&_img]:w-[184px] [&_img]:brightness-0 [&_img]:invert"><Logo compact /></span>
+            <p className="max-w-sm text-sm leading-6 text-white/80">Комплексная металлообработка:<br />от идеи и чертежа до готового изделия</p>
           </div>
           <a href={`tel:${siteConfig.phoneHref}`} className="w-fit text-xl font-bold tracking-tight transition-colors hover:text-white/80 sm:text-2xl">{siteConfig.phone}</a>
         </div>
-        <div className="grid gap-8 border-b border-white/20 py-9 sm:grid-cols-2 xl:grid-cols-[0.8fr_1.2fr_1fr_1fr]">
+        <div className="grid gap-6 border-b border-white/20 py-7 sm:grid-cols-2 sm:gap-8 sm:py-9 xl:grid-cols-[0.8fr_1.2fr_1fr_1fr]">
           <nav aria-label="Разделы в подвале">
             <p className="footer-label">Разделы</p>
             <div className="mt-3 flex flex-col items-start text-sm">
@@ -32,13 +32,13 @@ export default function Footer() {
             <a href={`mailto:${siteConfig.email}`} className="mt-3 inline-flex min-h-11 items-center text-base font-semibold underline-offset-4 hover:underline">{siteConfig.email}</a>
             <ContactLinks dark includeEmail={false} className="mt-4" />
           </div>
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-start text-left sm:items-center sm:text-center">
             <p className="footer-label">Адрес</p>
-            <address className="mt-4 flex w-full max-w-[240px] items-start gap-3 text-left text-sm not-italic leading-6 text-white/85">
+            <address className="mt-4 flex w-full items-start gap-3 text-left text-sm not-italic leading-6 text-white/85 sm:max-w-[240px]">
               <FiMapPin size={18} className="mt-1 shrink-0 text-signal" aria-hidden="true" />
               <span>{siteConfig.address.replace('корп. ', 'корп.\u00a0')}</span>
             </address>
-            <a href={mapLink} target="_blank" rel="noreferrer" className="shape-button mt-4 inline-flex min-h-11 w-full max-w-[216px] items-center justify-center border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white hover:border-signal hover:bg-signal">Открыть карту</a>
+            <a href={mapLink} target="_blank" rel="noreferrer" className="shape-button mt-4 inline-flex min-h-11 w-full items-center justify-center border border-white/20 bg-white/10 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white hover:border-signal hover:bg-signal sm:max-w-[216px]">Открыть карту</a>
           </div>
           <div className="overflow-hidden self-start rounded-[5px] border border-white/15 bg-white">
             <iframe

@@ -7,10 +7,10 @@ export default function HomePage() {
   return (
     <>
       <section className="bg-ink text-white">
-        <div className="mx-auto grid max-w-[1600px] lg:min-h-[640px] lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="px-5 py-8 sm:px-8 sm:py-16 lg:flex lg:flex-col lg:justify-center lg:py-16 lg:pl-12 xl:pl-16">
+        <div className="mx-auto grid max-w-[1600px] lg:min-h-[576px] lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="px-5 py-8 sm:px-8 sm:py-12 lg:flex lg:flex-col lg:justify-center lg:py-14 lg:pl-12 xl:pl-16">
             <p className="eyebrow text-white/80">Комплексная металлообработка с 2012 года</p>
-            <h1 className="mt-5 max-w-[760px] text-[clamp(2.35rem,5.5vw,5.5rem)] font-black leading-[1.06] tracking-[-0.045em]">
+            <h1 className="mt-5 max-w-[760px] text-[clamp(2.35rem,4.7vw,4.5rem)] font-semibold leading-[1.1] tracking-[-0.025em]">
               От идеи<br />до готового изделия
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-white/80 sm:text-lg">
@@ -32,12 +32,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-14 sm:py-20">
+      <section className="py-12 sm:py-16">
         <div className="container-page">
           <div className="grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-x-12">
             <div>
               <p className="eyebrow">Основные направления</p>
-              <h2 className="mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-[-0.035em] sm:text-5xl">Производство<br />полного цикла</h2>
+              <h2 className="mt-5 max-w-4xl text-3xl font-black leading-[1.1] tracking-[-0.035em] sm:text-4xl">Производство<br />полного цикла</h2>
             </div>
             <div className="max-w-lg lg:mt-[37px] lg:pl-12">
               <p className="text-base leading-7 text-ink/70 sm:text-lg sm:leading-8">Собственный парк оборудования позволяет выполнять заказы разной сложности без привлечения субподрядчиков</p>
@@ -45,10 +45,10 @@ export default function HomePage() {
             </div>
           </div>
 
-          <ol className="mt-10 grid border-t border-ink/20 md:grid-cols-2 md:gap-x-12">
+          <ol className="mt-7 grid border-t border-ink/20 md:grid-cols-2 md:gap-x-12">
             {serviceGroups.slice(0, 4).map(({ slug, number, title, short }) => (
               <li key={number} className="border-b border-ink/20">
-                <Link to={getServicePath({ slug })} className="service-index group grid grid-cols-[2rem_1fr] gap-4 py-7">
+                <Link to={getServicePath({ slug })} className="service-index group grid grid-cols-[2rem_1fr] gap-4 py-6">
                   <span className="pt-1 text-sm font-semibold tabular-nums text-signal">{number}</span>
                   <div>
                     <h3 className="text-xl font-bold tracking-tight group-hover:text-signal">{title}</h3>
@@ -62,7 +62,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="technology-partner" className="scroll-mt-24 bg-graphite py-12 text-white sm:py-14">
+      <section id="technology-partner" className="scroll-mt-24 bg-graphite py-12 text-white sm:py-16">
         <div className="container-page">
           <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-12">
             <div>
@@ -74,14 +74,14 @@ export default function HomePage() {
           <div className="mt-7 grid gap-7 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-12">
             <figure className="flex min-w-0 flex-col">
               <div className="partner-equipment">
-                <img src="/brand/equipment-turning-cutout.webp" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[360px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[16%]" />
+                <img src="/brand/equipment-turning-cutout.webp" alt="Токарный станок производственной площадки ТРИБЕКА" loading="lazy" className="relative block h-auto max-h-[300px] max-w-full object-contain lg:justify-self-start lg:-translate-x-[16%]" />
               </div>
               <figcaption className="mt-4"><p className="text-xs font-semibold text-white/80">Собственное оборудование</p><p className="mt-2 text-xl font-bold">Без лишних посредников</p></figcaption>
             </figure>
             <div>
               <ul className="divide-y divide-white/20 border-y border-white/20">
                 {advantages.map(({ title }) => (
-                  <li key={title} className="py-6 sm:py-7 text-xl font-bold tracking-tight">{title}</li>
+                  <li key={title} className="py-5 sm:py-6 text-xl font-bold tracking-tight">{title}</li>
                 ))}
               </ul>
               <Link to="/about/" className="shape-button mt-6 inline-flex min-h-12 items-center border border-white/35 px-6 py-3 text-sm font-semibold hover:bg-white/10">Подробнее о компании</Link>
@@ -90,11 +90,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-14 sm:py-20" aria-labelledby="advantages-title">
+      <section className="py-12 sm:py-16" aria-labelledby="advantages-title">
         <div className="container-page">
           <p className="eyebrow">Почему ТРИБЕКА</p>
           <h2 id="advantages-title" className="section-title mt-5">Один партнёр<br />Весь результат</h2>
-          <ol className="mt-10 grid gap-8 md:grid-cols-3">
+          <ol className="mt-7 grid gap-8 md:grid-cols-3">
             {advantages.map(({ title, text }, index) => (
               <li key={title} className="border-t-2 border-signal pt-5">
                 <span className="text-sm font-semibold tabular-nums text-signal">0{index + 1}</span>
