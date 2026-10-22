@@ -172,3 +172,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     margin-inline: auto;
   }
 }
+
+/* UI Ball / ldrs Ring, MIT: docs/licenses/ldrs-MIT.txt. */
+.submission-ring { width: 22px; height: 22px; flex-shrink: 0; overflow: visible; animation: submission-rotate 1.8s linear infinite; }
+.submission-ring circle { fill: none; stroke: currentColor; stroke-width: 3; }
+.submission-ring-track { opacity: .22; }
+.submission-ring-arc { stroke-linecap: round; stroke-dasharray: 1, 150; animation: submission-stretch 1.35s ease-in-out infinite; }
+@keyframes submission-rotate { to { transform: rotate(360deg); } }
+@keyframes submission-stretch { 0% { stroke-dasharray: 0, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 75, 150; stroke-dashoffset: -25; } 100% { stroke-dashoffset: -99; } }
+@media (prefers-reduced-motion: reduce) { .submission-ring, .submission-ring-arc { animation: none; } .submission-ring-arc { stroke-dasharray: 65, 150; } }

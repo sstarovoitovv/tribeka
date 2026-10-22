@@ -3,6 +3,8 @@ import { FiFileText, FiPaperclip, FiX } from 'react-icons/fi'
 import { parsePhoneNumberWithError } from 'libphonenumber-js/max'
 import { Link } from 'react-router-dom'
 import { siteConfig } from '../siteConfig.js'
+import SubmissionError from './SubmissionError.jsx'
+import SubmissionLoader from './SubmissionLoader.jsx'
 
 const MAX_FILES = 5
 const MAX_TOTAL_SIZE = 15 * 1024 * 1024
@@ -22,9 +24,10 @@ function resizeMessageField(event) {
   field.style.overflowY = field.scrollHeight > maxHeight ? 'auto' : 'hidden'
 }
 
-export default function RequestForm() {
+export default function RequestForm({ previewState } = {}) {
   const fileInput = useRef(null)
-  const [status, setStatus] = useState('idle')
+  const sending = useRef(false)
+  const [status, setStatus] = useState(import.meta.env.DEV && previewState === 'sent' ? 'sent' : 'idle')
   const [statusMessage, setStatusMessage] = useState('')
   const [files, setFiles] = useState([])
   const [phoneError, setPhoneError] = useState('')
@@ -105,6 +108,7 @@ export default function RequestForm() {
 
   async function submit(event) {
     event.preventDefault()
+    if (sending.current) return
     const form = event.currentTarget
     const phoneField = form.elements.phone
 
@@ -117,6 +121,7 @@ export default function RequestForm() {
       return
     }
 
+    sending.current = true
     setStatus('submitting')
     setStatusMessage('')
 
@@ -129,6 +134,14 @@ export default function RequestForm() {
       formData.set('consent_version', siteConfig.personalData.consentVersion)
       formData.set('policy_version', siteConfig.personalData.policyVersion)
 
+      if (import.meta.env.DEV && previewState?.startsWith('demo-')) {
+        await new Promise((resolve) => setTimeout(resolve, 2400))
+        if (previewState === 'demo-error') throw new Error('Сервис временно недоступен. Попробуйте ещё раз чуть позже.')
+        form.reset()
+        setFiles([])
+        setStatus('sent')
+        return
+      }
       const response = await fetch(siteConfig.formEndpoint, {
         method: 'POST',
         body: formData,
@@ -147,7 +160,13 @@ export default function RequestForm() {
     } catch (error) {
       setStatus('error')
       setStatusMessage(error.message || `Не удалось отправить заявку. Напишите на ${siteConfig.email}.`)
+    } finally {
+      sending.current = false
     }
+  }
+
+  if (import.meta.env.DEV && previewState === 'error') {
+    return <SubmissionError detail="Сервис временно недоступен. Попробуйте ещё раз чуть позже." preview />
   }
 
   if (status === 'sent') {
@@ -155,14 +174,17 @@ export default function RequestForm() {
       <div className="flex min-h-[284px] flex-col items-center justify-center bg-white p-7 text-center sm:p-9" role="status">
         <span className="mb-5 grid size-10 place-items-center border border-signal text-xl font-black text-signal">✓</span>
         <h3 className="text-2xl font-black uppercase text-ink">Заявка принята</h3>
-        <p className="mt-3 max-w-md text-sm leading-6 text-ink/60">Инженер свяжется с вами в рабочее время и уточнит детали проекта</p>
+        <p className="mt-3 max-w-md text-sm leading-6 text-ink/60">Инженер свяжется с вами в ближайшее время и уточнит детали проекта</p>
         <button onClick={() => setStatus('idle')} className="shape-button mt-6 border border-ink/10 bg-[#e3e7ed] px-5 py-3 text-xs font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">Отправить ещё одну</button>
       </div>
     )
   }
 
   return (
-    <form method="post" action={siteConfig.formEndpoint} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
+    <form aria-busy={status === 'submitting'} method="post" action={siteConfig.formEndpoint} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
+      {import.meta.env.DEV && !previewState?.startsWith('demo-') && siteConfig.formEndpoint === 'http://127.0.0.1:4193/api/request.php' && (
+        <p className="mb-5 text-sm leading-6 text-ink/70" role="note">Тестовая форма: письмо и вложения направляются на german.starovoitov@icloud.com, заявка сохраняется в существующей базе сайта. Используйте вымышленные данные и тестовые файлы.</p>
+      )}
       <input type="hidden" name="consent_version" value={siteConfig.personalData.consentVersion} />
       <input type="hidden" name="policy_version" value={siteConfig.personalData.policyVersion} />
       <noscript><p className="mb-4 text-sm leading-6">Для отправки заявки с вложениями включите JavaScript или свяжитесь с нами по телефону.</p></noscript>
@@ -257,16 +279,18 @@ export default function RequestForm() {
         />
         <span>Я даю {siteConfig.legalName} <Link to="/consent/" target="_blank" className="text-signal underline underline-offset-2">согласие на обработку персональных данных</Link> для рассмотрения обращения и подготовки расчёта</span>
       </label>
-      {consentError && <p id="request-consent-error" role="alert" className="mt-3 border-l-2 border-red-700 bg-red-50 px-3 py-2 text-sm leading-5 text-red-700">Чтобы отправить заявку, согласитесь на обработку персональных данных.</p>}
+      {consentError && <p id="request-consent-error" role="alert" className="mt-3 border-l-2 border-red-700 bg-red-50 px-3 py-2 text-sm leading-5 text-red-700">Чтобы отправить заявку, необходимо согласие на обработку персональных данных</p>}
       <p className="mt-3 max-w-lg text-[11px] leading-5 text-ink/65">
         Порядок обработки, хранения и удаления данных описан в <Link to="/privacy/" target="_blank" className="text-signal underline underline-offset-2">Политике в отношении обработки персональных данных</Link>.
       </p>
-      {statusMessage && <p className={`mt-4 text-xs leading-5 ${status === 'error' ? 'text-red-700' : 'text-ink/55'}`} role="alert" aria-live="polite">{statusMessage}</p>}
-      <div className="mt-7 flex">
-        <button type="submit" disabled={status === 'submitting'} className="shape-button flex w-full items-center justify-center bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
-          {status === 'submitting' ? 'Отправляем…' : 'Обсудить проект'}
+      {status === 'error' ? <SubmissionError detail={statusMessage} onRetry={(event) => event.currentTarget.closest('form').requestSubmit()} /> : statusMessage && <p className="mt-4 text-xs leading-5 text-ink/55" role="alert">{statusMessage}</p>}
+      <div className={`mt-7 ${status === 'error' ? 'hidden' : 'flex'}`}>
+        <button type="submit" disabled={status === 'submitting'} className="shape-button flex w-full min-h-12 items-center justify-center gap-3 bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
+          {status === 'submitting' && <SubmissionLoader />}
+          {status === 'submitting' ? 'Отправляем заявку…' : 'Обсудить проект'}
         </button>
       </div>
+      {status === 'submitting' && <p role="status" className="mt-3 text-center text-sm leading-6 text-ink/65">Передаём данные и файлы. Дождитесь подтверждения.</p>}
     </form>
   )
 }
