@@ -27,8 +27,8 @@ export const serviceGroups = [
       "Нарезка винтов с длиной резьбы ≈ 2000 мм"
     ],
     "image": {
-      "src": "/images/services/generated/service-01-ai-960.webp",
-      "small": "/images/services/generated/service-01-ai-480.webp",
+      "src": "/images/services/service-01-20261028-960.webp",
+      "small": "/images/services/service-01-20261028-480.webp",
       "alt": "Токарная обработка металлической детали"
 }
   },
@@ -48,16 +48,14 @@ export const serviceGroups = [
   },
   {
     "number": "03",
-    "description": ["Расточка — обработка уже имеющихся отверстий для получения нужного диаметра, формы и качества поверхности. Её применяют к корпусам, посадочным местам и другим деталям, в которых важно взаимное расположение отверстий.","Операция позволяет подготовить поверхности под сопряжение с валами, втулками и подшипниками. Требования к посадкам и соосности задаются конструкторской документацией."],
-    "title": "Расточные работы",
-    "short": "Расточная обработка корпусных деталей",
-    "details": [
-      "Масса детали — до 1000 кг"
-    ],
+    "description": ["Токарные автоматы применяют для серийного изготовления деталей вращения. Оборудование выполняет последовательность операций по заданной программе, обеспечивая повторяемость геометрии в партии.","Состав операций и способ подачи заготовки определяются конструкцией детали и возможностями оборудования. Материал, размеры и требования к поверхностям согласуются по чертежу."],
+    "title": "Токарные автоматы",
+    "short": "Серийное изготовление деталей на токарных автоматах",
+    "details": [],
     "image": {
-      "src": "/images/services/generated/service-03-ai-960.webp",
-      "small": "/images/services/generated/service-03-ai-480.webp",
-      "alt": "Обработка крупной цилиндрической заготовки"
+      "src": "/images/services/service-03-20261028-960.webp",
+      "small": "/images/services/service-03-20261028-480.webp",
+      "alt": "Обработка детали на токарном автомате"
 }
   },
   {
@@ -96,8 +94,8 @@ export const serviceGroups = [
       "Модуль — до 16 мм"
     ],
     "image": {
-      "src": "/images/services/generated/service-06-ai-960.webp",
-      "small": "/images/services/generated/service-06-ai-480.webp",
+      "src": "/images/services/service-06-20261028-960.webp",
+      "small": "/images/services/service-06-20261028-480.webp",
       "alt": "Нарезка зубьев зубчатого колеса"
 }
   },
@@ -120,8 +118,8 @@ export const serviceGroups = [
     "short": "Сварка чёрных и цветных металлов",
     "details": [],
     "image": {
-      "src": "/images/services/generated/service-08-ai-960.webp",
-      "small": "/images/services/generated/service-08-ai-480.webp",
+      "src": "/images/services/service-08-20261028-960.webp",
+      "small": "/images/services/service-08-20261028-480.webp",
       "alt": "Сварка металлических деталей"
 }
   },
