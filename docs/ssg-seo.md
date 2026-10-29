@@ -1,13 +1,9 @@
-# Статическая генерация и SEO
+# Маршруты и SEO
 
-`npm run build` создаёт клиентские assets и запускает `scripts/generate-seo-pages.mjs`. Генератор рендерит React на сервере сборки: HTML содержит заголовки, текст, навигацию, форму и метаданные без исполнения JavaScript. Создаются 17 страниц и `404.html`.
+`npm run build` создаёт клиентскую сборку и готовый HTML через `scripts/generate-seo-pages.mjs`. Текст, навигация, форма, метаданные и JSON-LD доступны без JavaScript. Неизвестные URL возвращают HTTP 404.
 
-Маршруты, canonical, метаданные и JSON-LD определяются в `src/seoConfig.js` и `src/serviceRoutes.js`. Apache обслуживает HTML существующих маршрутов; неизвестный адрес возвращает HTTP 404.
+`src/serviceRoutes.js` задаёт постоянные идентификаторы услуг, `slug` и `aliases`; `src/seoConfig.js` — canonical, метаданные и индексацию. При смене slug прежний адрес добавляется в aliases: сборка создаёт 301 и отклоняет конфликты.
 
-Услуга имеет постоянный `id`, изменяемый `slug` и историю `aliases`. При смене slug старый адрес добавляется в aliases; сборка создаёт 301-перенаправления и отклоняет конфликтующие адреса. Сейчас используются `service-01`…`service-11`; страницы услуг имеют `noindex,follow`, пока финальный контент и адреса не утверждены для индексации.
+Страницы услуг пока имеют `noindex,follow`. Перед включением индексации необходимо утвердить контент и адреса. Sitemap содержит только индексируемые маршруты, без юридических страниц и ошибок; `lastmod` не изменяется при каждой сборке.
 
-Sitemap содержит только разрешённые индексируемые маршруты. Юридические страницы и ошибки исключены. `lastmod` не меняется при каждой сборке. JSON-LD не содержит неподтверждённых цен, отзывов и рейтингов.
-
-`npm run sitemap:submit` показывает план; `-- --submit` выполняет авторизованную отправку. Переменные: `GOOGLE_SEARCH_CONSOLE_TOKEN`, `GOOGLE_SEARCH_CONSOLE_PROPERTY`, `YANDEX_WEBMASTER_TOKEN`, `YANDEX_WEBMASTER_USER_ID`, `YANDEX_WEBMASTER_HOST_ID`. Для отправки нужны подтверждённые права на сайт. Публикация sitemap и запись в robots.txt сами по себе не подтверждают отправку в кабинеты.
-
-Отдельные счётчики аналитики и UTM-атрибуция в приложении отсутствуют. Встроенная Яндекс Карта работает независимо и может использовать cookies и собственные технические запросы.
+`npm run sitemap:submit` показывает план, `npm run sitemap:submit -- --submit` отправляет sitemap. Для Google используются `GOOGLE_SEARCH_CONSOLE_TOKEN`, `GOOGLE_SEARCH_CONSOLE_PROPERTY`; для Яндекса — `YANDEX_WEBMASTER_TOKEN`, `YANDEX_WEBMASTER_USER_ID`, `YANDEX_WEBMASTER_HOST_ID`.

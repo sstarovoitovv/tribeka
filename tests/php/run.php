@@ -218,11 +218,11 @@ if (in_array('--version', $argv, true)) {
     exit;
 }
 file_put_contents(__DIR__ . '/scanner-arguments', json_encode($argv));
-if ($mode === 'timeout') { sleep(3); }
+if ($mode === 'timeout') { sleep(5); }
 exit(match ($mode) { 'virus', 'encrypted', 'limit' => 1, 'error' => 2, default => 0 });
 PHP);
     chmod($scannerPath, 0700);
-    $scanConfig = ['antivirus' => ['enabled' => true, 'binary' => $scannerPath, 'database_dir' => $temp, 'timeout_seconds' => 1]];
+    $scanConfig = ['antivirus' => ['enabled' => true, 'binary' => $scannerPath, 'database_dir' => $temp, 'timeout_seconds' => 3]];
     $scanFiles = [['temporary_path' => $pdf], ['temporary_path' => $step]];
     fixture('scanner-mode', 'clean');
     scanAttachments($scanFiles, $scanConfig);

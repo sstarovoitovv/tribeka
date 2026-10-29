@@ -12,7 +12,7 @@ export default function AboutPage() {
         description="С 2012 года ТРИБЕКА оказывает услуги комплексной металлообработки и выпускает готовые изделия по принципу одного окна"
       />
 
-      <section className="bg-[#f7f7f5] py-12 sm:py-16">
+      <section className="bg-paper py-12 sm:py-16">
         <div className="container-page grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start lg:gap-y-5">
           <div className="lg:contents">
             <p className="eyebrow lg:col-start-1 lg:row-start-1">Технологический партнёр</p>
@@ -68,7 +68,7 @@ export default function AboutPage() {
       <section className="bg-graphite py-12 text-white sm:py-16">
         <div className="container-page grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-center">
           <div>
-            <p className="eyebrow text-white/85 before:bg-[#7faee9]">Реквизиты</p>
+            <p className="eyebrow text-white/85 before:bg-signal-light">Реквизиты</p>
             <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">{siteConfig.legalName}</h2>
           </div>
           <div className="grid gap-px bg-white/10 sm:grid-cols-2">

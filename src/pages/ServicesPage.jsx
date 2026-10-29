@@ -13,7 +13,7 @@ export default function ServicesPage() {
         description="Основные виды производственных работ и возможности оборудования"
       />
 
-      <section className="bg-[#f7f7f5] py-10 sm:py-14">
+      <section className="bg-paper py-10 sm:py-14">
         <div className="container-page">
           <div className="mb-7 max-w-2xl">
             <p className="eyebrow">Производственные возможности</p>

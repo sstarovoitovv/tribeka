@@ -3,8 +3,8 @@ import { siteConfig } from '../siteConfig.js'
 
 const contacts = [
   { label: 'Почта', href: `mailto:${siteConfig.email}`, image: '/brand/email.svg' },
-  { label: 'WhatsApp', href: siteConfig.whatsappUrl, icon: SiWhatsapp, iconClass: 'text-[#25d366]' },
-  { label: 'Telegram', href: siteConfig.telegramUrl, icon: SiTelegram, iconClass: 'text-[#26a5e4]' },
+  { label: 'WhatsApp', href: siteConfig.whatsappUrl, icon: SiWhatsapp, iconClass: 'text-whatsapp' },
+  { label: 'Telegram', href: siteConfig.telegramUrl, icon: SiTelegram, iconClass: 'text-telegram' },
   { label: 'MAX', href: siteConfig.maxUrl, image: '/brand/max-messenger.svg' },
 ]
 

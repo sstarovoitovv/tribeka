@@ -12,9 +12,8 @@ export default function ConsentPage() {
         description="Условия обработки данных, передаваемых через форму заявки на сайте ТРИБЕКА"
       />
 
-      <section className="bg-[#f7f7f5] py-20 sm:py-24">
+      <section className="bg-paper py-20 sm:py-24">
         <div className="container-page max-w-4xl">
-          {import.meta.env.DEV && siteConfig.formEndpoint === 'http://127.0.0.1:4193/api/request.php' && <p className="mb-6 rounded border border-signal/20 bg-white p-5 text-sm leading-6 text-ink/75">Локальная тестовая версия: копии заявок и вложений направляются на german.starovoitov@icloud.com вместо штатного адреса Оператора. Заявки сохраняются в существующей базе сайта. Используйте только вымышленные данные и тестовые файлы. Это отличие не применяется к опубликованной версии сайта.</p>}
           <div className="grid gap-6 border border-ink/10 bg-white p-7 text-sm leading-7 text-ink/65 sm:p-10">
             <p>Устанавливая отметку в форме и нажимая кнопку «Обсудить проект», пользователь свободно, своей волей и в своём интересе даёт {siteConfig.legalName}, ИНН {siteConfig.inn}, ОГРН {siteConfig.ogrn}, находящемуся по юридическому адресу {siteConfig.legalAddress}, согласие на обработку персональных данных на следующих условиях.</p>
 

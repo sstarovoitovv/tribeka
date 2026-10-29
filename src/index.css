@@ -11,8 +11,23 @@
 }
 
 :root {
-  color: #07182e;
-  background: #f1f4f8;
+  --color-ink: 7 24 46;
+  --color-graphite: 16 39 68;
+  --color-steel: 140 150 159;
+  --color-signal: 53 105 173;
+  --color-signal-hover: 40 84 143;
+  --color-signal-light: 127 174 233;
+  --color-mist: 241 244 248;
+  --color-paper: 247 247 245;
+  --color-subtle: 227 231 237;
+  --color-navigation: 247 248 250;
+  --color-white: 255 255 255;
+  --color-whatsapp: 37 211 102;
+  --color-telegram: 38 165 228;
+  --font-body: 'Manrope Variable', Arial, sans-serif;
+  --font-display: 'Onest', Arial, sans-serif;
+  color: rgb(var(--color-ink));
+  background: rgb(var(--color-mist));
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -31,7 +46,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: 'Onest', Arial, sans-serif;
+  font-family: var(--font-display);
   overflow-wrap: normal;
   text-wrap: balance;
   word-break: normal;
@@ -62,8 +77,8 @@ textarea {
 }
 
 ::selection {
-  color: #fff;
-  background: #3569ad;
+  color: rgb(var(--color-white));
+  background: rgb(var(--color-signal));
 }
 
 @layer components {
@@ -93,9 +108,9 @@ textarea {
 /* One focus treatment across existing controls, on both light and dark surfaces. */
 a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible,
 .request-form input[type="file"]:focus-visible + div > label {
-  outline: 2px solid #3569ad;
+  outline: 2px solid rgb(var(--color-signal));
   outline-offset: 4px;
-  box-shadow: 0 0 0 4px #fff;
+  box-shadow: 0 0 0 4px rgb(var(--color-white));
 }
 
 .request-form input:not([type="checkbox"]):focus-visible,
@@ -135,7 +150,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   mask-image: linear-gradient(to bottom, #000, transparent);
 }
 .hero-photo::after {
-  background: linear-gradient(to bottom, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
+  background: linear-gradient(to bottom, rgb(var(--color-ink)) 0%, rgb(var(--color-ink) / 97%) 12%, rgb(var(--color-ink) / 84%) 28%, rgb(var(--color-ink) / 58%) 48%, rgb(var(--color-ink) / 28%) 68%, rgb(var(--color-ink) / 7%) 86%, rgb(var(--color-ink) / 0%) 100%);
 }
 @media (min-width: 1024px) {
   .hero-photo::before, .hero-photo::after {
@@ -145,7 +160,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   }
   .hero-photo::before { mask-image: linear-gradient(to right, #000, transparent); }
   .hero-photo::after {
-    background: linear-gradient(to right, #07182e 0%, rgb(7 24 46 / 97%) 12%, rgb(7 24 46 / 84%) 28%, rgb(7 24 46 / 58%) 48%, rgb(7 24 46 / 28%) 68%, rgb(7 24 46 / 7%) 86%, rgb(7 24 46 / 0%) 100%);
+    background: linear-gradient(to right, rgb(var(--color-ink)) 0%, rgb(var(--color-ink) / 97%) 12%, rgb(var(--color-ink) / 84%) 28%, rgb(var(--color-ink) / 58%) 48%, rgb(var(--color-ink) / 28%) 68%, rgb(var(--color-ink) / 7%) 86%, rgb(var(--color-ink) / 0%) 100%);
   }
 }
 
@@ -163,7 +178,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   position: absolute;
   z-index: -1;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, rgb(53 105 173 / 60%) 0%, rgb(53 105 173 / 28%) 42%, rgb(16 39 68 / 0%) 70%);
+  background: radial-gradient(ellipse at 50% 50%, rgb(var(--color-signal) / 60%) 0%, rgb(var(--color-signal) / 28%) 42%, rgb(var(--color-graphite) / 0%) 70%);
   pointer-events: none;
 }
 
