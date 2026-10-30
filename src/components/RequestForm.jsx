@@ -24,10 +24,10 @@ function resizeMessageField(event) {
   field.style.overflowY = field.scrollHeight > maxHeight ? 'auto' : 'hidden'
 }
 
-export default function RequestForm({ previewState } = {}) {
+export default function RequestForm() {
   const fileInput = useRef(null)
   const sending = useRef(false)
-  const [status, setStatus] = useState(import.meta.env.DEV && previewState === 'sent' ? 'sent' : 'idle')
+  const [status, setStatus] = useState('idle')
   const [statusMessage, setStatusMessage] = useState('')
   const [files, setFiles] = useState([])
   const [phoneError, setPhoneError] = useState('')
@@ -134,14 +134,6 @@ export default function RequestForm({ previewState } = {}) {
       formData.set('consent_version', siteConfig.personalData.consentVersion)
       formData.set('policy_version', siteConfig.personalData.policyVersion)
 
-      if (import.meta.env.DEV && previewState?.startsWith('demo-')) {
-        await new Promise((resolve) => setTimeout(resolve, 2400))
-        if (previewState === 'demo-error') throw new Error('Сервис временно недоступен. Попробуйте ещё раз чуть позже.')
-        form.reset()
-        setFiles([])
-        setStatus('sent')
-        return
-      }
       const response = await fetch(siteConfig.formEndpoint, {
         method: 'POST',
         body: formData,
@@ -165,26 +157,19 @@ export default function RequestForm({ previewState } = {}) {
     }
   }
 
-  if (import.meta.env.DEV && previewState === 'error') {
-    return <SubmissionError detail="Сервис временно недоступен. Попробуйте ещё раз чуть позже." preview />
-  }
-
   if (status === 'sent') {
     return (
       <div className="flex min-h-[284px] flex-col items-center justify-center bg-white p-7 text-center sm:p-9" role="status">
         <span className="mb-5 grid size-10 place-items-center border border-signal text-xl font-black text-signal">✓</span>
         <h3 className="text-2xl font-black uppercase text-ink">Заявка принята</h3>
         <p className="mt-3 max-w-md text-sm leading-6 text-ink/60">Инженер свяжется с вами в ближайшее время и уточнит детали проекта</p>
-        <button onClick={() => setStatus('idle')} className="shape-button mt-6 border border-ink/10 bg-[#e3e7ed] px-5 py-3 text-xs font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">Отправить ещё одну</button>
+        <button onClick={() => setStatus('idle')} className="shape-button mt-6 border border-ink/10 bg-subtle px-5 py-3 text-xs font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">Отправить ещё одну</button>
       </div>
     )
   }
 
   return (
     <form aria-busy={status === 'submitting'} method="post" action={siteConfig.formEndpoint} onSubmit={submit} encType="multipart/form-data" className="request-form bg-white p-6 sm:p-9">
-      {import.meta.env.DEV && !previewState?.startsWith('demo-') && siteConfig.formEndpoint === 'http://127.0.0.1:4193/api/request.php' && (
-        <p className="mb-5 text-sm leading-6 text-ink/70" role="note">Тестовая форма: письмо и вложения направляются на german.starovoitov@icloud.com, заявка сохраняется в существующей базе сайта. Используйте вымышленные данные и тестовые файлы.</p>
-      )}
       <input type="hidden" name="consent_version" value={siteConfig.personalData.consentVersion} />
       <input type="hidden" name="policy_version" value={siteConfig.personalData.policyVersion} />
       <noscript><p className="mb-4 text-sm leading-6">Для отправки заявки с вложениями включите JavaScript или свяжитесь с нами по телефону.</p></noscript>
@@ -238,7 +223,7 @@ export default function RequestForm({ previewState } = {}) {
             className="sr-only"
           />
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <label htmlFor="request-files" className="shape-button inline-flex cursor-pointer items-center gap-2 border border-ink/10 bg-[#e3e7ed] px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">
+            <label htmlFor="request-files" className="shape-button inline-flex cursor-pointer items-center gap-2 border border-ink/10 bg-subtle px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-signal hover:border-signal hover:bg-signal hover:text-white">
               <FiPaperclip size={15} /> Прикрепить файлы
             </label>
             <span className="text-xs leading-5 text-ink/70">До 5 файлов, общий размер до 15 МБ</span>
@@ -250,7 +235,7 @@ export default function RequestForm({ previewState } = {}) {
                   const extension = file.name.includes('.') ? file.name.split('.').pop().toUpperCase() : 'ФАЙЛ'
 
                   return (
-                    <div key={`${file.name}-${file.size}-${file.lastModified}`} className="flex max-w-full items-center gap-3 rounded-[10px] border border-ink/10 bg-[#f1f4f8] px-3 py-2">
+                    <div key={`${file.name}-${file.size}-${file.lastModified}`} className="flex max-w-full items-center gap-3 rounded-[10px] border border-ink/10 bg-mist px-3 py-2">
                       <span className="grid size-9 shrink-0 place-items-center rounded-[7px] bg-signal/10 text-signal"><FiFileText size={17} /></span>
                       <span className="min-w-0">
                         <span className="block max-w-[180px] truncate text-[11px] font-bold normal-case tracking-normal text-ink" title={file.name}>{file.name}</span>
@@ -285,7 +270,7 @@ export default function RequestForm({ previewState } = {}) {
       </p>
       {status === 'error' ? <SubmissionError detail={statusMessage} onRetry={(event) => event.currentTarget.closest('form').requestSubmit()} /> : statusMessage && <p className="mt-4 text-xs leading-5 text-ink/55" role="alert">{statusMessage}</p>}
       <div className={`mt-7 ${status === 'error' ? 'hidden' : 'flex'}`}>
-        <button type="submit" disabled={status === 'submitting'} className="shape-button flex w-full min-h-12 items-center justify-center gap-3 bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-[#28548f] disabled:cursor-wait disabled:opacity-60">
+        <button type="submit" disabled={status === 'submitting'} className="shape-button flex w-full min-h-12 items-center justify-center gap-3 bg-signal px-6 py-4 text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:bg-signal-hover disabled:cursor-wait disabled:opacity-60">
           {status === 'submitting' && <SubmissionLoader />}
           {status === 'submitting' ? 'Отправляем заявку…' : 'Обсудить проект'}
         </button>

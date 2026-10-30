@@ -27,8 +27,8 @@ export const serviceGroups = [
       "Нарезка винтов с длиной резьбы ≈ 2000 мм"
     ],
     "image": {
-      "src": "/images/services/service-01-20261028-960.webp",
-      "small": "/images/services/service-01-20261028-480.webp",
+      "src": "/images/services/service-01-20261030-960.webp",
+      "small": "/images/services/service-01-20261030-480.webp",
       "alt": "Токарная обработка металлической детали"
 }
   },
@@ -94,8 +94,8 @@ export const serviceGroups = [
       "Модуль — до 16 мм"
     ],
     "image": {
-      "src": "/images/services/service-06-20261028-960.webp",
-      "small": "/images/services/service-06-20261028-480.webp",
+      "src": "/images/services/service-06-20261030-960.webp",
+      "small": "/images/services/service-06-20261030-480.webp",
       "alt": "Нарезка зубьев зубчатого колеса"
 }
   },

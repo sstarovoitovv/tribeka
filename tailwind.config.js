@@ -3,20 +3,14 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
-      colors: {
-        ink: '#07182e',
-        graphite: '#102744',
-        steel: '#8c969f',
-        signal: '#3569ad',
-        mist: '#f1f4f8',
-      },
+      colors: Object.fromEntries([
+        'ink', 'graphite', 'steel', 'signal', 'signal-hover', 'signal-light',
+        'mist', 'paper', 'subtle', 'navigation', 'white', 'whatsapp', 'telegram',
+      ].map(name => [name, `rgb(var(--color-${name}) / <alpha-value>)`])),
       fontWeight: { black: '800' },
       fontFamily: {
-        sans: ['Manrope Variable', 'Arial', 'sans-serif'],
-        display: ['Onest', 'Arial', 'sans-serif'],
-      },
-      boxShadow: {
-        glow: '0 16px 60px rgba(53, 105, 173, 0.24)',
+        sans: ['var(--font-body)'],
+        display: ['var(--font-display)'],
       },
     },
   },

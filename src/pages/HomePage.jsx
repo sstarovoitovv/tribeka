@@ -17,7 +17,7 @@ export default function HomePage() {
               Работаем по принципу «одного окна»: берём на себя весь цикл, контролируем качество на каждом этапе и выдаём готовое изделие под ключ
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link to="/contacts/#request" className="shape-button flex min-h-12 items-center justify-center bg-signal px-6 py-3 text-sm font-bold text-white hover:bg-[#28548f]">
+              <Link to="/contacts/#request" className="shape-button flex min-h-12 items-center justify-center bg-signal px-6 py-3 text-sm font-bold text-white hover:bg-signal-hover">
                 Рассчитать стоимость
               </Link>
               <Link to="/services/" className="shape-button flex min-h-12 items-center justify-center border border-white/30 px-6 py-3 text-sm font-bold hover:bg-white/10">

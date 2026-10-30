@@ -13,19 +13,19 @@ export default function ContactsPage() {
         description="Пришлите чертёж или опишите задачу. Уточним требования, подберём технологию и подготовим индивидуальный расчёт"
       />
 
-      <section className="bg-[#f7f7f5] py-10 sm:py-14">
+      <section className="bg-paper py-10 sm:py-14">
         <div className="container-page grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div>
             <p className="eyebrow">Связаться с нами</p>
             <h2 className="mt-5 text-4xl font-black uppercase tracking-tight sm:text-5xl">ТРИБЕКА</h2>
             <div className="mt-10 grid gap-px bg-ink/10">
-              <a href={`tel:${siteConfig.phoneHref}`} className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-[#e3e7ed]">
+              <a href={`tel:${siteConfig.phoneHref}`} className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-subtle">
                 <span className="flex items-center gap-4"><img src="/brand/phone.svg" alt="" className="size-6 shrink-0" /><span><span className="block text-[11px] font-bold uppercase tracking-widest text-ink/70">Телефон</span><span className="mt-1 block text-base font-black">{siteConfig.phone}</span></span></span><FiArrowUpRight className="transition-transform duration-500 ease-in-out group-hover:translate-x-1 group-hover:-translate-y-1" size={18} />
               </a>
-              <a href={`mailto:${siteConfig.email}`} className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-[#e3e7ed]">
+              <a href={`mailto:${siteConfig.email}`} className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-subtle">
                 <span className="flex items-center gap-4"><img src="/brand/email.svg" alt="" className="size-6 shrink-0" /><span><span className="block text-[11px] font-bold uppercase tracking-widest text-ink/70">Электронная почта</span><span className="mt-1 block text-base font-black">{siteConfig.email}</span></span></span><FiArrowUpRight className="transition-transform duration-500 ease-in-out group-hover:translate-x-1 group-hover:-translate-y-1" size={18} />
               </a>
-              <a href="https://yandex.ru/maps/?text=Санкт-Петербург%2C%20улица%20Возрождения%2C%2024" target="_blank" rel="noreferrer" className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-[#e3e7ed]">
+              <a href="https://yandex.ru/maps/?text=Санкт-Петербург%2C%20улица%20Возрождения%2C%2024" target="_blank" rel="noreferrer" className="group flex items-center justify-between gap-5 border border-transparent bg-mist p-6 transition-[background-color,border-color] duration-500 ease-in-out hover:border-signal/25 hover:bg-subtle">
                 <span className="flex items-center gap-4"><FiMapPin className="shrink-0 text-signal" size={22} /><span><span className="block text-[11px] font-bold uppercase tracking-widest text-ink/70">Адрес</span><span className="mt-1 block text-sm font-black leading-6">{siteConfig.address}</span></span></span><FiArrowUpRight className="shrink-0 transition-transform duration-500 ease-in-out group-hover:translate-x-1 group-hover:-translate-y-1" size={18} />
               </a>
             </div>

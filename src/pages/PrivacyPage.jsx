@@ -21,9 +21,8 @@ export default function PrivacyPage() {
         description="Порядок сбора, использования, хранения, защиты и удаления персональных данных посетителей сайта ТРИБЕКА"
       />
 
-      <section className="bg-[#f7f7f5] py-20 sm:py-24">
+      <section className="bg-paper py-20 sm:py-24">
         <div className="container-page max-w-5xl">
-          {import.meta.env.DEV && siteConfig.formEndpoint === 'http://127.0.0.1:4193/api/request.php' && <p className="mb-6 rounded border border-signal/20 bg-white p-5 text-sm leading-6 text-ink/75">Локальная тестовая версия: копии заявок и вложений направляются на german.starovoitov@icloud.com вместо штатного адреса Оператора. Заявки сохраняются в существующей базе сайта. Используйте только вымышленные данные и тестовые файлы. Это отличие не применяется к опубликованной версии сайта.</p>}
           <div className="border-t border-ink/15">
             <PolicySection number="01" title="Общие положения">
               <p>1.1. Настоящая Политика определяет обработку персональных данных посетителей сайта https://трибека.рф оператором {siteConfig.legalName}, ИНН {siteConfig.inn}, ОГРН {siteConfig.ogrn}. Юридический адрес: {siteConfig.legalAddress}. Контакт: {siteConfig.email}.</p>

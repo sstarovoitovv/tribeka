@@ -10,7 +10,7 @@ const dashboardItems = [
 
 export default function MobileDashboard() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-[#f7f8fa] pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_rgba(7,24,46,0.08)] min-[1000px]:hidden" aria-label="Мобильная навигация по разделам">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-navigation pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_rgba(7,24,46,0.08)] min-[1000px]:hidden" aria-label="Мобильная навигация по разделам">
       <div className="mx-auto grid h-[62px] max-w-xl grid-cols-4">
         {dashboardItems.map(({ label, to, icon: Icon }) => (
           <NavLink
